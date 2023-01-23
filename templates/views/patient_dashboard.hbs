@@ -1,0 +1,647 @@
+{{>adminheader loginuser=loginuser}}
+{{>adminsidebaar loginuser=loginuser}}
+     <div class="main-panel">
+         <div class="content-wrapper">
+               
+                <div class="row">
+                  
+                    <div class="col-sm-7 col-6">
+                        <h4 class="page-title">Patient Profile</h4>
+                    </div>
+
+                   
+                </div>
+
+
+                
+
+
+                <div class="row">
+                        <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                        <div class="dash-widget">
+							<span class="dash-widget-bg1"><i class="fa fa-stethoscope" aria-hidden="true"></i></span>
+							<div class="dash-widget-info text-right">
+								<h3>24</h3>
+								<span class="widget-title1">game played <i class="fa fa-check" aria-hidden="true"></i></span>
+							</div>
+                        </div>
+                       </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+
+                   {{#each patientData}}
+					<div class="col-12 col-md-6 col-lg-6 col-xl-6">
+						<div class="card">
+							<div class="card-body">
+								<div class="chart-title">
+									<h4>Patient Data</h4>
+								
+								</div>
+								  <h3>patientFullName : {{this.patientFullName}}</h3>
+                                  <p>email: {{this.email}}</p>
+                                  <p>phone : {{this.phone}}</p>
+                                  <p>age : {{this.age}}</p>
+                                  <p>disabalityType: {{this.disabalityType}}</p>
+                                  <p>address : {{this.address}}</p>
+                               
+							</div>
+						</div>
+					</div>
+                    {{/each}}
+
+                     
+                      {{#each patientData}}
+                    <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+						<div class="card">
+							<div class="card-body">
+								<div class="chart-title">
+									<h4>game played list</h4>
+								</div>	
+								<p>gamename: baloonigirl</p>
+                                  <p>type: Nasi</p>
+                                  <p>category: </p>
+							</div>
+						</div>
+					</div>
+				</div>
+                {{/each}}
+
+
+                <div class="row">
+					<div class="col-12">
+						<div class="card">
+							<div class="card-body">
+								<div class="chart-title">
+									<center><h4><b>OverAllGraph</b></h4></center>
+								 
+								</div>	
+								   <canvas id="OverAllGraph" style="width:100%;max-width:100%"></canvas>
+                   
+							</div>
+             
+						</div>
+					</div>
+				</div>
+
+
+
+                  <div class="row">
+					<div class="col-12 col-md-4 col-lg-4col-xl-4">
+						<div class="card">
+							<div class="card-body">
+								<div class="chart-title">
+									<h4>Loudness Graph</h4>
+								
+								</div>	
+								   <canvas id="Loudness" style="width:100%;max-width:600px"></canvas>
+                   
+							</div>
+             
+						</div>
+					</div>
+
+					<div class="col-12 col-md-4 col-lg-4col-xl-4">
+						<div class="card">
+							<div class="card-body">
+								<div class="chart-title">
+									<h4>Hz Graph</h4>
+								</div>
+								 <canvas id="Hz" style="width:100%;max-width:600px"></canvas>
+							</div>
+						</div>
+					</div>
+
+                    <div class="col-12 col-md-4 col-lg-4col-xl-4">
+						<div class="card">
+							<div class="card-body">
+								<div class="chart-title">
+									<h4>Recognition Graph</h4>
+								</div>
+								 <canvas id="Recognition" style="width:100%;max-width:600px"></canvas>
+							</div>
+						</div>
+					</div>
+				</div>
+
+               
+				
+
+
+                
+                
+
+               
+
+            <script>
+              var xValues = ['11.09','1.98','12.09','2.09','3.0','7.09','10.98','12.0','5.98','7.09','7.0','7.77'];
+
+              var yValues = ['3','7','6','8','10','13'];
+
+              
+
+
+
+                  new Chart("OverAllGraph", {
+                    type: "line",
+                    data: {
+                      labels: xValues,
+                      datasets: [{
+                        fill: false,
+                        lineTension: 0,
+                        backgroundColor: "orange",
+                        borderColor: "yellow",
+                        data: yValues
+                      }]
+                    },
+                    options: {
+                      legend: {display: false},
+                      scales: {
+                        xAxes: [{ticks: {min: 0, max:95}}],
+                        yAxes: [{ticks: {min: 0, max:100}}],
+                      }
+                    }
+                  });
+                  </script>
+
+
+                   <script>
+              var xValues = ['11.09','1.98','12.09','2.09','3.0','7.09','10.98','12.0','5.98','7.09','7.0','7.77'];
+
+              var yValues = ['3','7','6','8','10','13'];
+
+              
+
+
+
+                  new Chart("Loudness", {
+                    type: "line",
+                    data: {
+                      labels: xValues,
+                      datasets: [{
+                        fill: false,
+                        lineTension: 0,
+                        backgroundColor: "pink",
+                        borderColor: "orange",
+                        data: yValues
+                      }]
+                    },
+                    options: {
+                      legend: {display: false},
+                      scales: {
+                        xAxes: [{ticks: {min: 0, max:95}}],
+                        yAxes: [{ticks: {min: 0, max:100}}],
+                      }
+                    }
+                  });
+                  </script>
+
+
+                   <script>
+              var xValues = ['11.09','1.98','12.09','2.09','3.0','7.09','10.98','12.0','5.98','7.09','7.0','7.77'];
+
+              var yValues = ['3','7','6','8','10','13'];
+
+              
+
+
+
+                  new Chart("Hz", {
+                    type: "line",
+                    data: {
+                      labels: xValues,
+                      datasets: [{
+                        fill: false,
+                        lineTension: 0,
+                        backgroundColor: "pink",
+                        borderColor: "Blue",
+                        data: yValues
+                      }]
+                    },
+                    options: {
+                      legend: {display: false},
+                      scales: {
+                        xAxes: [{ticks: {min: 0, max:95}}],
+                        yAxes: [{ticks: {min: 0, max:100}}],
+                      }
+                    }
+                  });
+                  </script>
+
+                   <script>
+              var xValues = ['11.09','1.98','12.09','2.09','3.0','7.09','10.98','12.0','5.98','7.09','7.0','7.77'];
+
+              var yValues = ['3','7','6','8','10','13'];
+
+              
+
+
+
+                  new Chart("Recognition", {
+                    type: "line",
+                    data: {
+                      labels: xValues,
+                      datasets: [{
+                        fill: false,
+                        lineTension: 0,
+                        backgroundColor: "pink",
+                        borderColor: "red",
+                        data: yValues
+                      }]
+                    },
+                    options: {
+                      legend: {display: false},
+                      scales: {
+                        xAxes: [{ticks: {min: 0, max:95}}],
+                        yAxes: [{ticks: {min: 0, max:100}}],
+                      }
+                    }
+                  });
+                  </script>
+
+
+
+                <div class="card-box profile-header">
+                    <div class="row">
+                        {{#each userData}}
+                        <div class="col-md-12">
+                            <div class="profile-view">
+                                <!-- <div class="profile-img-wrap">
+                                    <div class="profile-img">
+                                        <a href="#"><img class="avatar" src="img/doctor-03.jpg" alt=""></a>
+                                    </div>
+                                </div> -->
+                                <div class="profile-basic">
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <div class="profile-info-left">
+                                                <h3 class="user-name m-t-0 mb-0">{{this.patientId}}</h3>
+                                                <h3 class="user-name m-t-0 mb-0">{{this.elapsedTime}}</h3>
+                                                <small class="text-muted">Patient</small>
+                                                <div class="staff-id">Game ID : {{this.gameId}}</div>
+                                                <div class="staff-id">Number of times played : {{this.NumberOfTrials}}</div>
+                                                <!-- <div class="staff-id">Disability Type : {{this.disabalityType}}</div> -->
+                                                <!-- <div class="staff-id">Experience : 10 Years</div>
+                                                <div class="staff-id">Language : Hindi, English, Spanish</div> -->
+                                                <div class="staff-msg">
+                                                    {{!-- <a href="chat.html" class="btn btn-primary">Send Message</a> --}}
+                                                    </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <ul class="personal-info">
+                                                <li>
+                                                    <span class="title">Date :</span>
+                                                    <span class="text"><a href="#">{{this.date}}</a></span>
+                                                </li>
+                                                <!-- <li>
+                                                    <span class="title">Email:</span>
+                                                    <span class="text"><a href="#">{{this.email}}</a></span>
+                                                </li>
+                                                <li>
+                                                    <span class="title">Native language:</span>
+                                                    <span class="text"><a href="#">{{this.nativeLanaguage}}</a></span>
+                                                </li> -->
+                                                <!-- <li>
+                                                    <span class="title">Birthday:</span>
+                                                    <span class="text">3rd March</span>
+                                                </li> -->
+                                                <!-- <li>
+                                                    <span class="title">Address:</span>
+                                                    <span class="text">714 Burwell Heights Road, Bridge City, TX, 77611</span>
+                                                </li> -->
+                                                <!-- <li>
+                                                    <span class="title">Gender:</span>
+                                                    <span class="text">Female</span>
+                                                </li> -->
+                                            </ul>
+                                        </div>
+
+
+                                        <div class="col-12 col-md-6 col-lg-6 col-xl-6" style="max-width: 100%;">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="chart-title">
+                                                        <h4>Patient Game graph</h4>
+                                                        <!-- <span class="float-right"><i class="fa fa-caret-up" aria-hidden="true"></i> 15% Higher than Last Month</span> -->
+                                                    </div>	
+                                                    <canvas id="linegraph"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                        
+                        </div>
+                        {{/each}}
+                    </div>
+                </div>
+				{{!-- <div class="profile-tabs">
+					<ul class="nav nav-tabs nav-tabs-bottom">
+						<li class="nav-item"><a class="nav-link active" href="#about-cont" data-toggle="tab">About</a></li>
+						<li class="nav-item"><a class="nav-link" href="#bottom-tab2" data-toggle="tab">Profile</a></li>
+						<li class="nav-item"><a class="nav-link" href="#bottom-tab3" data-toggle="tab">Messages</a></li>
+					</ul>
+
+					{{!-- <div class="tab-content">
+						<div class="tab-pane show active" id="about-cont">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card-box">
+                            <h3 class="card-title">Education Informations</h3>
+                            <div class="experience-box">
+                                <ul class="experience-list">
+                                    <li>
+                                        <div class="experience-user">
+                                            <div class="before-circle"></div>
+                                        </div>
+                                        <div class="experience-content">
+                                            <div class="timeline-content">
+                                                <a href="#/" class="name">International College of Medical Science (UG)</a>
+                                                <div>MBBS</div>
+                                                <span class="time">2001 - 2003</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="experience-user">
+                                            <div class="before-circle"></div>
+                                        </div>
+                                        <div class="experience-content">
+                                            <div class="timeline-content">
+                                                <a href="#/" class="name">International College of Medical Science (PG)</a>
+                                                <div>MD - Obstetrics & Gynaecology</div>
+                                                <span class="time">1997 - 2001</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-box mb-0">
+                            <h3 class="card-title">Experience</h3>
+                            <div class="experience-box">
+                                <ul class="experience-list">
+                                    <li>
+                                        <div class="experience-user">
+                                            <div class="before-circle"></div>
+                                        </div>
+                                        <div class="experience-content">
+                                            <div class="timeline-content">
+                                                <a href="#/" class="name">Consultant Gynecologist</a>
+                                                <span class="time">Jan 2014 - Present (4 years 8 months)</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="experience-user">
+                                            <div class="before-circle"></div>
+                                        </div>
+                                        <div class="experience-content">
+                                            <div class="timeline-content">
+                                                <a href="#/" class="name">Consultant Gynecologist</a>
+                                                <span class="time">Jan 2009 - Present (6 years 1 month)</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="experience-user">
+                                            <div class="before-circle"></div>
+                                        </div>
+                                        <div class="experience-content">
+                                            <div class="timeline-content">
+                                                <a href="#/" class="name">Consultant Gynecologist</a>
+                                                <span class="time">Jan 2004 - Present (5 years 2 months)</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+						</div>
+						<div class="tab-pane" id="bottom-tab2">
+							Tab content 2
+						</div>
+						<div class="tab-pane" id="bottom-tab3">
+							Tab content 3
+						</div>
+					</div> --}}
+				</div> --}}
+                
+            </div>
+            {{!-- <div class="notification-box">
+                <div class="msg-sidebar notifications msg-noti">
+                    <div class="topnav-dropdown-header">
+                        <span>Messages</span>
+                    </div>
+                    <div class="drop-scroll msg-list-scroll" id="msg_list">
+                        <ul class="list-box">
+                            <li>
+                                <a href="chat.html">
+                                    <div class="list-item">
+                                        <div class="list-left">
+                                            <span class="avatar">R</span>
+                                        </div>
+                                        <div class="list-body">
+                                            <span class="message-author">Richard Miles </span>
+                                            <span class="message-time">12:28 AM</span>
+                                            <div class="clearfix"></div>
+                                            <span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="chat.html">
+                                    <div class="list-item new-message">
+                                        <div class="list-left">
+                                            <span class="avatar">J</span>
+                                        </div>
+                                        <div class="list-body">
+                                            <span class="message-author">John Doe</span>
+                                            <span class="message-time">1 Aug</span>
+                                            <div class="clearfix"></div>
+                                            <span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="chat.html">
+                                    <div class="list-item">
+                                        <div class="list-left">
+                                            <span class="avatar">T</span>
+                                        </div>
+                                        <div class="list-body">
+                                            <span class="message-author"> Tarah Shropshire </span>
+                                            <span class="message-time">12:28 AM</span>
+                                            <div class="clearfix"></div>
+                                            <span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="chat.html">
+                                    <div class="list-item">
+                                        <div class="list-left">
+                                            <span class="avatar">M</span>
+                                        </div>
+                                        <div class="list-body">
+                                            <span class="message-author">Mike Litorus</span>
+                                            <span class="message-time">12:28 AM</span>
+                                            <div class="clearfix"></div>
+                                            <span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="chat.html">
+                                    <div class="list-item">
+                                        <div class="list-left">
+                                            <span class="avatar">C</span>
+                                        </div>
+                                        <div class="list-body">
+                                            <span class="message-author"> Catherine Manseau </span>
+                                            <span class="message-time">12:28 AM</span>
+                                            <div class="clearfix"></div>
+                                            <span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="chat.html">
+                                    <div class="list-item">
+                                        <div class="list-left">
+                                            <span class="avatar">D</span>
+                                        </div>
+                                        <div class="list-body">
+                                            <span class="message-author"> Domenic Houston </span>
+                                            <span class="message-time">12:28 AM</span>
+                                            <div class="clearfix"></div>
+                                            <span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="chat.html">
+                                    <div class="list-item">
+                                        <div class="list-left">
+                                            <span class="avatar">B</span>
+                                        </div>
+                                        <div class="list-body">
+                                            <span class="message-author"> Buster Wigton </span>
+                                            <span class="message-time">12:28 AM</span>
+                                            <div class="clearfix"></div>
+                                            <span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="chat.html">
+                                    <div class="list-item">
+                                        <div class="list-left">
+                                            <span class="avatar">R</span>
+                                        </div>
+                                        <div class="list-body">
+                                            <span class="message-author"> Rolland Webber </span>
+                                            <span class="message-time">12:28 AM</span>
+                                            <div class="clearfix"></div>
+                                            <span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="chat.html">
+                                    <div class="list-item">
+                                        <div class="list-left">
+                                            <span class="avatar">C</span>
+                                        </div>
+                                        <div class="list-body">
+                                            <span class="message-author"> Claire Mapes </span>
+                                            <span class="message-time">12:28 AM</span>
+                                            <div class="clearfix"></div>
+                                            <span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="chat.html">
+                                    <div class="list-item">
+                                        <div class="list-left">
+                                            <span class="avatar">M</span>
+                                        </div>
+                                        <div class="list-body">
+                                            <span class="message-author">Melita Faucher</span>
+                                            <span class="message-time">12:28 AM</span>
+                                            <div class="clearfix"></div>
+                                            <span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="chat.html">
+                                    <div class="list-item">
+                                        <div class="list-left">
+                                            <span class="avatar">J</span>
+                                        </div>
+                                        <div class="list-body">
+                                            <span class="message-author">Jeffery Lalor</span>
+                                            <span class="message-time">12:28 AM</span>
+                                            <div class="clearfix"></div>
+                                            <span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="chat.html">
+                                    <div class="list-item">
+                                        <div class="list-left">
+                                            <span class="avatar">L</span>
+                                        </div>
+                                        <div class="list-body">
+                                            <span class="message-author">Loren Gatlin</span>
+                                            <span class="message-time">12:28 AM</span>
+                                            <div class="clearfix"></div>
+                                            <span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="chat.html">
+                                    <div class="list-item">
+                                        <div class="list-left">
+                                            <span class="avatar">T</span>
+                                        </div>
+                                        <div class="list-body">
+                                            <span class="message-author">Tarah Shropshire</span>
+                                            <span class="message-time">12:28 AM</span>
+                                            <div class="clearfix"></div>
+                                            <span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="topnav-dropdown-footer">
+                        <a href="chat.html">See all messages</a>
+                    </div>
+                </div>
+            </div> --}}
+        </div>
+    </div>
+   {{>adminfooter}}

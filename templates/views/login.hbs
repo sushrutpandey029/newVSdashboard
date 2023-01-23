@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>VS Dashboard</title>
+  <!-- plugins:css -->
+  <link rel="stylesheet" href="../../vendors/feather/feather.css">
+  <link rel="stylesheet" href="../../vendors/ti-icons/css/themify-icons.css">
+  <link rel="stylesheet" href="../../vendors/css/vendor.bundle.base.css">
+  <!-- endinject -->
+  <!-- Plugin css for this page -->
+  <!-- End plugin css for this page -->
+  <!-- inject:css -->
+  <link rel="stylesheet" href="../../superadmin/css/vertical-layout-light/style.css">
+  <!-- endinject -->
+  <link rel="shortcut icon" href="../../superadmin/images/favicon.png" />
+</head>
+
+<body>
+  <div class="container-scroller">
+    <div class="container-fluid page-body-wrapper full-page-wrapper">
+      <div class="content-wrapper d-flex align-items-center auth px-0">
+        <div class="row w-100 mx-0">
+          <div class="col-lg-4 mx-auto">
+            <div class="auth-form-light text-left py-5 px-4 px-sm-5">
+
+               <center><h4>Admin Login</h4></center>
+               <br>
+              {{!-- <div class="brand-logo">
+                <img src="../../superadmin/images/logo.svg" alt="logo">
+              </div> --}}
+              <h4>Hello! let's get started</h4>
+              <h6 class="font-weight-light">Sign in to continue.</h6>
+              <form action="/adminlogin"  method="POST" class="pt-3">
+
+                {{#each errors}}
+                        <div class="alert alert-danger" id="alert" role="alert">
+                             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            {{text}} 
+                        </div>
+                        {{/each}}
+
+               <div class="form-group">
+                            <label><b>Email</b></label>
+                            <input type="text" autofocus="" class="form-control" name="email" value="{{username}}" placeholder="example@gmail.com" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label><b>Password</b></label>
+                            <input type="password" class="form-control" name="password" value="{{password}}" placeholder="password@123" required>
+                        </div>
+                       
+                        <div class="form-group text-center">
+                            <button type="submit" class="btn btn-primary account-btn">Login</button>
+                        </div>
+               
+                
+                {{!-- <div class="text-center mt-4 font-weight-light">
+                 Doctor login <a href="./doctor_login" class="text-primary">Click Here</a>
+                </div>
+                <div class="text-center mt-4 font-weight-light">
+                 Super Admin login <a href="./superadminlogin" class="text-primary">Click Here</a>
+                </div> --}}
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="../../vendors/js/vendor.bundle.base.js"></script>
+  <script src="../../superadmin/js/off-canvas.js"></script>
+  <script src="../../superadmin/js/hoverable-collapse.js"></script>
+  <script src="../../superadmin/js/template.js"></script>
+  <script src="../../superadmin/js/settings.js"></script>
+  <script src="../../superadmin/js/todolist.js"></script>
+  <!-- endinject -->
+</body>
+
+</html>

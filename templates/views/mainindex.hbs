@@ -1,0 +1,985 @@
+{{>adminheader loginuser=loginuser}}
+{{>adminsidebaar loginuser=loginuser}}
+
+     
+      <!-- partial:partials/_sidebar.html -->
+      
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-md-12 grid-margin">
+              <div class="row">
+                <div class="col-12 col-xl-8 mb-4 mb-xl-0">
+                    {{#each loginuser}}
+                  <h3 class="font-weight-bold">Welcome {{this.username}}</h3>
+                  {{/each}}
+                  <h6 class="font-weight-normal mb-0">All systems are running smoothly!<span class="text-primary"></span></h6>
+                </div>
+                <div class="col-12 col-xl-4">
+                 <div class="justify-content-end d-flex">
+                  <div class="dropdown flex-md-grow-1 flex-xl-grow-0">
+                    <button class="btn btn-sm btn-light bg-white" type="button" id="dropdownMenuDate2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                     <i class="mdi mdi-calendar"></i> <script>
+  const currentDate = new Date();
+  const formattedDate = currentDate.toLocaleDateString();
+</script>
+<p>Today is: <script>document.write(formattedDate);</script></p>
+                    </button>
+                   
+                  </div>
+                 </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 grid-margin stretch-card">
+              <div class="card tale-bg">
+                <div class="card-people mt-auto">
+                   <div class="card-body">
+                  <p class="card-title">Admin Graph</p>
+                  <canvas id="amyChart" style="width:100%"></canvas>
+                   <select onclick="timeFrame('month')" id='date-dropdowna'></select>
+
+              <button onClick="timeFrame('day')" >Month</button>
+              <input onchange="filterData()" type="date" id="startdata" value="">
+               <input onchange="filterData()" type="date" id="enddata" value="">     
+                </div>
+                  <div class="weather-info">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 grid-margin transparent">
+              <div class="row">
+                <div class="col-md-6 mb-4 stretch-card transparent">
+                  <div class="card card-tale">
+                    <a class="nav-link" href="../admin_list">
+                    <div class="card-body">
+                      <p class="mb-4" style="color: white;">Admin</p>
+                      <p class="fs-30 mb-2" style="color: white;">{{admin.length}}</p>
+                      <p style="color: white;">30 days</p>
+                    </div>
+                    </a>
+                  </div>
+                </div>
+                <div class="col-md-6 mb-4 stretch-card transparent">
+                  <div class="card card-dark-blue">
+                    <a class="nav-link" href="../sdoctor">
+                    <div class="card-body">
+                      <p class="mb-4" style="color: white;">Doctors</p>
+                      <p class="fs-30 mb-2" style="color: white;">{{docData.length}}</p>
+                      <p style="color: white;">30 days</p>
+                    </div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-4 mb-lg-0 stretch-card transparent">
+                  <div class="card card-light-blue">
+                    <a class="nav-link" href="../spatients">
+                    <div class="card-body">
+                      <p class="mb-4" style="color: white;">Patients</p>
+                      <p class="fs-30 mb-2" style="color: white;">{{patientdata.length}}</p>
+                      <p style="color: white;">30 days</p>
+                    </div>
+                    </a>
+                  </div>
+                </div>
+                <div class="col-md-6 stretch-card transparent">
+                  <div class="card card-light-danger">
+                     <a class="nav-link" href="../games">
+                    <div class="card-body">
+                      <p class="mb-4" style="color: white;">Number of Games</p>
+                      <p class="fs-30 mb-2" style="color: white;">{{gameData.length}}</p>
+                      <p style="color: white;">30 days</p>
+                    </div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+         
+
+          <div class="row">
+            <div class="col-md-6 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <p class="card-title">Doctor Graph</p>
+                  <p class="font-weight-500">The total number of Doctor Added by Admins</p>
+                  <div class="d-flex flex-wrap mb-5"> 
+                  </div>
+               <canvas id="pmyChart" style="width:100%"></canvas>
+                   
+              <select onclick="timeFrame('month')" id='date-dropdown'></select>
+
+              <button onClick="timeFrame('day')" >Month</button>
+              <input onchange="filterData()" type="date" id="startdate" value="">
+               <input onchange="filterData()" type="date" id="enddate" value="">     
+                </div>
+              </div>
+            </div>
+
+
+            <div class="col-md-6 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <p class="card-title">Patient Graph</p>
+                  <p class="font-weight-500">The total number of Patients Added by Doctors</p>
+                  <div class="d-flex flex-wrap mb-5"> 
+                  </div>
+                 <canvas id="myChartp" style="width:100%; max-height:400px"></canvas>
+                 
+                 <select onclick="timeFramep('month')" id='date-dropdownp'></select>
+
+                 <button onClick="timeFramep('day')" >Month</button>
+                <input onchange="filterDatap()" type="date" id="startdatep" value="">
+               <input onchange="filterDatap()" type="date" id="enddatep" value=""> 
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+           <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+
+<script>
+  let dateDropdown = document.getElementById('date-dropdown'); 
+       
+  let currentYear = new Date().getFullYear();    
+  let earliestYear = 2020;     
+  while (currentYear >= earliestYear) {      
+    let dateOption = document.createElement('option');          
+    dateOption.text = currentYear;      
+    dateOption.value = currentYear;        
+    dateDropdown.add(dateOption);      
+    currentYear -= 1;    
+  }
+</script> 
+
+<script  myvar={{graphDataDoc}}>
+
+          var unique = (a,t={}) => a.filter(e=>!(t[e]=e in t)); // function to find unique dates
+          var tempd = document.currentScript.getAttribute('myvar'); 
+          var arrd=tempd.split(","); // spliting from iso date to normal date
+          var YEAR=document.getElementById('date-dropdown');
+          var datapointsd=[];
+          var yAxis=new Array(12).fill(0);
+          var xAxis = ["January", "February", "March", "April", "May", "June", 
+              "July","August", "September", "October","November", "December"]
+              
+          var curr=1;
+         for(var i=1;i<arrd.length;i++){ //counting occurance of each element
+            if(arrd[i-1]===arrd[i]){
+              ++curr;
+            }else{
+              datapointsd.push(curr);
+              curr=1;
+            }
+         }
+         const counts = {};
+         for (const num of arrd) {
+                counts[num] = counts[num] ? counts[num] + 1 : 1;
+              }
+              // console.log(counts)
+          datapointsd.push(curr);
+          arr1=unique(arrd);
+          var dayd=[];
+          var mpo=new Map();
+
+          for(var i=0;i<arrd.length;i++){
+                  let date=new Date(arrd[i]);
+                  let month = date.getMonth();
+                let year = date.getFullYear().toString();
+                if(year==YEAR.value){
+                  yAxis[month]++;
+                }
+              }
+
+          for(var i=0;i<arrd.length;i++){           
+             mpo[arrd[i]]=mpo[arrd[i]] || [];
+             mpo.set(arrd[i],datapointsd[i]);
+          }
+        for(var i=0;i<12;i++){
+          dayd.push({x:xAxis[i],y:yAxis[i]});
+        }
+          
+          var data = {
+            labels: xAxis,
+            datasets: [{
+              label: 'Doctors',
+              data: dayd,
+              backgroundColor: "skyblue",
+              borderColor: "blue",
+              borderWidth: 3
+            }]
+          };
+          var config = {
+            type: 'line',
+            data:data,
+            options: {
+              responsive: true,
+              scales: {
+                x:{
+                  type: 'category',
+                  time:{
+                    unit: 'month'
+                  }
+                },
+                y: {
+                  beginAtZero: true,
+                  ticks: {
+                    precision: 0,
+                }
+                }
+              },
+            }
+          };
+          const myChart = new Chart(
+            document.getElementById('pmyChart'),
+            config
+          );
+
+          function timeFrame(period){
+            if(period=='day'){
+            var startdate=document.getElementById('startdate');
+            var enddate=document.getElementById('enddate');
+            var temp = new Date(startdate.value)
+            enddate = new Date(enddate.value)
+            
+              var label = []
+              while (temp <= enddate) {
+                let day = temp.getDate();
+                let month = temp.getMonth()+1;
+                let year = temp.getFullYear();
+                if(day<=9){
+                 day= day.toString().padStart(2, '0');
+                } if(month<=9){
+                  month=month.toString().padStart(2,'0');
+                }
+                  label.push(year + "-" + month + "-" + day)
+                  temp = new Date(temp.getTime() + 24 * 60 * 60 * 1000)
+              }
+              var dayn=[];
+            for(var i=0;i<label.length;i++){
+              if(mpo.has(label[i])){
+                dayn.push({x:Date.parse(label[i]),y:counts[label[i]]}) 
+              }else{
+                dayn.push({x:Date.parse(label[i]),y:0});
+              }
+              }
+                
+              console.log("dayn ",dayn) 
+              myChart.config.options.scales.x.time.unit=period;
+              myChart.config.options.scales.x.type="category";
+              myChart.config.data.labels=label; 
+              myChart.config.data.datasets[0].data=dayn;
+
+            }else if(period=='month'){
+              var selectYear=document.getElementById('date-dropdown');
+              
+              var label = ["January", "February", "March", "April", "May", "June", 
+              "July","August", "September", "October","November", "December"]
+              
+              var data=new Array(12).fill(0);
+
+              for(var i=0;i<arrd.length;i++){
+                  let date=new Date(arrd[i]);
+                  let month = date.getMonth();
+                let year = date.getFullYear().toString();
+                if(year==selectYear.value){
+                  data[month]++;
+                }
+              }
+              var dayn=[];
+              for(let i=0;i<12;i++){
+                dayn.push({x:label[i],y:data[i]});
+              }
+
+              myChart.config.options.scales.x.time.unit=period;
+              myChart.config.options.scales.x.type="category";
+              myChart.config.data.labels=label; 
+              myChart.config.data.datasets[0].data=dayn;
+             
+            }else if(period=='year'){
+              var startdate=document.getElementById('startdate');
+              var enddate=document.getElementById('enddate');
+              startdate = new Date(startdate.value)
+              enddate = new Date(enddate.value)
+              
+              var syear=startdate.getFullYear();
+              var eyear=enddate.getFullYear();
+
+              var dif=eyear-syear+1;
+              var data=new Array(dif).fill(0);
+
+              var label = []
+              for(var i=syear;i<=eyear;i++){
+                label.push(i);
+              }
+              for(var i=0;i<arrd.length;i++){
+                let date=new Date(arrd[i]);
+                let temp=date.getFullYear();
+                data[temp-syear]++;
+              }
+              var dayn=[];
+              for(var i=0;i<label.length;i++){
+                dayn.push({x:label[i],y:data[i]});
+              }
+              myChart.config.options.scales.x.time.unit=period;
+              myChart.config.options.scales.x.type="category";
+              myChart.config.data.labels=label; 
+              myChart.config.data.datasets[0].data=dayn;
+            }
+            myChart.update();
+          }
+
+          function filterData(){
+            var dates2=[...arrd];
+            const startdate=document.getElementById('startdate');
+            const enddate=document.getElementById('enddate');
+           const indexstartdate=dates2.findIndex(function(date) {
+                            return date >=startdate.value;
+                        });
+           var indexenddate;
+          for(var i=0;i<dates2.length;i++){
+            if(dates2[i]<=enddate.value){
+              indexenddate=i;
+            }
+          }
+           const filterDate= dates2.slice(indexstartdate,indexenddate+1);
+            myChart.config.data.labels=filterDate;
+            var datapoints2=[...datapointsd]
+            const filterDatapoints=datapoints2.slice(indexstartdate,indexenddate+1);
+            myChart.config.data.datasets[0].data=filterDatapoints;
+
+            myChart.update();
+       
+          }
+
+ </script>
+
+
+<script> //for patient
+  let dateDropdownp = document.getElementById('date-dropdownp'); 
+       
+  let currentYearp = new Date().getFullYear();    
+  let earliestYearp = 2020;     
+  while (currentYearp >= earliestYearp) {      
+    let dateOption = document.createElement('option');          
+    dateOption.text = currentYearp;      
+    dateOption.value = currentYearp;        
+    dateDropdownp.add(dateOption);      
+    currentYearp -= 1;    
+  } 
+</script>
+
+
+<script myvar={{graphDataPatient}}>
+              
+          var unique = (a,t={}) => a.filter(e=>!(t[e]=e in t)); // function to find unique dates
+          var temp = document.currentScript.getAttribute('myvar'); 
+          var arr2=temp.split(","); // spliting from iso date to normal date
+          var datapoints=[];
+          var xAxis = ["January", "February", "March", "April", "May", "June", 
+              "July","August", "September", "October","November", "December"]
+         var dpp=new Array(12).fill(0);     
+         var Yp=document.getElementById('date-dropdownp');
+          var curr=1;
+         for(var i=1;i<arr2.length;i++){ //counting occurance of each element
+            if(arr2[i-1]===arr2[i]){
+              ++curr;
+            }else{
+              datapoints.push(curr);
+              curr=1;
+            }
+         }
+         const countsp = {};
+         for (const num of arr2) {
+                countsp[num] = countsp[num] ? countsp[num] + 1 : 1;
+              }
+
+          datapoints.push(curr);
+          arrp=unique(arr2);
+          const dayp=[];
+         
+          var mpp=new Map();
+
+          for(var i=0;i<arr2.length;i++){
+                  let date=new Date(arr2[i]);
+                  let month = date.getMonth();
+                let year = date.getFullYear().toString();
+                if(year==Yp.value){
+                  dpp[month]++;
+                }
+              }
+              
+          for(var i=0;i<arr2.length;i++){
+             
+             mpp[arrp[i]]=mpo[arrp[i]] || [];
+             mpp.set(arrp[i],datapoints[i]);
+          }
+          for(var i=0;i<12;i++){
+          dayp.push({x:xAxis[i],y:dpp[i]});
+        }
+          var data = {
+            labels: xAxis,
+            datasets: [{
+              label: 'Patients',
+              data: dayp,
+              backgroundColor: "lightgreen",
+              borderColor: "green",
+              borderWidth: 3
+            }]
+          };
+          var config = {
+            type: 'line',
+            data,
+            options: {
+              scales: {
+                x:{
+                  type: 'category',
+                  time:{
+                    unit: 'month'
+                  }
+                },
+                y: {
+                  beginAtZero: true,
+                   ticks: { 
+                    precision: 0
+                }
+                }
+              }
+            }
+          };
+          const myChartp = new Chart(
+            document.getElementById('myChartp'),
+            config
+          );
+
+          function timeFramep(period){
+
+            if(period=='day'){
+              var startdate=document.getElementById('startdatep');
+            var enddate=document.getElementById('enddatep');
+            var temp = new Date(startdate.value)
+            enddate = new Date(enddate.value)
+            
+              var labels = []
+              while (temp <= enddate) {
+                let day = temp.getDate();
+                let month = temp.getMonth()+1;
+                let year = temp.getFullYear();
+                if(day<=9){
+                 day= day.toString().padStart(2, '0');
+                } if(month<=9){
+                  month=month.toString().padStart(2,'0');
+                }
+                  labels.push(year + "-" + month + "-" + day)
+                  temp = new Date(temp.getTime() + 24 * 60 * 60 * 1000)
+              }
+
+              var dayn=[];
+            for(var i=0;i<labels.length;i++){
+              if(mpp.has(labels[i])){
+                dayn.push({x:Date.parse(labels[i]),y:countsp[labels[i]]}) 
+              }else{
+                dayn.push({x:Date.parse(labels[i]),y:0});
+              }
+              }
+      
+              myChartp.config.options.scales.x.time.unit=period;
+              myChartp.config.options.scales.x.type="category";
+              myChartp.config.data.labels=labels; 
+              myChartp.config.data.datasets[0].data=dayn;
+
+            }else if(period=='month'){
+              var selectYear=document.getElementById('date-dropdownp');
+              
+              var label = ["January", "February", "March", "April", "May", "June", 
+              "July","August", "September", "October","November", "December"]
+              
+              var data=new Array(12).fill(0);
+
+              for(var i=0;i<arr2.length;i++){
+                  let date=new Date(arr2[i]);
+                  let month=date.getMonth();
+                let year = date.getFullYear().toString();
+                if(year==selectYear.value){
+                  data[month]++;
+                }
+              }
+              var dayn=[];
+              for(let i=0;i<12;i++){
+                dayn.push({x:label[i],y:data[i]});
+              }
+              myChartp.config.options.scales.x.time.unit=period;
+              myChartp.config.options.scales.x.type="category";
+              myChartp.config.data.labels=label; 
+              myChartp.config.data.datasets[0].data=dayn;
+             
+            }else if(period=='year'){
+              var startdate=document.getElementById('startdatep');
+              var enddate=document.getElementById('enddatep');
+              startdate = new Date(startdate.value)
+              enddate = new Date(enddate.value)
+              
+              var syear=startdate.getFullYear();
+              var eyear=enddate.getFullYear();
+
+              var dif=eyear-syear+1;
+              var data=new Array(dif).fill(0);
+
+              var label = []
+              for(var i=syear;i<=eyear;i++){
+                label.push(i);
+              }
+              for(var i=0;i<arr2.length;i++){
+                let date=new Date(arr2[i]);
+                let temp=date.getFullYear();
+                data[temp-syear]++;
+              }
+              var dayn=[];
+              for(var i=0;i<label.length;i++){
+                dayn.push({x:label[i],y:data[i]});
+              }
+              myChartp.config.options.scales.x.time.unit=period;
+              myChartp.config.options.scales.x.type="category";
+              myChartp.config.data.labels=label; 
+              myChartp.config.data.datasets[0].data=dayn;
+            }
+            myChartp.update();
+          }
+
+         function filterDatap(){
+            var dates2=[...arrp];
+            const startdate=document.getElementById('startdatep');
+            const enddate=document.getElementById('enddatep');
+           var indexstartdate=dates2.findIndex(function(date) {
+                            return date >=startdate.value;
+                        });
+          
+          var indexenddate;
+          for(var i=0;i<dates2.length;i++){
+            if(dates2[i]<=enddate.value){
+              indexenddate=i;
+            }
+          }
+           const filterDate= dates2.slice(indexstartdate,indexenddate+1);
+            myChartp.config.data.labels=filterDate;
+            var datapoints2=[...datapoints]
+            const filterDatapoints=datapoints2.slice(indexstartdate,indexenddate+1);
+            myChartp.config.data.datasets[0].data=filterDatapoints;
+
+            myChartp.update();
+       
+          }
+</script>
+
+
+
+
+{{!-- admin graph --}}
+
+
+<script>
+  let dateDropdowna = document.getElementById('date-dropdowna'); 
+       
+  let currentYeara = new Date().getFullYear();    
+  let earliestYeara = 2020;     
+  while (currentYeara >= earliestYeara) {      
+    let dateOption = document.createElement('option');          
+    dateOption.text = currentYeara;      
+    dateOption.value = currentYeara;        
+    dateDropdowna.add(dateOption);      
+    currentYeara -= 1;    
+  } 
+</script>
+
+
+<script myvar={{graphdataadmin}}>
+              
+          var unique = (a,t={}) => a.filter(e=>!(t[e]=e in t)); // function to find unique dates
+          var temp = document.currentScript.getAttribute('myvar'); 
+          var arr3=temp.split(","); // spliting from iso date to normal date
+          var datapoints=[];
+          var xAxis = ["January", "February", "March", "April", "May", "June", 
+              "July","August", "September", "October","November", "December"]
+         var daa=new Array(12).fill(0);     
+         var Ya=document.getElementById('date-dropdowna');
+          var curr=1;
+         for(var i=1;i<arr2.length;i++){ //counting occurance of each element
+            if(arr3[i-1]===arr3[i]){
+              ++curr;
+            }else{
+              datapoints.push(curr);
+              curr=1;
+            }
+         }
+         const countsa = {};
+         for (const num of arr3) {
+                countsa[num] = countsa[num] ? countsa[num] + 1 : 1;
+              }
+
+          datapoints.push(curr);
+          arra=unique(arr3);
+          const daya=[];
+         
+          var maa=new Map();
+
+          for(var i=0;i<arr3.length;i++){
+                  let date=new Date(arr3[i]);
+                  let month = date.getMonth();
+                let year = date.getFullYear().toString();
+                if(year==Ya.value){
+                  daa[month]++;
+                }
+              }
+              
+          for(var i=0;i<arr3.length;i++){
+             
+             maa[arra[i]]=mpo[arra[i]] || [];
+             maa.set(arra[i],datapoints[i]);
+          }
+          for(var i=0;i<12;i++){
+          daya.push({x:xAxis[i],y:daa[i]});
+        }
+          var data = {
+            labels: xAxis,
+            datasets: [{
+              label: 'Patients',
+              data: daya,
+              backgroundColor: "lightgreen",
+              borderColor: "green",
+              borderWidth: 3
+            }]
+          };
+          var config = {
+            type: 'line',
+            data,
+            options: {
+              scales: {
+                x:{
+                  type: 'category',
+                  time:{
+                    unit: 'month'
+                  }
+                },
+                y: {
+                  beginAtZero: true,
+                   ticks: { 
+                    precision: 0
+                }
+                }
+              }
+            }
+          };
+          const amyChart = new Chart(
+            document.getElementById('amyChart'),
+            config
+          );
+
+          function timeFramea(period){
+
+            if(period=='day'){
+              var startdate =document.getElementById('startdatea');
+            var enddate =document.getElementById('enddatea');
+            var temp = new Date(startdate.value)
+            enddate = new Date(enddate.value)
+            
+              var labels = []
+              while (temp <= enddate) {
+                let day = temp.getDate();
+                let month = temp.getMonth()+1;
+                let year = temp.getFullYear();
+                if(day<=9){
+                 day= day.toString().padStart(2, '0');
+                } if(month<=9){
+                  month=month.toString().padStart(2,'0');
+                }
+                  labels.push(year + "-" + month + "-" + day)
+                  temp = new Date(temp.getTime() + 24 * 60 * 60 * 1000)
+              }
+
+              var dayn=[];
+            for(var i=0;i<labels.length;i++){
+              if(maa.has(labels[i])){
+                dayn.push({x:Date.parse(labels[i]),y:countsa[labels[i]]}) 
+              }else{
+                dayn.push({x:Date.parse(labels[i]),y:0});
+              }
+              }
+      
+              amyChart.config.options.scales.x.time.unit=period;
+              amyChart.config.options.scales.x.type="category";
+              amyChart.config.data.labels=labels; 
+              amyChart.config.data.datasets[0].data=dayn;
+
+            }else if(period=='month'){
+              var selectYear=document.getElementById('date-dropdowna');
+              
+              var label = ["January", "February", "March", "April", "May", "June", 
+              "July","August", "September", "October","November", "December"]
+              
+              var data=new Array(12).fill(0);
+
+              for(var i=0;i<arr3.length;i++){
+                  let date=new Date(arr3[i]);
+                  let month=date.getMonth();
+                let year = date.getFullYear().toString();
+                if(year==selectYear.value){
+                  data[month]++;
+                }
+              }
+              var dayn=[];
+              for(let i=0;i<12;i++){
+                dayn.push({x:label[i],y:data[i]});
+              }
+              amyChart.config.options.scales.x.time.unit=period;
+              amyChart.config.options.scales.x.type="category";
+              amyChart.config.data.labels=label; 
+              amyChart.config.data.datasets[0].data=dayn;
+             
+            }else if(period=='year'){
+              var startdate=document.getElementById('startdatea');
+              var enddate=document.getElementById('enddatea');
+              startdate = new Date(startdate.value)
+              enddate = new Date(enddate.value)
+              
+              var syear=startdate.getFullYear();
+              var eyear=enddate.getFullYear();
+
+              var dif=eyear-syear+1;
+              var data=new Array(dif).fill(0);
+
+              var label = []
+              for(var i=syear;i<=eyear;i++){
+                label.push(i);
+              }
+              for(var i=0;i<arr3.length;i++){
+                let date=new Date(arr3[i]);
+                let temp=date.getFullYear();
+                data[temp-syear]++;
+              }
+              var dayn=[];
+              for(var i=0;i<label.length;i++){
+                dayn.push({x:label[i],y:data[i]});
+              }
+              amyChart.config.options.scales.x.time.unit=period;
+              amyChart.config.options.scales.x.type="category";
+              amyChart.config.data.labels=label; 
+              amyChart.config.data.datasets[0].data=dayn;
+            }
+            amyChart.update();
+          }
+
+         function filterDataa(){
+            var dates2=[...arra];
+            const startdate=document.getElementById('startdatea');
+            const enddate=document.getElementById('enddatea');
+           var indexstartdate=dates2.findIndex(function(date) {
+                            return date >=startdate.value;
+                        });
+          
+          var indexenddate;
+          for(var i=0;i<dates2.length;i++){
+            if(dates2[i]<=enddate.value){
+              indexenddate=i;
+            }
+          }
+           const filterDate= dates2.slice(indexstartdate,indexenddate+1);
+            amyChart.config.data.labels=filterDate;
+            var datapoints2=[...datapoints]
+            const filterDatapoints=datapoints2.slice(indexstartdate,indexenddate+1);
+            amyChart.config.data.datasets[0].data=filterDatapoints;
+
+            amyChart.update();
+       
+          }
+</script>
+
+
+
+           <div class="row">
+            <div class="col-md-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <p class="card-title mb-0">Admin</p>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-borderless">
+                      <thead>
+                        <tr>
+                        	<th>Admin Name</th>
+							<th>Email</th>
+							<th>Phone</th>
+							<th>isAdmin</th>
+              <th class="text-right">Admin Dashboard</th>
+                        </tr>  
+                      </thead>
+                      	 {{#each admin}}
+                      <tbody>
+                        <tr>
+                          <td><a  href="admin_profiles/{{this._id}}">{{this.username}}</a></td>
+                          <td class="font-weight-bold">{{this.email}}</td>
+                          <td>{{this.phone}}</td>
+                          <td class="font-weight-medium">{{this.isAdmin}}</td>
+                          <td class="font-weight-medium"><button class="btn btn-primary btn-primary-one float-right"><a  href="#" style="color: white;">Dashboard</a></button></td>
+                        </tr>   
+                      </tbody>
+                       {{/each}}
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+           
+          </div>
+        
+          <div class="row">
+            <div class="col-md-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <p class="card-title mb-0">Doctors</p>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-borderless">
+                      <thead>
+                        <tr>
+                        	<th>Image/Name</th>
+										<th>Admin Id</th>
+										{{!-- <th></th> --}}
+										<th>Doc Email</th>
+										<th>Doc Phone</th>
+										<th class="text-right">Doc Dashboard</th>
+                        </tr>  
+                      </thead>
+                      	 {{#each docData}}
+                      <tbody>
+                        <tr>
+                          <td><a  href="doc_detail_profile/{{this._id}}"><img width="28" height="28" class="rounded-circle" src="{{this.image}}" alt="">{{this.fullname}}</a></td>
+                          <td class="font-weight-bold">{{this.adminid}}</td>
+                          <td class="font-weight-bold">{{this.email}}</td>
+                          <td>{{this.phone}}</td>
+                          <td class="font-weight-medium"><button class="btn btn-primary btn-primary-one float-right"><a  href="doc-dashboard/{{this._id}}" style="color: white;">Dashboard</a></button></td>
+                        </tr>   
+                      </tbody>
+                       {{/each}}
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+           
+          </div>
+
+
+           <div class="row">
+            <div class="col-md-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <p class="card-title mb-0">Patient</p>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-borderless">
+                      <thead>
+                        <tr>
+	                     <th>Image/Name</th>
+										{{!-- <th>Age</th> --}}
+										<th>Doctor ID</th>
+										<th>Patient Email</th>
+										<th>Patient Phone</th>
+										<th class="text-right">Profile</th>
+                        </tr>  
+                      </thead>
+                      	 {{#each patientdata}}
+                      <tbody>
+                        <tr>
+                          <td><a href="user_detailprofile/{{this._id}}"><img width="28" height="28" class="rounded-circle" src="{{this.image}}" alt=""> {{this.patientFullName}}</a></td>
+                          <td class="font-weight-bold"><a  href="doc_detail_profile/{{this.DocId}}">{{this.DocId}}</a></td>
+                          <td>{{this.email}}</td>
+                          <td>{{this.phone}}</td>
+                          <td class="font-weight-medium"><form action="../patients-profile/{{this._id}}">
+                                              <button type="submit" class="btn btn-primary btn-primary-one float-right">Profile</button>
+                                                    </form></td>
+                        </tr>   
+                      </tbody>
+                       {{/each}}
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+           
+          </div>
+
+
+          <div class="row">
+            <div class="col-md-12 stretch-card grid-margin">
+              <div class="card">
+                <div class="card-body">
+                  <p class="card-title mb-0">Games</p>
+                  <div class="table-responsive">
+                    <table class="table table-borderless">
+                      <thead>
+                        <tr>
+                          <th class="pl-0  pb-2 border-bottom">Image/Name</th>
+                          <th class="border-bottom pb-2">Game Type</th>
+                          <th class="border-bottom pb-2">Game Category</th>
+                        </tr>
+                      </thead>
+                       {{#each gameData}}
+                      <tbody>
+                        <tr>
+                          <td class="pl-0"><img width="28" height="28" class="rounded-circle" src="{{this.gameimage}}" alt=""> {{this.gamename}}</td>
+                          <td><p class="mb-0">{{this.gametype}}</td>
+                          <td class="text-muted">{{this.gamecategories}}</td>
+                        </tr>
+                      </tbody>
+                       {{/each}}
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+         
+        
+          </div>
+          {{!-- <div class="row">
+            <div class="col-md-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <p class="card-title">Advanced Table</p>
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="table-responsive">
+                        <table id="example" class="display expandable-table" style="width:100%">
+                          <thead>
+                            <tr>
+                              <th>Quote#</th>
+                              <th>Product</th>
+                              <th>Business type</th>
+                              <th>Policy holder</th>
+                              <th>Premium</th>
+                              <th>Status</th>
+                              <th>Updated at</th>
+                              <th></th>
+                            </tr>
+                          </thead>
+                      </table>
+                      </div>
+                    </div>
+                  </div>
+                  </div>
+                </div>
+
+                
+              </div>
+            </div> --}}
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:partials/_footer.html -->
+ 
+{{>adminfooter}}

@@ -1,0 +1,74 @@
+{{>adminheader loginuser=loginuser}}
+{{>adminsidebaar loginuser=loginuser}}
+       <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="row">
+                    <div class="col-sm-7 col-6">
+                        <h4 class="page-title">Doc Profile</h4>
+                    </div>
+
+                    <div class="col-sm-5 col-6 text-right m-b-30">
+                        <a href="edit-profile" class="btn btn-primary btn-rounded"><i class="fa fa-plus"></i> Edit Profile</a>
+                    </div>
+                </div>
+                <div class="card-box profile-header">
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{#each  docData}}
+                            <div class="profile-view">
+                                <div class="profile-img-wrap">
+                                    <div class="profile-img">
+                                        <a href="#"><img class="avatar" src="img/doctor-03.jpg" alt=""></a>
+                                    </div>
+                                </div>
+                                <div class="profile-basic">
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <div class="profile-info-left">
+                                                <h3 class="user-name m-t-0 mb-0">{{this.fullname}} {{this.lastfullname}}</h3>
+                                                <small class="text-muted">{{this.role}}</small>
+                                                <div class="staff-id">Doctor ID : {{this._id}}</div>
+                                                <div class="staff-id">Doctor Email :{{this.email}}</div>
+                                                <div class="staff-id">Biography : {{this.Biography}}</div>
+                                                <div class="staff-msg">
+                                                    {{!-- <a href="chat.html" class="btn btn-primary">Send Message</a> --}}
+                                                    </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <ul class="personal-info">
+                                                <li>
+                                                    <span class="title">Phone:</span>
+                                                    <span class="text"><a href="#">{{this.phone}}</a></span>
+                                                </li>
+                                                <li>
+                                                    <span class="title">Email:</span>
+                                                    <span class="text"><a href="#">{{this.email}}</a></span>
+                                                </li>
+                                                <li>
+                                                    <span class="title">Birthday:</span>
+                                                    <span class="text">{{this.Dob}}</span>
+                                                </li>
+                                                <li>
+                                                    <span class="title">Address:</span>
+                                                    <span class="text">{{this.Address}}</span>
+                                                </li>
+                                                {{!-- <li>
+                                                    <span class="title">Gender:</span>
+                                                    <span class="text">Female</span>
+                                                </li> --}}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>  
+                            {{/each}}                      
+                        </div>
+                    </div>
+                </div>
+				
+            </div>
+           
+        </div>
+    </div>
+  {{>adminfooter}}

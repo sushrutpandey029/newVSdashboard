@@ -1,0 +1,55 @@
+{{>adminheader loginuser=loginuser}}
+{{>adminsidebaar loginuser=loginuser}}
+
+   <div class="main-panel">
+        <div class="content-wrapper">
+   <div class="main-panel">
+        <div class="content-wrapper">
+            <div class="account-center">
+                {{#each userData}}
+                <div class="account-box">
+                    <form action="/adminUpdate/{{this.id}}" class="form-signin" method="POST">
+                        <div class="account-logo">
+                            <a href="#"><img src="./img/images.jpg" alt=""></a>
+                        </div>
+
+                         {{#each errors}} 
+                        <div class="alert alert-danger" id="alert" role="alert">
+                             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            {{text}}
+                        </div>
+                        {{/each}}
+                        <div class="form-group">
+                            <label>Username</label>
+                            <input type="text" class="form-control" name="username" value="{{this.username}}" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="email" class="form-control" name="email" value="{{this.email}}" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Mobile Number</label>
+                            <input type="text" class="form-control" name="phone" value="{{this.phone}}" required>
+                        </div>
+
+                         {{!-- <div class="form-group">
+                            <label>Change Password</label>
+                            <input type="text" class="form-control" name="password" value="{{this.password}}" required>
+                        </div> --}}
+                       
+                        <div class="form-group text-center">
+                            <button class="btn btn-primary account-btn" type="submit">Update Admin</button>
+                        </div>
+
+                     
+                    </form>
+
+                     <div class="form-group text-center">
+                        <a href="../change-password" type="submit" class="btn btn-primary account-btn">password</a>
+                        </div>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+    {{>adminfooter}}

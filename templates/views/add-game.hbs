@@ -1,0 +1,85 @@
+{{>adminheader loginuser=loginuser}}
+{{>adminsidebaar loginuser=loginuser}}
+       <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="row">
+                    {{!-- <div class="col-lg-8 offset-lg-2">
+                        <h4 class="page-title">Add Games</h4>
+                    </div> --}}
+                </div>
+                <div class="row"> 
+                    <div class="col-lg-8 offset-lg-2"> 
+                        <form action="/game_register" method="POST">
+                            {{#each errors}}
+                            <div class="alert alert-danger">
+                              <a href="#" class ="close" data-dismiss="alert" aria-label="close">&times;</a>
+                              {{text}}    
+                            </div>
+                            {{/each}}
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <!-- <input type="text" name ="nickName"class="form-control" id="floatingInput" placeholder=" nick Name "> -->
+                                        <label>Game Categorie <span class="text-danger">*</span></label>
+                                        <select class="form-control" type="text" name ="gamecategories" value="{{gamecategories}}" required>
+                                            <option class="form-control" value="">Select Categorie</option>
+                                            <option class="form-control" value="HASI">HASI</option>
+                                            <option class="form-control" value="CFANV">CFANV</option>
+                                            <option class="form-control" value="PCT">PCT</option>
+                                            <option class="form-control" value="LL">LL</option>
+                                        </select>
+                                        
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Game type <span class="text-danger">*</span></label>
+                                         <select class="form-control" type="text" name ="gametype" value="{{gametype}}" required>
+                                              <option class="form-control" value=""><b></b>Select SubCategorie</option>
+                                            <option class="form-control" value="Phoentics">Phoentics</option>
+                                            <option class="form-control" value="Syllables">Syllables</option>
+                                            <option class="form-control" value="Words">Words</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Game Name <span class="text-danger">*</span></label>
+                                        <input class="form-control" type="text" name ="gamename" value="{{gamename}}" required>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+									<div class="form-group">
+										<label>Game Image URL</label>
+										<div class="profile-upload">
+                                            <div>
+                                                <input class="form-control" type="text" name="gameimage" value="{{gameimage}}">
+                                            </div>
+										</div>
+									</div>
+                                </div>
+                
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Game File <span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" name ="gamefile" value="{{gamefile}}" required>
+                                </div>
+                            </div>
+
+							<div class="form-group">
+                                <label>Game Description</label>
+                                <textarea class="form-control" rows="3" cols="30" name="gamedescription" value="gamedescription"></textarea>
+                            </div>
+                            <div class="m-t-20 text-center">
+                                <button class="btn btn-primary account-btn" type="submit">Create Game</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+    
+        </div>
+    </div>
+  {{>adminfooter}}

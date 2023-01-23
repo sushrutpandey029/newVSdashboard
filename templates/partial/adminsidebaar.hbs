@@ -1,0 +1,196 @@
+<nav class="sidebar sidebar-offcanvas" id="sidebar">
+        {{#each loginuser}}
+         <ul class="nav" id="task">
+            {{#if isAdmin}}
+                <li class="nav-item">
+                    <a class="nav-link" href="../index">
+                    <i class="icon-grid menu-icon"></i>
+                    <span class="menu-title">Dashboard</span></a>
+                </li>
+
+                 <li class="nav-item">
+                    <a class="nav-link" href="../doctor">
+                    <i class="icon-grid menu-icon"></i>
+                    <span class="menu-title">Doctors</span></a>
+                </li>
+
+
+                 <li class="nav-item">
+                    <a class="nav-link" href="../patients">
+                    <i class="icon-grid menu-icon"></i>
+                    <span class="menu-title">Patients</span></a>
+                </li>
+
+                 {{!-- <li class="nav-item">
+                    <a class="nav-link" href="../games">
+                    <i class="icon-grid menu-icon"></i>
+                    <span class="menu-title">Games</span></a>
+                </li> --}}
+
+                 <li class="nav-item">
+                    <a class="nav-link" href="/admin-profile">
+                    <i class="icon-grid menu-icon"></i>
+                    <span class="menu-title">My Profile</span></a>
+                </li>
+
+                 <li class="nav-item">
+                    <a class="nav-link" href="/edit-profile">
+                    <i class="icon-grid menu-icon"></i>
+                    <span class="menu-title">Edit Profile</span></a>
+                </li>
+
+                  <li class="nav-item">
+                    <a class="nav-link" href="/logout">
+                    <i class="icon-grid menu-icon"></i>
+                    <span class="menu-title">Logout</span></a>
+                </li>
+                   </ul>
+
+            {{else if isSuperadmin}}
+         
+             <ul class="nav">
+           <li class="nav-item">
+            <a class="nav-link" href="../mainindex">
+              <i class="icon-grid menu-icon"></i>
+              <span class="menu-title">Dashboard</span>
+            </a>
+          </li>
+
+
+           <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#Admin" aria-expanded="false" aria-controls="ui-basic">
+              <i class="icon-layout menu-icon"></i>
+              <span class="menu-title">Admin</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="Admin">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="../admin_list">Admin list</a></li>
+                 <li class="nav-item"> <a class="nav-link" href="../register">Add Admin</a></li>
+                
+              </ul>
+            </div>
+          </li>
+
+
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+              <i class="icon-layout menu-icon"></i>
+              <span class="menu-title">Doctor</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="ui-basic">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="../sdoctor">Doctors list</a></li>
+                
+              </ul>
+            </div>
+          </li>
+
+           <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#patients" aria-expanded="false" aria-controls="ui-basic">
+              <i class="icon-layout menu-icon"></i>
+              <span class="menu-title">Patient</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="patients">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="../spatients">Patients list</a></li>
+                
+              </ul>
+            </div>
+          </li>
+
+
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#game" aria-expanded="false" aria-controls="ui-basic">
+              <i class="icon-layout menu-icon"></i>
+              <span class="menu-title">Game</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="game">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="../games">Games list</a></li>
+                
+              </ul>
+            </div>
+          </li>
+
+
+           <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#Profile" aria-expanded="false" aria-controls="ui-basic">
+              <i class="icon-layout menu-icon"></i>
+              <span class="menu-title">Profile</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="Profile">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="/superadmin_profile">My Profile</a></li>
+                <li class="nav-item"> <a class="nav-link" href="/superedit-profile">Edit Profile</a></li>
+                <li class="nav-item"> <a class="nav-link" href="/superadminlogout">Logout</a></li>
+                
+              </ul>
+            </div>
+          </li>
+
+
+    </ul>
+
+
+    {{else}}
+
+     <ul class="nav">
+           <li class="nav-item">
+            <a class="nav-link" href="{{this._id}}">
+              <i class="icon-grid menu-icon"></i>
+              <span class="menu-title">Dashboard</span>
+            </a>
+          </li>
+
+
+           <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#patients" aria-expanded="false" aria-controls="ui-basic">
+              <i class="icon-layout menu-icon"></i>
+              <span class="menu-title">Patient</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="patients">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="../patients">Patients list</a></li>
+                
+              </ul>
+            </div>
+          </li>
+
+
+          
+
+              <li class="nav-item">
+                    <a class="nav-link" href="/doc_detail_profile/{{this._id}}">
+                    <i class="icon-grid menu-icon"></i>
+                    <span class="menu-title">My Profile</span></a>
+                </li>
+
+                 <li class="nav-item">
+                    <a class="nav-link" href="/edit-doctor/{{this._id}}">
+                    <i class="icon-grid menu-icon"></i>
+                    <span class="menu-title">Edit Profile</span></a>
+                </li>
+
+                  <li class="nav-item">
+                    <a class="nav-link" href="/doclogout">
+                    <i class="icon-grid menu-icon"></i>
+                    <span class="menu-title">Logout</span></a>
+                </li>
+
+
+    </ul>
+
+    
+            {{/if}}
+
+         {{/each}}
+
+
+   
+</nav>

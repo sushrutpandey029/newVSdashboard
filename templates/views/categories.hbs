@@ -1,0 +1,33 @@
+{{>adminheader loginuser=loginuser}}
+{{>adminsidebaar loginuser=loginuser}}
+       <div class="main-panel">
+             <div class="content-wrapper">
+                <div class="row">
+                    <div class="col-sm-4 col-3">
+                        <h4 class="page-title">Game Category</h4>
+                    </div>
+                    {{!-- <div class="col-sm-8 col-9 text-right m-b-20">
+                        <a href="add-game" class="btn btn-primary btn-rounded float-right"><i class="fa fa-plus"></i> Add Game</a>
+                    </div> --}}
+                </div>
+				<div class="row doctor-grid">
+                    {{#each userData}}
+                    <div class="col-md-4 col-sm-4  col-lg-3">
+                        <div class="profile-widget">
+                            <div class="doctor-img"> 
+                                <!-- add image url here to display -->
+                                <a class="avatar" href="/game_categorie/{{this}}"><img alt="" src=""></a> 
+                            </div>
+                           
+                            <h4 class="doctor-name text-ellipsis"><a href="/game_categorie/{{this}}">{{this}}</a></h4>
+                            <h3>{{this.gamecategories}}</h3>
+                        </div>
+                    </div>
+                    {{/each}}
+                
+            </div>
+            
+        </div>
+    </div>
+    </div>
+    {{>adminfooter}}

@@ -1,0 +1,84 @@
+{{>adminheader loginuser=loginuser}}
+{{>adminsidebaar loginuser=loginuser}}
+       <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="row">
+                    <div class="col-lg-8 offset-lg-2">
+                        <h4 class="page-title">Edit Games</h4>
+                    </div>
+                </div>
+                <div class="row">
+                    {{#each userData}} 
+                    <div class="col-lg-8 offset-lg-2">
+                        <form action="/edit_game/{{this._id}}" method="POST">
+                            {{#each errors}}
+                            <div class="alert alert-danger">
+                              <a href="#" class ="close" data-dismiss="alert" aria-label="close">&times;</a>
+                              {{text}}    
+                            </div>
+                            {{/each}} 
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <!-- <input type="text" name ="nickName"class="form-control" id="floatingInput" placeholder=" nick Name "> -->
+                                        <label>Game Categories <span class="text-danger">*</span></label>
+                                        <input class="form-control" type="text" name ="gamecategories" value="{{this.gamecategories}}" required>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Game type <span class="text-danger">*</span></label>
+                                        <input class="form-control" type="text" name ="gametype" value="{{this.gametype}}" required>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Game Name <span class="text-danger">*</span></label>
+                                        <input class="form-control" type="text" name ="gamename" value="{{this.gamename}}" required>
+                                    </div>
+                                </div>
+                                <!-- <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Confirm Password <span class="text-danger">*</span></label>
+                                        <input class="form-control" type="password" name ="confirmPassword" value="{{confirmPassword}}" required >
+                                    </div>
+                                </div> -->
+                                <div class="col-sm-6">
+									<div class="form-group">
+										<label>Game Image</label>
+										<div class="profile-upload">
+											<div class="upload-img">
+												<img alt="" src="{{this.gameimage}}">
+											</div>
+											<div class="upload-input">
+												<input type="url" class="form-control" name="gameimage" value="{{this.gameimage}}">
+											</div>
+										</div>
+									</div>
+                                </div>
+                
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Game File <span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" name ="gamefile" value="{{this.gamefile}}" required>
+                                </div>
+                            </div>
+
+							<div class="form-group">
+                                <label>Game Description</label>
+                                <textarea class="form-control" rows="3" cols="30" name="gamedescription" value="gamedescription">{{this.gamedescription}}</textarea>
+                            </div>
+                            <div class="m-t-20 text-center">
+                                <button class="btn btn-primary account-btn" type="submit">Update Game</button>
+                            </div>
+                        </form>
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+    
+        </div>
+    </div>
+   {{>adminfooter}}

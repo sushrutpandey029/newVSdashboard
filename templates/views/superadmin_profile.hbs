@@ -1,0 +1,58 @@
+{{>adminheader loginuser=loginuser}}
+{{>adminsidebaar loginuser=loginuser}}
+       <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="row">
+                    <div class="col-sm-7 col-6">
+                        <h4 class="page-title">My Profile</h4>
+                    </div>
+
+                
+                </div>
+                {{#each data}}
+                <div class="card-box profile-header">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="profile-view">
+                                <div class="profile-img-wrap">
+                                    <div class="profile-img">
+                                        <a href="#"><img class="avatar" src="img/doctor-03.jpg" alt="" style="width: 200px; border-radius: 10px;"></a>
+                                    </div>
+                                </div>
+                                <div class="profile-basic">
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <div class="profile-info-left">
+                                                <h3 class="user-name m-t-0 mb-0">{{this.username}}</h3>
+                                                <small class="text-muted">{{this.email}}</small>
+                                                <div class="staff-id">Super Admin ID : {{this._id}}</div>
+                                                <div class="staff-msg">
+                                                    {{!-- <a href="chat.html" class="btn btn-primary">Send Message</a> --}}
+                                                    </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <ul class="personal-info">
+                                                <li>
+                                                    <span class="title">Phone:</span>
+                                                    <span class="text"><a href="#">{{this.phone}}</a></span>
+                                                </li>
+                                                <li>
+                                                    <span class="title">Email:</span>
+                                                    <span class="text"><a href="#">{{this.email}}</a></span>
+                                                </li>
+                                               
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                        
+                        </div>
+                    </div>
+                </div>
+				{{/each}}
+            </div>
+          
+        </div>
+    </div>
+    {{>adminfooter}}
