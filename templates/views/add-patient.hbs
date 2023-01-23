@@ -1,4 +1,5 @@
 {{>adminheader loginuser=loginuser}}
+
 {{>adminsidebaar loginuser=loginuser}}
       <div class="main-panel">
      <div class="main-panel">
@@ -25,18 +26,24 @@
                                         <input class="form-control" type="text" name="patientFullName" value="{{patientFullName}}" required>
                                     </div>
                                 </div>
+
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label>Doc id</label>
                                         <input class="form-control" type="text" name="DocId" value="{{DocId}}" required>
                                     </div>
                                 </div>
-                                <!-- <div class="col-sm-6">
+
+                                <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label>Doctor Email Id: <span class="text-danger">*</span></label>
-                                        <input class="form-control" type="text" name="demail" value="{{demail}}" >
+                                        <label>Admin ID: <span class="text-danger">*</span></label>
+                                        <select class="form-control select" name="adminid" required>
+                                            {{#each admin}}
+													<option value="{{this._id}}">{{this.username}}</option>
+                                            {{/each}}
+										</select>
                                     </div>
-                                </div> -->
+                                </div> 
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label>Email <span class="text-danger">*</span></label>

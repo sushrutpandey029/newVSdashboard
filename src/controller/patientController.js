@@ -3,12 +3,14 @@
 const roleModel = require("../models/rolesModel");
 const patientModel = require("../models/patientModel");
 const progressModel=require("../models/progressModel")
+const registerModel=require("../models/registerModel")
 const gameModel=require("../models/gameModel")
 const validation = require("../validator/validator");
 const AdmZip = require('adm-zip');
 var fs = require('fs');
 
 var multer = require('multer');
+const { register } = require("./adminController");
 // var gamefile = multer({dest: 'src/gamefiles/'});
 
 
@@ -396,11 +398,18 @@ const createPatientnew = async function (req, res) {
             return res.status(400).send({ status: false, msg: "Invalid parameters, please provide user details" })
         }
 
-        const { DocId, patientFullName, email, phone, disabalityType, progress, address } = body
+        const { DocId,adminid, patientFullName, email, phone, disabalityType, progress, address } = body
+
 
         // if (!validation.isValidobjectId(DocId)) {
-        //     return res.status(400).send({ status: false, msg: "Doctor id is wrong" })
+        //     return res.status(400).send({ status: false, msg: "DocId id is wrong" })
         // }
+
+        // if (!validation.isValidobjectId(adminid)) {
+        //     return res.status(400).send({ status: false, msg: "adminid id is wrong" })
+        // }
+
+
 
         if (!validation.isValid(patientFullName)) {
             return res.status(400).send({ status: false, msg: "please provide fullname" })
@@ -445,7 +454,14 @@ const createPatientnew = async function (req, res) {
         }
 
         const output = await patientModel.create(body)
+
         const data = await roleModel.findOne({ _id: DocId })
+
+        // const data1 = await registerModel.findOne({ _id: adminid })
+
+       tom = data.patientData;
+       console.log(tom)
+
         data.patientData.push(output);
         // return res.status(201).send({ status: true, msg: "Patient Succesfully Created", data: output })
         res.redirect('../patients') 

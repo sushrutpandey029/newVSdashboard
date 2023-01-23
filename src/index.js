@@ -73,13 +73,16 @@ app.use('/', route);
 
 app.get("/index",async(req,res) => {
 
-   let data= await roleModel.find().sort({_id:-1});
+   const temp1 = req.cookies.id;
+   let data = await roleModel.find({adminid:temp1});
 
-   let datag= await roleModel.find().sort({createdAt:1})
+   let datag= await roleModel.find({adminid:temp1}).sort({createdAt:1})
+   
 
-   let data1 = await patientModel.find().sort({_id:-1});
+   const temp2 = req.cookies.id;
+   let data1 = await patientModel.find({adminid:temp2});
 
-   let datap = await patientModel.find().sort({createdAt:1});
+   let datap = await patientModel.find({adminid:temp1}).sort({createdAt:1});
    
    let data2 = await gameModel.find().sort({_id:-1});
 
@@ -101,9 +104,49 @@ console.log(user)
       array2.push(iso.split("T")[0])
    })
 
-   if(user.length>0)res.render("index",{docData:data,patientdata:data1, gameData:data2,graphDataDoc:array,graphDataPatient:array2,loginuser:user})
-   else res.send("authorization invalid");
+   res.render("index",{docData:data,patientdata:data1, gameData:data2,graphDataDoc:array,graphDataPatient:array2,loginuser:user})
+   
 })
+
+
+app.get("/admindash/:id",async(req,res) => {
+
+   const temp1 = req.cookies.id;
+   let data = await roleModel.find({adminid:temp1});
+
+   let datag= await roleModel.find({adminid:temp1}).sort({createdAt:1})
+   
+
+   const temp2 = req.cookies.id;
+   let data1 = await patientModel.find({adminid:temp2});
+
+   let datap = await patientModel.find({adminid:temp1}).sort({createdAt:1});
+
+   
+   let data2 = await gameModel.find().sort({_id:-1});
+
+   const temp = req.cookies.id;
+   const user = await registerModel.find({_id:temp});
+
+console.log(user)
+
+   var array=[]
+
+   datag.map(ob =>{
+      let iso=new Date(ob.createdAt).toISOString();
+      array.push(iso.split("T")[0])
+   })
+
+   var array2=[]
+   datap.map(ob =>{
+      let iso=new Date(ob.createdAt).toISOString();
+      array2.push(iso.split("T")[0])
+   })
+
+   if(user.length>0)res.render("admindash",{docData:data,patientdata:data1, gameData:data2,graphDataDoc:array,graphDataPatient:array2,loginuser:user})
+   else res.render("admindash",{docData:data,patientdata:data1, gameData:data2,graphDataDoc:array,graphDataPatient:array2,loginuser:user})
+})
+
 
 
 app.get("/mainindex",async(req,res) => {
@@ -233,9 +276,11 @@ app.get('/superedit-profile',async(req,res)=>{
 })
 
 app.get("/change-password",async(req,res)=>{
+
    const temp= req.cookies.id;
    const data =await registerModel.find({_id:temp})
-   res.render("change-password",{userData:data});
+
+   res.render("change-password",{userData:data,loginuser:data});
 })
 
 app.get("/change-superpassword",async(req,res)=>{
@@ -303,9 +348,14 @@ app.get('/docchange-password/:id',async(req,res)=>{
    const temp1 = req.cookies.id;
    const superuser = await superadminModel.find({_id:temp1});
 
+   const temp2 = req.cookies.id;
+   const docuser = await roleModel.find({_id:temp2});
+
    // console.log(datadoc)
 
-   res.render("docchange-password",{docdata:datadoc,loginuser:user,loginuser:superuser});
+   if(user.length>0)res.render("docchange-password",{docdata:datadoc,loginuser:user})
+   else if (superuser.length>0)res.render("docchange-password",{docdata:datadoc,loginuser:superuser})
+   else res.render("docchange-password",{docdata:datadoc,loginuser:docuser})
 })
 
 app.get('/game_categorie/:category',async(req,res)=>{
@@ -386,7 +436,10 @@ app.get('/sgames',async(req,res)=>{
 
 app.get("/doctor",async(req,res)=>{
    let exist=await roleModel.find({_id:req.cookies.id})
-   let data= await roleModel.find().sort({_id:1})
+
+   const temp1 = req.cookies.id;
+   let data= await roleModel.find({adminid:temp1});
+
    let datag= await roleModel.find().sort({_id:1})
 
    const temp = req.cookies.id;
@@ -398,6 +451,7 @@ app.get("/doctor",async(req,res)=>{
       array.push(iso.split("T")[0])
    })
    if(exist.length>0)res.send("admin login required")
+
    else res.render('doctor',{userData:data,graphDataDoc:array,loginuser:user})
 })
 
@@ -456,7 +510,12 @@ app.get("/add-doctor",async(req,res)=>{
    const temp1 = req.cookies.id;
    const superuser = await superadminModel.find({_id:temp1});
 
-   res.render('add-doctor',{loginuser:user,loginuser:superuser})
+   const temp2 = req.cookies.id;
+   const docuser = await roleModel.find({_id:temp2});
+
+   if(user.length>0)res.render('add-doctor',{loginuser:user})
+   else if (superuser.length>0)res.render('add-doctor',{loginuser:superuser})
+   else res.render('add-doctor',{loginuser:docuser})
 })
 
 app.get("/doc-dashboard/:id",async(req,res)=>{
@@ -465,7 +524,8 @@ app.get("/doc-dashboard/:id",async(req,res)=>{
 
    let data = await patientModel.find({DocId:req.params.id}).sort({_id:-1})
 
-   let datap = await patientModel.find({DocId:req.params.id}).sort({_id:1})
+   
+   // let datap = await patientModel.find({DocId:req.params.id}).sort({createdAt:1});
 
    const temp = req.cookies.id;
    const user = await registerModel.find({_id:temp});
@@ -476,13 +536,26 @@ app.get("/doc-dashboard/:id",async(req,res)=>{
    const temp2 = req.cookies.id;
    const docuser = await roleModel.find({_id:temp2});
 
+   const temp3 = req.cookies.id;
+   let datap = await patientModel.find({DocId:temp3}).sort({createdAt:1});
+
+   // var array=[]
+   // datap.map(ob =>{
+   //    let iso=new Date(ob.createdAt).toISOString();
+   //    array.push(iso.split("T")[0])
+   // })
+
    var array2=[]
    datap.map(ob =>{
       let iso=new Date(ob.createdAt).toISOString();
       array2.push(iso.split("T")[0])
    })
 
-   res.render("doc_dashboard",{userData:data, graphData:array2, dacdata:docdata, loginuser:user,loginuser:superuser,loginuser:docuser})
+   console.log(array2)
+
+   if(user.length>0)res.render("doc_dashboard",{userData:data, graphDataPatient:array2, dacdata:docdata, loginuser:user})
+   else if(superuser.length>0) res.render("doc_dashboard",{userData:data,graphDataPatient:array2, dacdata:docdata,loginuser:superuser})
+   else res.render("doc_dashboard",{userData:data, dacdata:docdata,graphDataPatient:array2,loginuser:docuser})
 })
 
 
@@ -509,15 +582,19 @@ app.get("/patient_dashboard/:id",async(req,res)=>{
 })
 
 app.get("/patients",async(req,res)=>{ // to render all the paitients 
-   let data = await patientModel.find()
-   let exist=await roleModel.find({_id:req.cookies.id})
+
+   const temp1 = req.cookies.id;
+   let data = await patientModel.find({adminid:temp1})
+
+   const temp3 = req.cookies.id;
+   let exist=await roleModel.find({_id:temp3})
+
    let datap = await patientModel.find().sort({_id:1})
+
    let Data = await patientModel.find({DocId:req.cookies.id});
 
    const temp = req.cookies.id;
    const user = await registerModel.find({_id:temp});
-
-   
 
 
    var array2=[]
@@ -525,14 +602,16 @@ app.get("/patients",async(req,res)=>{ // to render all the paitients
       let iso=new Date(ob.createdAt).toISOString();
       array2.push(iso.split("T")[0])
    })
-   if(exist.length>0)res.render('patients',{userData:Data})
+
+   if(exist.length>0)res.render('patients',{userData:Data,loginuser:exist})
+
    else res.render('patients',{userData:data,graphDataPatient:array2,loginuser:user})
 })
 
 
 app.get("/spatients",async(req,res)=>{ // to render all the paitients 
    let data = await patientModel.find()
-   let exist=await roleModel.find({_id:req.cookies.id})
+   // let exist=await roleModel.find({_id:req.cookies.id})
    let datap = await patientModel.find().sort({_id:1})
    let Data = await patientModel.find({DocId:req.cookies.id});
 
@@ -553,8 +632,9 @@ app.get("/spatients",async(req,res)=>{ // to render all the paitients
       let iso=new Date(ob.createdAt).toISOString();
       array2.push(iso.split("T")[0])
    })
-   if(exist.length>0)res.render('spatients',{userData:Data})
-   else res.render('spatients',{userData:data,graphDataPatient:array2,loginuser:user,loginuser:superuser,loginuser:doc})
+   if(user.length>0)res.render('spatients',{userData:Data,graphDataPatient:array2,loginuser:user})
+   else if (superuser.length>0) res.render('spatients',{userData:data,graphDataPatient:array2,loginuser:superuser})
+   else res.render('spatients',{userData:data,graphDataPatient:array2,loginuser:doc})
 })
 
 
@@ -566,7 +646,16 @@ app.get("/add-patient",async(req,res)=>{
    const temp1 = req.cookies.id;
    const superuser = await superadminModel.find({_id:temp1});
 
-   res.render("add-patient",{loginuser:user,loginuser:superuser})
+   const temp2 = req.cookies.id;
+   const docuser = await roleModel.find({_id:temp2});
+
+   const admin = await registerModel.find();
+
+   // const admin1 = await roleModel.find({_id:temp});
+
+   if(user.length>0)res.render("add-patient",{loginuser:user,admin:admin})
+   else if (superuser.length>0)res.render("add-patient",{loginuser:superuser,admin:admin})
+   else res.render("add-patient",{loginuser:docuser,admin:admin})
 })
 
 app.get("/add-game",async(req,res)=>{
@@ -589,7 +678,12 @@ app.get('/edit-doctor/:id',async(req,res)=>{ // api to edit doctor
    const temp1 = req.cookies.id;
    const superuser = await superadminModel.find({_id:temp1});
 
-   res.render("edit-doctor",{userData:user1,loginuser:user,loginuser:superuser})
+   const temp2 = req.cookies.id;
+   const docuser = await roleModel.find({_id:temp2});
+
+   if(user.length>0)res.render("edit-doctor",{userData:user1,loginuser:user})
+   else if (superuser.length>0)res.render("edit-doctor",{userData:user1,loginuser:superuser})
+   else res.render("edit-doctor",{userData:user1,loginuser:docuser})
 })
 
 app.get('/doc-profile/:id',async(req,res)=>{ // api to edit doctor
@@ -603,7 +697,11 @@ app.get('/edit-game/:id',async(req,res)=>{
    const temp = req.cookies.id;
    const user = await registerModel.find({_id:temp});
 
-   res.render("edit-game",{userData:user1,loginuser:user})
+   const temp1 = req.cookies.id;
+   const superuser = await superadminModel.find({_id:temp1});
+
+   if(user.length>0)res.render("edit-game",{userData:user1,loginuser:user})
+   else if(superuser.length>0)res.render("edit-game",{userData:user1,loginuser:superuser})
 })
 
 app.get('/edit-patient/:id',async(req,res)=>{
@@ -615,7 +713,12 @@ app.get('/edit-patient/:id',async(req,res)=>{
    const temp1 = req.cookies.id;
    const superuser = await superadminModel.find({_id:temp1});
 
-   res.render("edit-patient",{userData:user1,loginuser:user,loginuser:superuser})
+   const temp2 = req.cookies.id;
+   const docuser = await roleModel.find({_id:temp2});
+
+   if(user.length>0)res.render("edit-patient",{userData:user1,loginuser:user})
+   else if(superuser.length>0)res.render("edit-patient",{userData:user1,loginuser:superuser})
+   else res.render("edit-patient",{userData:user1,loginuser:docuser})
 })
 
 
@@ -687,7 +790,15 @@ app.get('/patients-profile/:id',async(req,res)=>{
       arro.push(sum/mpo[m].length);
    }
 
-   res.render("progress",{userData:data,progress:gameData,graphDataPatient:array2,loudness:arrl,datel:aloud,pitch:arrp,datep:apitch,overrall:arro,dateo:aover,loginuser:user});
+   const temp1 = req.cookies.id;
+   const superuser = await superadminModel.find({_id:temp1});
+
+   const temp2 = req.cookies.id;
+   const docuser = await roleModel.find({_id:temp2});
+
+  if(user.length>0) res.render("progress",{userData:data,progress:gameData,graphDataPatient:array2,loudness:arrl,datel:aloud,pitch:arrp,datep:apitch,overrall:arro,dateo:aover,loginuser:user})
+  else if (superuser.length>0) res.render("progress",{userData:data,progress:gameData,graphDataPatient:array2,loudness:arrl,datel:aloud,pitch:arrp,datep:apitch,overrall:arro,dateo:aover,loginuser:superuser});
+  else res.render("progress",{userData:data,progress:gameData,graphDataPatient:array2,loudness:arrl,datel:aloud,pitch:arrp,datep:apitch,overrall:arro,dateo:aover,loginuser:docuser});
 });
 
 
@@ -711,7 +822,13 @@ app.get("/doc_detail_profile/:_id",async(req,res)=>{
    const temp1 = req.cookies.id;
    const superuser = await superadminModel.find({_id:temp1});
 
-   res.render("doc_detail_profile",{docdata:data,loginuser:user,loginuser:superuser})
+   const temp2 = req.cookies.id;
+   const docuser = await roleModel.find({_id:temp2});
+
+  if(user.length>0)res.render("doc_detail_profile",{docdata:data,loginuser:user})
+
+   else if(superuser.length>0) res.render("doc_detail_profile",{docdata:data,loginuser:superuser})
+   else  res.render("doc_detail_profile",{docdata:data,loginuser:docuser})
 })
 
 
@@ -719,13 +836,24 @@ app.get("/user_detailprofile/:_id",async(req,res)=>{
 
    const datauser = await patientModel.find({"_id":req.params._id});
 
+ 
+
    const temp = req.cookies.id;
    const user = await registerModel.find({_id:temp});
 
+   
    const temp1 = req.cookies.id;
    const superuser = await superadminModel.find({_id:temp1});
 
-   res.render("user_detailprofile",{datauser:datauser,loginuser:user,loginuser:superuser})
+   
+   const temp2 = req.cookies.id;
+   const docuser = await roleModel.find({_id:temp2});
+
+
+
+   if(user.length>0)res.render("user_detailprofile",{datauser:datauser,loginuser:user})
+   else if (superuser.length>0)res.render("user_detailprofile",{datauser:datauser,loginuser:superuser})
+   else res.render("user_detailprofile",{datauser:datauser,loginuser:docuser})
 });
 
 // app.get("/",async(req,res)=>{
