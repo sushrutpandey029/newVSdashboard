@@ -111,22 +111,23 @@ console.log(user)
 
 app.get("/admindash/:id",async(req,res) => {
 
-   const temp1 = req.cookies.id;
-   let data = await roleModel.find({adminid:temp1});
+   // const temp1 = req.cookies.id;
 
-   let datag= await roleModel.find({adminid:temp1}).sort({createdAt:1})
+   let data = await roleModel.find({adminid:req.params.id});
+
+   let datag= await roleModel.find({adminid:req.params.id}).sort({createdAt:1})
    
 
-   const temp2 = req.cookies.id;
-   let data1 = await patientModel.find({adminid:temp2});
+   // const temp2 = req.cookies.id;
+   let data1 = await patientModel.find({adminid:req.params.id});
 
-   let datap = await patientModel.find({adminid:temp1}).sort({createdAt:1});
+   let datap = await patientModel.find({adminid:req.params.id}).sort({createdAt:1});
 
    
    let data2 = await gameModel.find().sort({_id:-1});
 
-   const temp = req.cookies.id;
-   const user = await registerModel.find({_id:temp});
+   // const temp = req.cookies.id;
+   const user = await registerModel.find({_id:req.params.id});
 
 console.log(user)
 
