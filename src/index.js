@@ -70,7 +70,7 @@ app.use(session({
  )
   
 app.use('/', route);
-
+ 
 app.get("/index",async(req,res) => {
 
    const temp1 = req.cookies.id;
@@ -193,6 +193,7 @@ console.log(user)
 
    res.render("mainindex",{docData:data,patientdata:data1, gameData:data2, graphDataDoc:array,graphdataadmin:array3, graphDataPatient:array2,loginuser:user,admin:admin})
 })
+
 
 
  app.get('/register',async(req,res)=>{

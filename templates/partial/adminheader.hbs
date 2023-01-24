@@ -58,10 +58,12 @@
                   </div>
                 </div>
                 <div class="preview-item-content">
-                  <h6 class="preview-subject font-weight-normal">Super Admin Notifications</h6>
+                  {{#each patientdata}}
+                  <h6 class="preview-subject font-weight-normal">New patient registration by {{this.DocId}}</h6>
                   <p class="font-weight-light small-text mb-0 text-muted">
-                    Just now
+                    {{this.createdAt}}
                   </p>
+                  {{/each}}
                 </div>
               </a>
               <a class="dropdown-item preview-item">
@@ -84,10 +86,12 @@
                   </div>
                 </div>
                 <div class="preview-item-content">
-                  <h6 class="preview-subject font-weight-normal">SubAdmin/Doc Notifications</h6>
+                  {{#each docData}}
+                  <h6 class="preview-subject font-weight-normal">New Doctor / Sub admin registration by {{this.adminid}}</h6>
                   <p class="font-weight-light small-text mb-0 text-muted">
                    Notifications
                   </p>
+                  {{/each}}
                 </div>
               </a>
             </div>
