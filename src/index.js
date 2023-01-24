@@ -126,8 +126,8 @@ app.get("/admindash/:id",async(req,res) => {
    
    let data2 = await gameModel.find().sort({_id:-1});
 
-   // const temp = req.cookies.id;
-   const user = await registerModel.find({_id:req.params.id});
+   const temp = req.cookies.id;
+   const user = await superadminModel.find({_id:temp});
 
 console.log(user)
 
