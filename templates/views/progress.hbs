@@ -67,59 +67,30 @@
 
       <div class="page-wrapper">
              <div class="content">
-                 <div class="row">
+                   <div class="row">
             <div class="col-md-6 grid-margin stretch-card">
               <div class="card tale-bg">
                 <div class="card-people mt-auto">
                    <div class="card-body">
-                  <p class="card-title">Patient Profile</p>
-                      <div class="row">
-                        <div class="col-md-12">
-                            <div class="profile-view">
-                            {{#each userData}}
-                                <div class="profile-basic">
-                                    <div class="row">
-                                        <div class="col-md-5">
-                                            <div class="profile-info-right">
-                                                <h3 class="user-name">{{this.patientFullName}}</h3>
-                                                <small class="text-muted">{{this.email}}</small>
-                                                <div class="staff-id">Employee ID : {{this._id}}</div>
-                                                 {{!-- <div class="staff-id">Doc ID : {{this.DocId}}</div> --}}
-                                               
-                                            </div>
-                                        </div>
-                                        <div class="col-md-7">
-                                            <ul class="personal-info">
-                                                <li>
-                                                    <span class="title">Phone:</span>
-                                                    <span class="text"><a href="#">{{this.phone}}</a></span>
-                                                </li>
-                                              
-                                             
-                                                  <li>
-                                                    <span class="title">Age:</span>
-                                                    <span class="text">{{this.age}}</span>
-                                                </li>
-                                             
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                {{/each}}
-                            </div>                        
-                        </div>
-                    </div>
+                  <p class="card-title">Patient OverAllGraph Graph</p>
+                   <p class="font-weight-500">Overall Rating of Patient Progress</p>
+                   <canvas id="myCharto" style="width:100%;max-width:100%"></canvas>
+                                   <button onClick="timeFrameo('day')" >Day</button>
+                                   <button onclick="timeFrameo('month')">Month</button>
+                                   <button onclick="timeFrameo('year')" >Year</button>
+                                   <input onchange="filterDatao()" type="date" id="startdateo" value="">
+                                   <input onchange="filterDatao()" type="date" id="enddateo" value="">   
                 </div>
                   <div class="weather-info">
                   </div>
                 </div>
               </div>
             </div>
-             <div class="col-md-6 grid-margin transparent">
+            <div class="col-md-6 grid-margin transparent">
               <div class="row">
-                <div class="col-md-12 mb-12 stretch-card transparent">
+                <div class="col-md-12 mb-4 stretch-card transparent">
                   <div class="card card-tale">
-                    <a class="nav-link" href="../admin_list">
+                    <a class="nav-link" href="#">
                     <div class="card-body">
                       <p class="mb-4" style="color: white;">Patients Play Games</p>
                       <p class="fs-30 mb-2" style="color: white;">{{graphDataPatient.length}}</p>
@@ -129,37 +100,25 @@
                   </div>
                 </div>
                 </div>
-                </div>
-            </div>
-
-
-                
-<br><br>
-
-
-
-
-              <div class="row">
-            <div class="col-md-12 grid-margin stretch-card">
-              <div class="card">
-                <div class="card-body">
-                  <p class="card-title">Patient OverAllGraph Graph</p>
-                  <p class="font-weight-500">Overall Rating of Patient Progress</p>
-                  <div class="d-flex flex-wrap mb-5"> 
+                 
+                <div class="row">
+              
+                <div class="col-md-12 stretch-card transparent">
+                  <div class="card card-light-danger">
+                     <a class="nav-link" href="#">
+                    <div class="card-body">
+                      <p class="mb-4" style="color: white;">Number of Games</p>
+                      <p class="fs-30 mb-2" style="color: white;">{{datagame.length}}</p>
+                      <p style="color: white;">30 days</p>
+                    </div>
+                    </a>
                   </div>
-                <canvas id="myCharto" style="width:100%;max-width:100%"></canvas>
-                                   <button onClick="timeFrameo('day')" >Day</button>
-                                   <button onclick="timeFrameo('month')">Month</button>
-                                   <button onclick="timeFrameo('year')" >Year</button>
-                                   <input onchange="filterDatao()" type="date" id="startdateo" value="">
-                                   <input onchange="filterDatao()" type="date" id="enddateo" value=""> 
                 </div>
-              </div>
+             
             </div>
+          </div>
 
-
-
-                  <div class="row">
+        <div class="row">
 					<div class="col-12 col-md-4 col-lg-4col-xl-4">
 						<div class="card">
 							<div class="card-body">

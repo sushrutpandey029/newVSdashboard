@@ -40,6 +40,8 @@ router.post("/superadminlogin",superadminController.superadminlogin)
 router.post("/superadminUpdate/:id",superadminController.superadminUpdate)
 
 router.post("/changesuperpassword/:id",superadminController.changesuperpassword)
+router.post("/adminchangepassword/:id",adminController.adminchangepassword);
+
 
 
 

@@ -54,7 +54,7 @@
               <div class="row">
                 <div class="col-md-12 mb-12 stretch-card transparent">
                   <div class="card card-dark-blue">
-                     <a class="nav-link" href="../doctor">
+                     <a class="nav-link" href="#adminD">
                     <div class="card-body">
                       <p class="mb-4" style="color: white;">Doctors</p>
                       <p class="fs-30 mb-2" style="color: white;">{{docData.length}}</p>
@@ -68,7 +68,7 @@
               <div class="row">
                 <div class="col-md-6 mb-4 mb-lg-0 stretch-card transparent">
                   <div class="card card-light-blue">
-                    <a class="nav-link" href="../patients">
+                    <a class="nav-link" href="#adminP">
                     <div class="card-body">
                       <p class="mb-4" style="color: white;">Patients</p>
                       <p class="fs-30 mb-2" style="color: white;">{{patientdata.length}}</p>
@@ -561,15 +561,8 @@
 
 
 
-        {{!-- new patients --}}
 
-     
-			
-
-      {{!-- list of patient --}}
-
-
-       <div class="row">
+       <div class="row" id="adminP">
             <div class="col-md-12 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
@@ -609,7 +602,7 @@
 
 
         {{!-- recent doctors --}}
-        <div class="row">
+        <div class="row" id="adminD">
             <div class="col-md-12 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
@@ -632,7 +625,7 @@
                           <td><a  href="doc_detail_profile/{{this._id}}">{{this.fullname}}</a></td>
                           <td class="font-weight-bold">{{this.email}}</td>
                           <td>{{this.phone}}</td>
-                          <td class="font-weight-medium"><button class="btn btn-primary btn-primary-one float-right"><a  href="doc-dashboard/{{this._id}}" style="color: white;">Dashboard</a></button></td>
+                          <td class="font-weight-medium"><button class="btn btn-primary btn-primary-one float-right"><a  href="../doc_maindashboard/{{this._id}}" style="color: white;">Dashboard</a></button></td>
                         </tr>   
                       </tbody>
                        {{/each}}

@@ -42,9 +42,10 @@
                       <thead>
                         <tr>
                         	<th>Admin Name</th>
-							<th>Email</th>
-							<th>Phone</th>
-							<th class="text-right">isAdmin</th>
+							            <th>Email</th>
+							           <th>Phone</th>
+                         <th>Edit</th>
+							           <th class="text-right">isAdmin</th>
                         </tr>  
                       </thead>
                       	 {{#each admin}}
@@ -53,7 +54,8 @@
                           <td><a  href="admin_profiles/{{this._id}}">{{this.username}}</a></td>
                           <td class="font-weight-bold">{{this.email}}</td>
                           <td>{{this.phone}}</td>
-                          <td class="font-weight-medium"><div class="badge badge-success">{{this.isAdmin}}</div></td>
+                           <td><a  href="adminedit-profile/{{this._id}}"><i class="fas fa-edit">edit</i></a></td>
+                          <td class="text-right"><div class="badge badge-success">{{this.isAdmin}}</div></td>
                         </tr>   
                       </tbody>
                        {{/each}}

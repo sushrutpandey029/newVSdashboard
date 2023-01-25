@@ -332,13 +332,13 @@ const doclogin = async(req,res)=>{
         }
  
         if(errors.length>0){
-          res.render("login",{
+          res.render("doctor_login",{
               errors:errors,
               title:'Error',
               email:email,
               password:password
           })
-      }
+      }else{
        req.user = user;
     //   console.log(user);
 
@@ -353,11 +353,12 @@ const doclogin = async(req,res)=>{
 
     //    return res.status(200).send(`/doc-dashboard/:${user._id.toString()}`); 
        res.redirect(`../doc-dashboard/${user._id.toString()}`)
+    }
    }
    catch (error) {
     let errors = [];
     errors.push[{text:"Server error"}]
-    return res.render("login",{
+    return res.render("doctor_login",{
        errors:errors,
        title:'Error'
     });

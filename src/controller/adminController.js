@@ -239,18 +239,11 @@ const register =async(req,res)=>{
  const adminUpdate= async (req,res)=>{
     
     await Register.updateOne({_id:req.params.id},{
-
-    
-
-
+        
          $set:{
              username:req.body.username,
              email:req.body.email,
-             password:req.body.password,
              phone:req.body.phone,
-             password:password,
-
-             
          },function(err,docs){
              if(err){
                  console.log(err);
@@ -301,8 +294,43 @@ const register =async(req,res)=>{
           // Return an error if the old password is incorrect
           response.status(401).send('Incorrect old password');
         }
+
+      
+}
+
+
+const adminchangepassword=async(req,res)=>{
+
+    const newpassword = req.body.newpassword;
+  
+  
+        if (newpassword) {
+          // If the old password is correct, hash the new password
+          bcrypt.hash(newpassword, 10, function(error, hashedPassword) {
+            if (error) {
+              // Return an error if there was a problem hashing the password
+              return res.status(500).send(error);
+            }
+  
+            // Save the hashed new password to the database
+            Register.updateOne({_id:req.params.id}, { password: hashedPassword }, function(error) {
+              if (error) {
+                // Return an error if there was a problem updating the password
+                return res.status(500).send(error);
+              }
+  
+              // Return a success message if the password was updated successfully
+              // res.send('Password updated successfully');
+            //   console.log('yes')
+              res.redirect('/mainindex') 
+            });
+          });
+        } else {
+          // Return an error if the old password is incorrect
+          response.status(401).send('Incorrect old password');
+        }
 }
 
 
 
-module.exports = { authUser,authRole,register,adminlogin,adminUpdate,logout,changepassword } 
+module.exports = { authUser,authRole,register,adminlogin,adminUpdate,logout,changepassword,adminchangepassword} 
