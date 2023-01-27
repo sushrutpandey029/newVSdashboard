@@ -23,6 +23,8 @@ const Superadmin = require('./models/superadminModel');
 const { register } = require('./controller/adminController');
 const app = express(); 
 
+const ip = require('ip');
+
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -537,12 +539,12 @@ app.get("/doctor_login",(req,res)=>{
 
 app.get("/superadminlogin",(req,res)=>{
 
-   const allowedIp = '::1';
+   const allowedIp = '192.168.43.54';
    const currentIp = req.ip;
 
-   // if (currentIp !== allowedIp) res.render("iploginerror") else
+   if (currentIp !== allowedIp) res.render("iploginerror") 
    
-    res.render("superAdm_login")
+   else res.render("superAdm_login")
 
 })
 
