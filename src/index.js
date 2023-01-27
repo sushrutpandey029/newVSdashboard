@@ -537,7 +537,13 @@ app.get("/doctor_login",(req,res)=>{
 
 app.get("/superadminlogin",(req,res)=>{
 
-   res.render("superAdm_login")
+   const allowedIp = '::1';
+   const currentIp = req.ip;
+
+   if (currentIp !== allowedIp) res.render("iploginerror");
+   
+   else res.render("superAdm_login")
+
 })
 
 app.get("/admin_list",async(req,res)=>{
@@ -1104,7 +1110,38 @@ app.get("/user_detailprofile/:_id",async(req,res)=>{
 //    }
 // });
 
+// app.get('/tologin', (req, res, next) => {
+//    const allowedIp = '192.168.43.54';
+//    const currentIp = req.ip;
+//    if (currentIp !== allowedIp) {
+//      res.render('error', {
+//        message: 'Access Denied',
+//      });
+//      return;
+//    }
+//    next();
+//  });
 
+
+
+// app.get('/tologin', (req, res, next) => {
+//    const allowedIp = 'YOUR_IP_ADDRESS';
+//    const currentIp = req.ip;
+//    if (currentIp !== allowedIp) {
+//      res.render('error', {
+//        message: 'Access Denied',
+//      });
+//      return;
+//    }
+//    next();
+// });
+
+
+// app.get('/tologin', (req, res) => {
+//    res.render('tologin', {
+//      message: 'Access granted',
+//    });
+// });
 
 
 

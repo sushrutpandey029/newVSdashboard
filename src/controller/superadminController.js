@@ -19,7 +19,7 @@ const superadminlogin = async(req,res)=>{
           res.status(400)
           errors.push({text:'Email Id is Invalid'})
        }
- 
+      
        const user = await superadmin.findOne({ email });
        const adminid=await superadmin.find({'email':req.body.email});
 
@@ -60,6 +60,9 @@ const superadminlogin = async(req,res)=>{
         req.session.isAuth=true;
 
         console.log(req.session.user)
+
+    
+      
 
     res.redirect("mainindex")
     
