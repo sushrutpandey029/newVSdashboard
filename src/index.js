@@ -539,12 +539,12 @@ app.get("/doctor_login",(req,res)=>{
 
 app.get("/superadminlogin",(req,res)=>{
 
-   const allowedIp = '42.105.157.132';
+   const allowedIp = '::1';
    const currentIp = req.ip;
 
-   if (currentIp !== allowedIp) res.render("iploginerror") 
+   // if (currentIp !== allowedIp) res.render("iploginerror") 
 
-   else res.render("superAdm_login")
+    res.render("superAdm_login")
 
 })
 
