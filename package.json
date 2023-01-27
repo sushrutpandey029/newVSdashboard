@@ -25,6 +25,7 @@
     "express-session": "^1.17.3",
     "googleapis": "^110.0.0",
     "hbs": "^4.2.0",
+    "ip": "^2.0.0",
     "jsonwebtoken": "^8.5.1",
     "modules": "^0.4.0",
     "mongoose": "^6.4.5",

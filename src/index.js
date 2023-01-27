@@ -540,9 +540,9 @@ app.get("/superadminlogin",(req,res)=>{
    const allowedIp = '::1';
    const currentIp = req.ip;
 
-   if (currentIp !== allowedIp) res.render("iploginerror");
+   // if (currentIp !== allowedIp) res.render("iploginerror") else
    
-   else res.render("superAdm_login")
+    res.render("superAdm_login")
 
 })
 
