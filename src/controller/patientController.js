@@ -10,7 +10,11 @@ const AdmZip = require('adm-zip');
 var fs = require('fs');
 
 var multer = require('multer');
+const axios = require("axios");
+
+
 const { register } = require("./adminController");
+
 // var gamefile = multer({dest: 'src/gamefiles/'});
 
 
@@ -384,21 +388,28 @@ const gamelist = async (req, res) => {
     }
 }
 
-
-
-
 // ADMIN FUNCTION FOR ADMIN PANEL
-
-
 const createPatientnew = async function (req, res) {
     try {
-        let body = req.body
+        let body = {
+            DocId: req.body.DocId,
+            adminid: req.body.adminid,
+            patientFullName: req.body.patientFullName,
+            email: req.body.email,
+            phone: req.body.phone,
+            age: req.body.age,
+            nativeLanaguage: req.body.nativeLanaguage,
+            address: req.body.address,
+            file:req.body.filename,
+            disabalityType: req.body.disabalityType,
+          };
+      
             console.log(body);
         if (!validation.isrequestBody(body)) {
             return res.status(400).send({ status: false, msg: "Invalid parameters, please provide user details" })
         }
 
-        const { DocId,adminid, patientFullName, email, phone, disabalityType, progress, address } = body
+        const { DocId, adminid, patientFullName, email, phone, disabalityType, progress, address } = body
 
 
         // if (!validation.isValidobjectId(DocId)) {
@@ -452,6 +463,8 @@ const createPatientnew = async function (req, res) {
         if (duplicatephone) {
             return res.status(400).send({ status: false, messgage: "phone is already registered" })
         }
+
+        console.log(body.patientfile);
 
         const output = await patientModel.create(body)
 

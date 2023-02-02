@@ -67,7 +67,7 @@
                 </div>
                 <div class="col-md-6 mb-4 stretch-card transparent">
                   <div class="card card-dark-blue">
-                    <a class="nav-link" href="../sdoctor">
+                    <a class="nav-link" href="../doctor">
                     <div class="card-body">
                       <p class="mb-4" style="color: white;">Doctors</p>
                       <p class="fs-30 mb-2" style="color: white;">{{docData.length}}</p>
@@ -80,7 +80,7 @@
               <div class="row">
                 <div class="col-md-6 mb-4 mb-lg-0 stretch-card transparent">
                   <div class="card card-light-blue">
-                    <a class="nav-link" href="../spatients">
+                    <a class="nav-link" href="../patients">
                     <div class="card-body">
                       <p class="mb-4" style="color: white;">Patients</p>
                       <p class="fs-30 mb-2" style="color: white;">{{patientdata.length}}</p>
@@ -113,17 +113,9 @@
                   <p class="font-weight-500">The total number of Doctor Added by Admins</p>
                   <div class="d-flex flex-wrap mb-5"> 
                   </div>
-               {{!-- <canvas id="pmyChart" style="width:100%"></canvas>
-                   
-              <select onclick="timeFrame('month')" id='date-dropdown'></select>
-
-              <button onClick="timeFrame('day')" >Month</button>
-              <input onchange="filterData()" type="date" id="startdate" value="">
-               <input onchange="filterData()" type="date" id="enddate" value="">      --}}
-
                 <canvas id="pmyChart" style="width:100%"></canvas>
-                Select Year<select id='date-dropdown' onchange="setGraph()"></select>
-                Select Month<select id='month-dropdown' onchange="setGraph()"></select>
+                <select id='date-dropdown' onchange="setGraph()"></select>
+                <select id='month-dropdown' onchange="setGraph()"></select>
                 </div>
               </div>
             </div>
@@ -136,13 +128,10 @@
                   <p class="font-weight-500">The total number of Patients Added by Doctors</p>
                   <div class="d-flex flex-wrap mb-5"> 
                   </div>
-                 <canvas id="myChartp" style="width:100%; max-height:400px"></canvas>
-                 
-                 <select onclick="timeFramep('month')" id='date-dropdownp'></select>
-
-                 <button onClick="timeFramep('day')" >Month</button>
-                <input onchange="filterDatap()" type="date" id="startdatep" value="">
-               <input onchange="filterDatap()" type="date" id="enddatep" value=""> 
+                <canvas id="myChartp" style="width:100%;max-width:600px"></canvas>
+                
+                 <select id='date-dropdownp' onchange="setGraphp()"></select>
+                <select id='month-dropdownp' onchange="setGraphp()"></select>
                 </div>
               </div>
             </div>
@@ -628,24 +617,7 @@
        
           }
 
- </script> --}}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
+</script> --}}
 
 <script> //for patient
   let dateDropdownp = document.getElementById('date-dropdownp'); 
@@ -657,10 +629,42 @@
     dateOption.text = currentYearp;      
     dateOption.value = currentYearp;        
     dateDropdownp.add(dateOption);      
-    currentYearp -= 1;    
+    currentYearp -= 1;
   } 
-</script>
+  var setMonthp = (year)=>{
+    var monthNames = ["January", "February", "March", "April", "May", "June", 
+              "July","August", "September", "October","November", "December"]
+              
+  const currentTime = new Date();
+  const monthDropdown = document.getElementById("month-dropdownp")
+  let index =0;
+      monthDropdown.innerHTML=`<option value="-1">Select</option>`;
+    if(year <currentTime.getFullYear()){
+      console.log("current month")
+      while(index<12){
+        let monthOption = document.createElement("option");
+        monthOption.text = monthNames[index];
+        monthOption.value = index;
+        monthDropdown.add(monthOption)
+        index++;
+      }
+    }
+    else{
+      console.log("past month")
+      while(index<=currentTime.getMonth()){
+        let monthOption = document.createElement("option");
+        monthOption.text = monthNames[index];
+        monthOption.value = index;
+        monthDropdown.add(monthOption)
+        index++;
+      }
+    }
+  }
 
+  setMonthp();
+
+
+</script>
 
 <script myvar={{graphDataPatient}}>
               
@@ -744,13 +748,25 @@
             config
           );
 
-          function timeFramep(period){
 
+          function setGraphp(){
+              const monthValue = document.getElementById("month-dropdownp").value;
+              const yearValue = document.getElementById("date-dropdownp").value;
+              setMonthp(document.getElementById("date-dropdownp").value);
+              if(monthValue==-1){
+                timeFramep('month', -1)
+              }
+              else{
+                timeFramep('day',{month:monthValue, year: yearValue} )
+              }
+            
+          }
+
+          function timeFramep(period, payload){
             if(period=='day'){
-              var startdate=document.getElementById('startdatep');
-            var enddate=document.getElementById('enddatep');
-            var temp = new Date(startdate.value)
-            enddate = new Date(enddate.value)
+            var startdate=new Date(parseInt(payload.year), parseInt(payload.month), 1);
+              var enddate=new Date(parseInt(payload.year), parseInt(payload.month)+1, 0);
+              var temp = startdate;
             
               var labels = []
               while (temp <= enddate) {
@@ -1142,7 +1158,7 @@
                       	 {{#each docData}}
                       <tbody>
                         <tr>
-                          <td><a  href="doc_detail_profile/{{this._id}}"><img width="28" height="28" class="rounded-circle" src="{{this.image}}" alt="">{{this.fullname}}</a></td>
+                          <td><a  href="doc_detail_profile/{{this._id}}"><img width="28" height="28" class="rounded-circle" src="../doc/{{this.file}}" alt="">{{this.fullname}}</a></td>
                           <td class="font-weight-bold">{{this.adminid}}</td>
                           <td class="font-weight-bold">{{this.email}}</td>
                           <td>{{this.phone}}</td>

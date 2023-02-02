@@ -10,6 +10,8 @@ var multer = require('multer');
 var fs = require('fs');
 var path = require('path');
 
+const axios = require("axios");
+
 const nodemailer = require('nodemailer');
 
 
@@ -159,147 +161,177 @@ const login = async (req, res) => {
 
 const createUsernew = async function (req, res) {
     // console.log("new user", info.messageId)
- 
-
+  
     try {
-        let body ={
-            fullname:req.body.fullname,
-            lastfullname:req.body.lastfullname,
-            username:req.body.username,
-            adminid:req.body.adminid,
-            email:req.body.email,
-            Dob:req.body.Dob,
-            phone:req.body.phone,
-            password:req.body.password,
-            role:req.body.role,
-            Address:req.body.Address,
-            Country:req.body.Country,
-            City:req.body.City,
-            State:req.body.State,
-            pincode:req.body.pincode,
-            Biography:req.body.Biography,
-            status:req.body.status,
-            payment:req.body.payment
-        }
-
-        if (!validation.isrequestBody(body)) {
-            return res.status(400).send({ status: false, msg: "Invalid parameters, please provide user details" })
-        }
-
-        const { fullname,lastfullname, username,adminid, email, phone, password, role, payment, patientId } = body
-
-        if (!validation.isValid(fullname)) {
-            return res.status(400).send({ status: false, msg: "please provide full name" })
-
-        }
-
-        if (!validation.isValid(adminid)) {
-            return res.status(400).send({ status: false, msg: "please provide adminid" })
-
-        }
-
-        if (!validation.isValid(lastfullname)) {
-            return res.status(400).send({ status: false, msg: "please provide lastfullname" })
-
-        }
-
-        if (!validation.isValid(username)) {
-            return res.status(400).send({ status: false, msg: "please provide username" })
-
-        }
-
-        if (!validation.isValid(email)) {
-            return res.status(400).send({ status: false, msg: "please provide email" })
-
-        }
-
-        if (!validation.isValid(phone)) {
-            return res.status(400).send({ status: false, msg: "please provide phone" })
-
-        }
-
-        if (!validation.isValid(password)) {
-            return res.status(400).send({ status: false, msg: "please provide password" })
-
-        }
-
-        if (password.length < 6 || password.length > 15) {
-            return res.status(400).send({ status: false, msg: "password length min 6 and max 15" })
-          }
-
-        if (!(/^\w+([\.-]?\w+)@\w+([\. -]?\w+)(\.\w{2,3})+$/.test(email))) {
-            return res.status(400).send({ status: false, msg: "email is not valid" })
-        }
-
-        if (!(/^(\+91[\-\s]?)?[0]?(91)?[789]\d{9}$/.test(phone))) {
-            return res.status(400).send({ status: false, msg: "Mobile Number is not valid" })
-
-        }
-
-        let isDuplicateEmail = await roleModel.findOne({ email });
-        if (isDuplicateEmail) {
-            res.redirect("/createUser")
-        }
-
-        let duplicatephone = await roleModel.findOne({ phone });
-        if (duplicatephone) {
-            return res.status(400).send({ status: false, msg: "phone is already in use" })
-        }
-
-
-        let duplicateusername = await roleModel.findOne({ username });
-        if (duplicateusername) {
-            return res.status(400).send({ status: false, msg: "username is already in use" })
-        }
-
-        // generate salt to hash password
-        const salt = await bcrypt.genSalt(10);
-        // now we set user password to hashed password
-        body.password = await bcrypt.hash(body.password, salt);
-
-        if (role == "Admin") {
-            let duplicateAdmin = await roleModel.findOne({ role: "Admin" })
-            if (duplicateAdmin) {
-                return res.status(400).send({ status: false, msg: "Admin Already Present!!! Only one admin can exist" })
-            }
-        }
-
-        let testAccount = await nodemailer.createTestAccount();
-
-        let transporter = nodemailer.createTransport({
-            service:'gmail',
-            auth: {
-                user: 'rashupandey029@gmail.com', // generated ethereal user
-                pass: 'nsedmjzulrvhucif', // generated ethereal password
-            },
+      let body = {
+        fullname: req.body.fullname,
+        lastfullname: req.body.lastfullname,
+        username: req.body.username,
+        adminid: req.body.adminid,
+        email: req.body.email,
+        Dob: req.body.Dob,
+        phone: req.body.phone,
+        password: req.body.password,
+        role: req.body.role,
+        Address: req.body.Address,
+        file: req.file.filename,
+        Country: req.body.Country,
+        City: req.body.City,
+        State: req.body.State,
+        pincode: req.body.pincode,
+        Biography: req.body.Biography,
+        status: req.body.status,
+        payment: req.body.payment,
+      };
+  
+      if (!validation.isrequestBody(body)) {
+        return res
+          .status(400)
+          .send({
+            status: false,
+            msg: "Invalid parameters, please provide user details",
           });
- 
-        let info = await transporter.sendMail({
-            from: 'rashupandey029@gmail.com', // sender address
-            to: body.email, // list of receivers
-            subject: "Registration Confirmed VS", // Subject line
-            text: "Welcome to Voice Simulation", // plain text body
-            html:`<b>Hi ${body.fullname}</b><br><b>Welcome to Voice Simulation</b><br><p>Your registration was successful. Thank you for joining our service!</p><b>Your Login Id = </b> ${body.email}<br> <b>Your Login Password = </b>${password}<br><br> Best Regards <br>Voice Simulation <br> Head Office <br>Thank You `,// html body
-          });
-
-          console.log("new user", info.messageId);
-          console.log("To", info);
-        
-        
-        const output = await roleModel.create(body)
-
-        
-        // return res.status(201).send({ status: true, msg: "User Succesfully Created", data: output }) // original code
-        res.redirect('../doctor') //added this to redirect 
+      }
+  
+      const {fullname,lastfullname,username,adminid,email,phone,password,role,payment,patientId} = body;
+  
+      // if (body.file) {
+      //     const response = await axios.post("/file/upload", {
+      //         file: body.file,
+      //         name: Date.now()+ body.file.name
+      //     })
+  
+      // }
+  
+      if (!validation.isValid(fullname)) {
+        return res
+          .status(400)
+          .send({ status: false, msg: "please provide full name" });
+      }
+  
+      if (!validation.isValid(adminid)) {
+        return res
+          .status(400)
+          .send({ status: false, msg: "please provide adminid" });
+      }
+  
+      if (!validation.isValid(lastfullname)) {
+        return res
+          .status(400)
+          .send({ status: false, msg: "please provide lastfullname" });
+      }
+  
+      if (!validation.isValid(username)) {
+        return res
+          .status(400)
+          .send({ status: false, msg: "please provide username" });
+      }
+  
+      if (!validation.isValid(email)) {
+        return res
+          .status(400)
+          .send({ status: false, msg: "please provide email" });
+      }
+  
+      if (!validation.isValid(phone)) {
+        return res
+          .status(400)
+          .send({ status: false, msg: "please provide phone" });
+      }
+  
+      if (!validation.isValid(password)) {
+        return res
+          .status(400)
+          .send({ status: false, msg: "please provide password" });
+      }
+  
+      if (password.length < 6 || password.length > 15) {
+        return res
+          .status(400)
+          .send({ status: false, msg: "password length min 6 and max 15" });
+      }
+  
+      if (!/^\w+([\.-]?\w+)@\w+([\. -]?\w+)(\.\w{2,3})+$/.test(email)) {
+        return res.status(400).send({ status: false, msg: "email is not valid" });
+      }
+  
+      if (!/^(\+91[\-\s]?)?[0]?(91)?[789]\d{9}$/.test(phone)) {
+        return res
+          .status(400)
+          .send({ status: false, msg: "Mobile Number is not valid" });
+      }
+  
+      let isDuplicateEmail = await roleModel.findOne({ email });
+      if (isDuplicateEmail) {
+        res.redirect("/createUser");
+      }
+  
+      let duplicatephone = await roleModel.findOne({ phone });
+      if (duplicatephone) {
+        return res
+          .status(400)
+          .send({ status: false, msg: "phone is already in use" });
+      }
+  
+      let duplicateusername = await roleModel.findOne({ username });
+      if (duplicateusername) {
+        return res
+          .status(400)
+          .send({ status: false, msg: "username is already in use" });
+      }
+  
+      // generate salt to hash password
+      const salt = await bcrypt.genSalt(10);
+      // now we set user password to hashed password
+      body.password = await bcrypt.hash(body.password, salt);
+  
+      if (role == "Admin") {
+        let duplicateAdmin = await roleModel.findOne({ role: "Admin" });
+        if (duplicateAdmin) {
+          return res
+            .status(400)
+            .send({
+              status: false,
+              msg: "Admin Already Present!!! Only one admin can exist",
+            });
+        }
+      }
+  
+      let testAccount = await nodemailer.createTestAccount();
+  
+      let transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: "rashupandey029@gmail.com", // generated ethereal user
+          pass: "nsedmjzulrvhucif", // generated ethereal password
+        },
+      });
+  
+      let info = await transporter.sendMail({
+        from: "rashupandey029@gmail.com", // sender address
+        to: body.email, // list of receivers
+        subject: "Registration Confirmed VS", // Subject line
+        text: "Welcome to Voice Simulation", // plain text body
+        html: `<b>Hi ${body.fullname}</b><br><b>Welcome to Voice Simulation</b><br><p>Your registration was successful. Thank you for joining our service!</p><b>Your Login Id = </b> ${body.email}<br> <b>Your Login Password = </b>${password}<br><br> Best Regards <br>Voice Simulation <br> Head Office <br>Thank You `, // html body
+      });
+  
+      console.log("new user", info.messageId);
+      console.log("To", info);
+  
+      console.log(body.file);
+  
+        const output = await roleModel.create(body);
+      //   res.status(200).json(output);
+  
+      // return res.status(201).send({ status: true, msg: "User Succesfully Created", data: output }) // original code
+      res.redirect("../doctor"); //added this to redirect
+    } catch (errors) {
+      //   console.log(errors)
+      //   res.status(500).json(errors);
+      res.render("../docregister", { msg: errors.msg });
+      // conslog.log(errors);
     }
-
-    catch (errors) {
-        // console.log(error.msg)
-        res.render('../docregister', { msg: errors.msg});
-    }
-
-
-}
+};
 
 
 const doclogin = async(req,res)=>{
@@ -424,9 +456,9 @@ const doclogin = async(req,res)=>{
 //  }
 
 
-const deletedoc=async (req,res)=>{
-        const ID=req.params.id;
-       // console.log(ID)
+const deletedoc =async(req,res)=>{
+        const ID =req.params.id;
+       console.log(ID)
     await roleModel.findOneAndDelete({_id:ID});
     
    // let data = await roleModel.find()

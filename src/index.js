@@ -21,9 +21,20 @@ const gameModel = require('./models/gameModel');
 let cookieParser = require('cookie-parser');
 const Superadmin = require('./models/superadminModel');
 const { register } = require('./controller/adminController');
+const { exit } = require('process');
 const app = express(); 
 
-const ip = require('ip');
+
+// const os = require('os');
+// const interfaces = os.networkInterfaces();
+// const eth0 = interfaces.eth0;
+// const systemIp = eth0[0].address;
+
+// const ip = require('ip');
+// const systemIp = ip.address();
+
+// const ip = require('ip');
+// const systemIp = ip.address();
 
 app.use(cookieParser());
 app.use(bodyParser.json());
@@ -31,8 +42,17 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // app.use(bodyParser.text({ type: '/' }));
 
 
-app.use(multer().any())
+// app.use(multer().any())
 
+app.use(
+   "/file",
+   express.static(path.join(__dirname, "../public/doc"))
+);
+
+app.use(
+   "/file",
+   express.static(path.join(__dirname, "../public/patient"))
+);
 
 const static_path = path.join(__dirname,"../public")
 const template_path = path.join(__dirname,"../templates/views")
@@ -485,7 +505,8 @@ app.get('/sgames',async(req,res)=>{
 
 
 app.get("/doctor",async(req,res)=>{
-   let exist=await roleModel.find({_id:req.cookies.id})
+
+   // let exist=await roleModel.find({_id:req.cookies.id})
 
    const temp1 = req.cookies.id;
    let data= await roleModel.find({adminid:temp1});
@@ -495,39 +516,44 @@ app.get("/doctor",async(req,res)=>{
    const temp = req.cookies.id;
    const user = await registerModel.find({_id:temp});
 
+   const temp2 = req.cookies.id;
+   const superuser = await superadminModel.find({_id:temp2});
+
+   const superadmindoc = await roleModel.find();
+
    var array=[]
    datag.map(ob =>{
       let iso=new Date(ob.createdAt).toISOString();
       array.push(iso.split("T")[0])
    })
-   if(exist.length>0)res.send("admin login required")
+   if(user.length>0) res.render('doctor',{userData:data,graphDataDoc:array,loginuser:user})
 
-   else res.render('doctor',{userData:data,graphDataDoc:array,loginuser:user})
+   else res.render('doctor',{userData:superadmindoc,graphDataDoc:array,loginuser:superuser})
 })
 
 
 
-app.get("/sdoctor",async(req,res)=>{
+// app.get("/sdoctor",async(req,res)=>{
 
-   let exist=await roleModel.find({_id:req.cookies.id})
-   let data= await roleModel.find().sort({_id:1})
-   let datag= await roleModel.find().sort({_id:1})
+//    let exist=await roleModel.find({_id:req.cookies.id})
+//    let data= await roleModel.find().sort({_id:1})
+//    let datag= await roleModel.find().sort({_id:1})
 
-   const temp = req.cookies.id;
-   const user = await registerModel.find({_id:temp});
+//    const temp = req.cookies.id;
+//    const user = await registerModel.find({_id:temp});
 
 
-   const temp1 = req.cookies.id;
-   const superuser = await Superadmin.find({_id:temp1});
+//    const temp1 = req.cookies.id;
+//    const superuser = await Superadmin.find({_id:temp1});
 
-   var array=[]
-   datag.map(ob =>{
-      let iso=new Date(ob.createdAt).toISOString();
-      array.push(iso.split("T")[0])
-   })
+//    var array=[]
+//    datag.map(ob =>{
+//       let iso=new Date(ob.createdAt).toISOString();
+//       array.push(iso.split("T")[0])
+//    })
    
-   res.render('sdoctor',{userData:data,graphDataDoc:array,loginuser:user,loginuser:superuser})
-})
+//    res.render('sdoctor',{userData:data,graphDataDoc:array,loginuser:user,loginuser:superuser})
+// })
 
 app.get("/doctor_login",(req,res)=>{
 
@@ -545,6 +571,17 @@ app.get("/superadminlogin",(req,res)=>{
    // if (currentIp !== allowedIp) res.render("iploginerror") 
 
     res.render("superAdm_login")
+
+})
+
+
+app.get("/tom",(req,res)=>{
+
+   const currentIp = req.ip;
+
+   if (currentIp !== systemIp) console.log(currentIp)
+
+   else res.render("tom")
 
 })
 
@@ -672,18 +709,38 @@ app.get("/patient_dashboard/:id",async(req,res)=>{
 
 app.get("/patients",async(req,res)=>{ // to render all the paitients 
 
-   const temp1 = req.cookies.id;
-   let data = await patientModel.find({adminid:temp1})
-
-   const temp3 = req.cookies.id;
-   let exist=await roleModel.find({_id:temp3})
 
    let datap = await patientModel.find().sort({_id:1})
 
    let Data = await patientModel.find({DocId:req.cookies.id});
 
+   let superData = await patientModel.find();
+
+
+// dac data
+
+   const temp3 = req.cookies.id;
+   let exist=await roleModel.find({_id:temp3})
+
+
+   
+   const temp1 = req.cookies.id;
+   let data = await patientModel.find({adminid:temp1})
+
+  
+
    const temp = req.cookies.id;
    const user = await registerModel.find({_id:temp});
+   let Data2 = await patientModel.find({adminid:temp});
+
+
+   const temp4 = req.cookies.id;
+   const superuser = await superadminModel.find({_id:temp4});
+
+
+   // const temp5 = req.cookies.id;
+   // const docuser = await patientModel.find({DocId:temp5});
+   
 
 
    var array2=[]
@@ -694,40 +751,42 @@ app.get("/patients",async(req,res)=>{ // to render all the paitients
 
    if(exist.length>0)res.render('patients',{userData:Data,loginuser:exist})
 
-   else res.render('patients',{userData:data,graphDataPatient:array2,loginuser:user})
+   else if(Data2.length>0) res.render('patients',{userData:Data2,graphDataPatient:array2,loginuser:user})
+
+   else res.render('patients',{userData:superData,graphDataPatient:array2,loginuser:superuser})
 })
 
 
-app.get("/spatients",async(req,res)=>{ // to render all the paitients 
-   let data = await patientModel.find()
+// app.get("/spatients",async(req,res)=>{ // to render all the paitients 
+//    let data = await patientModel.find()
 
-   // let exist=await roleModel.find({_id:req.cookies.id})
+//    // let exist=await roleModel.find({_id:req.cookies.id})
 
-   let datap = await patientModel.find().sort({_id:1})
+//    let datap = await patientModel.find().sort({_id:1})
 
-   let Data = await patientModel.find({DocId:req.cookies.id});
+//    let Data = await patientModel.find({DocId:req.cookies.id});
 
-   const temp = req.cookies.id;
-   const user = await registerModel.find({_id:temp});
+//    const temp = req.cookies.id;
+//    const user = await registerModel.find({_id:temp});
 
-   const temp1 = req.cookies.id;
-   const superuser = await Superadmin.find({_id:temp1});
-
-
-   const temp2 = req.cookies.id;
-   const doc = await roleModel.find({_id:temp2});
+//    const temp1 = req.cookies.id;
+//    const superuser = await Superadmin.find({_id:temp1});
 
 
+//    const temp2 = req.cookies.id;
+//    const doc = await roleModel.find({_id:temp2});
 
-   var array2=[]
-   datap.map(ob =>{
-      let iso=new Date(ob.createdAt).toISOString();
-      array2.push(iso.split("T")[0])
-   })
-   if(user.length>0)res.render('spatients',{userData:Data,graphDataPatient:array2,loginuser:user})
-   else if (superuser.length>0) res.render('spatients',{userData:data,graphDataPatient:array2,loginuser:superuser})
-   else res.render('spatients',{userData:data,graphDataPatient:array2,loginuser:doc})
-})
+
+
+//    var array2=[]
+//    datap.map(ob =>{
+//       let iso=new Date(ob.createdAt).toISOString();
+//       array2.push(iso.split("T")[0])
+//    })
+//    if(user.length>0)res.render('spatients',{userData:Data,graphDataPatient:array2,loginuser:user})
+//    else if (superuser.length>0) res.render('spatients',{userData:data,graphDataPatient:array2,loginuser:superuser})
+//    else res.render('spatients',{userData:data,graphDataPatient:array2,loginuser:doc})
+// })
 
 
 app.get("/add-patient",async(req,res)=>{
@@ -890,6 +949,8 @@ app.get('/patients-profile/:id',async(req,res)=>{
    const temp2 = req.cookies.id;
    const docuser = await roleModel.find({_id:temp2});
 
+   console.log(arro);
+
   if(user.length>0) res.render("progress",{userData:data,progress:gameData,graphDataPatient:array2,loudness:arrl,datel:aloud,pitch:arrp,datep:apitch,overrall:arro,dateo:aover,loginuser:user,datagame:datagame})
   else if (superuser.length>0) res.render("progress",{userData:data,progress:gameData,graphDataPatient:array2,loudness:arrl,datel:aloud,pitch:arrp,datep:apitch,overrall:arro,dateo:aover,loginuser:superuser,datagame:datagame});
   else res.render("progress",{userData:data,progress:gameData,graphDataPatient:array2,loudness:arrl,datel:aloud,pitch:arrp,datep:apitch,overrall:arro,dateo:aover,loginuser:docuser,datagame:datagame});
@@ -951,6 +1012,9 @@ app.get("/user_detailprofile/:_id",async(req,res)=>{
 });
 
 // app.get("/",async(req,res)=>{
+
+
+
 //    var temp=req.cookies.id;
 //    var data=await roleModel.find({_id:temp})
 //    if(data.length !=0){
@@ -1144,7 +1208,6 @@ app.get("/user_detailprofile/:_id",async(req,res)=>{
 //      message: 'Access granted',
 //    });
 // });
-
 
 
 

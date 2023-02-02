@@ -38,12 +38,9 @@
                 <div class="card-people mt-auto">
                    <div class="card-body">
                   <p class="card-title">Doctor Graph</p>
-                   <canvas id="pmyChart" style="width:100%"></canvas>
-                   
-              <select onclick="timeFrame('month')" id='date-dropdown'></select>
-             <button onClick="timeFrame('day')" >Month</button>
-              <input onchange="filterData()" type="date" id="startdate" value="">
-               <input onchange="filterData()" type="date" id="enddate" value="">     
+                  <canvas id="pmyChart" style="width:100%"></canvas>
+                <select id='date-dropdown' onchange="setGraph()"></select>
+                <select id='month-dropdown' onchange="setGraph()"></select>     
                 </div>
                   <div class="weather-info">
                   </div>
@@ -104,12 +101,10 @@
 								<div class="chart-title">
 								<center><b><h4>Patients graph</h4></b></center>
 								</div>	
-								 <canvas id="myChartp" style="width:100%; max-height:400px"></canvas>
+								<canvas id="myChartp" style="width:100%;"></canvas>
                 
-                 <select onclick="timeFramep('month')" id='date-dropdownp'></select>
-               <button onClick="timeFramep('day')" >Month</button>
-                <input onchange="filterDatap()" type="date" id="startdatep" value="">
-               <input onchange="filterDatap()" type="date" id="enddatep" value="">     
+                 <select id='date-dropdownp' onchange="setGraphp()"></select>
+                <select id='month-dropdownp' onchange="setGraphp()"></select>   
              
               </div>
 						</div>
@@ -121,6 +116,9 @@
 
 
 
+
+
+{{!-- doc graph --}}
 <script>
   let dateDropdown = document.getElementById('date-dropdown'); 
        
@@ -133,11 +131,41 @@
     dateDropdown.add(dateOption);      
     currentYear -= 1;    
   }
-</script> 
 
-{{!-- doc graph --}}
+  
+  var setMonth = (year)=>{
+    var monthNames = ["January", "February", "March", "April", "May", "June", 
+              "July","August", "September", "October","November", "December"]
+              
+  const currentTime = new Date();
+  const monthDropdown = document.getElementById("month-dropdown")
+  let index =0;
+      monthDropdown.innerHTML=`<option value="-1">Select</option>`;
+    if(year <currentTime.getFullYear()){
+      while(index<12){
+        let monthOption = document.createElement("option");
+        monthOption.text = monthNames[index];
+        monthOption.value = index;
+        monthDropdown.add(monthOption)
+        index++;
+      }
+    }
+    else{
+      while(index<=currentTime.getMonth()){
+        let monthOption = document.createElement("option");
+        monthOption.text = monthNames[index];
+        monthOption.value = index;
+        monthDropdown.add(monthOption)
+        index++;
+      }
+    }
+  }
 
-     <script  myvar={{graphDataDoc}}>
+  setMonth();
+
+</script>
+
+<script  myvar={{graphDataDoc}}>
 
           var unique = (a,t={}) => a.filter(e=>!(t[e]=e in t)); // function to find unique dates
           var tempd = document.currentScript.getAttribute('myvar'); 
@@ -220,12 +248,24 @@
             config
           );
 
-          function timeFrame(period){
+          function setGraph(){
+              const monthValue = document.getElementById("month-dropdown").value;
+              const yearValue = document.getElementById("date-dropdown").value;
+              setMonth(document.getElementById("date-dropdown").value);
+              if(monthValue==-1){
+                timeFrame('month', -1)
+              }
+              else{
+                timeFrame('day',{month:monthValue, year: yearValue} )
+              }
+            
+          }
+
+          function timeFrame(period, payload){
             if(period=='day'){
-            var startdate=document.getElementById('startdate');
-            var enddate=document.getElementById('enddate');
-            var temp = new Date(startdate.value)
-            enddate = new Date(enddate.value)
+              var startdate=new Date(parseInt(payload.year), parseInt(payload.month), 1);
+              var enddate=new Date(parseInt(payload.year), parseInt(payload.month)+1, 0);
+              var temp = startdate;
             
               var label = []
               while (temp <= enddate) {
@@ -241,13 +281,13 @@
                   temp = new Date(temp.getTime() + 24 * 60 * 60 * 1000)
               }
               var dayn=[];
-            for(var i=0;i<label.length;i++){
-              if(mpo.has(label[i])){
-                dayn.push({x:Date.parse(label[i]),y:counts[label[i]]}) 
-              }else{
-                dayn.push({x:Date.parse(label[i]),y:0});
-              }
-              }
+              for(var i=0;i<label.length;i++){
+                if(mpo.has(label[i])){
+                  dayn.push({x:Date.parse(label[i]),y:counts[label[i]]}) 
+                }else{
+                  dayn.push({x:Date.parse(label[i]),y:0});
+                }
+                }
                 
               console.log("dayn ",dayn) 
               myChart.config.options.scales.x.time.unit=period;
@@ -255,7 +295,8 @@
               myChart.config.data.labels=label; 
               myChart.config.data.datasets[0].data=dayn;
 
-            }else if(period=='month'){
+            }
+            else if(period=='month'){
               var selectYear=document.getElementById('date-dropdown');
               
               var label = ["January", "February", "March", "April", "May", "June", 
@@ -275,13 +316,14 @@
               for(let i=0;i<12;i++){
                 dayn.push({x:label[i],y:data[i]});
               }
-
+              console.log(dayn)
               myChart.config.options.scales.x.time.unit=period;
               myChart.config.options.scales.x.type="category";
               myChart.config.data.labels=label; 
               myChart.config.data.datasets[0].data=dayn;
              
-            }else if(period=='year'){
+            }
+            else if(period=='year'){
               var startdate=document.getElementById('startdate');
               var enddate=document.getElementById('enddate');
               startdate = new Date(startdate.value)
@@ -337,13 +379,11 @@
        
           }
 
-          </script>
+</script>
+   
 
-         <!-- //paitent chart -->
-
-
-
- <script> //for patient
+   <!-- //paitent chart -->
+<script> //for patient
   let dateDropdownp = document.getElementById('date-dropdownp'); 
        
   let currentYearp = new Date().getFullYear();    
@@ -353,8 +393,41 @@
     dateOption.text = currentYearp;      
     dateOption.value = currentYearp;        
     dateDropdownp.add(dateOption);      
-    currentYearp -= 1;    
+    currentYearp -= 1;
   } 
+  var setMonthp = (year)=>{
+    var monthNames = ["January", "February", "March", "April", "May", "June", 
+              "July","August", "September", "October","November", "December"]
+              
+  const currentTime = new Date();
+  const monthDropdown = document.getElementById("month-dropdownp")
+  let index =0;
+      monthDropdown.innerHTML=`<option value="-1">Select</option>`;
+    if(year <currentTime.getFullYear()){
+      console.log("current month")
+      while(index<12){
+        let monthOption = document.createElement("option");
+        monthOption.text = monthNames[index];
+        monthOption.value = index;
+        monthDropdown.add(monthOption)
+        index++;
+      }
+    }
+    else{
+      console.log("past month")
+      while(index<=currentTime.getMonth()){
+        let monthOption = document.createElement("option");
+        monthOption.text = monthNames[index];
+        monthOption.value = index;
+        monthDropdown.add(monthOption)
+        index++;
+      }
+    }
+  }
+
+  setMonthp();
+
+
 </script>
 
 <script myvar={{graphDataPatient}}>
@@ -439,13 +512,25 @@
             config
           );
 
-          function timeFramep(period){
 
+          function setGraphp(){
+              const monthValue = document.getElementById("month-dropdownp").value;
+              const yearValue = document.getElementById("date-dropdownp").value;
+              setMonthp(document.getElementById("date-dropdownp").value);
+              if(monthValue==-1){
+                timeFramep('month', -1)
+              }
+              else{
+                timeFramep('day',{month:monthValue, year: yearValue} )
+              }
+            
+          }
+
+          function timeFramep(period, payload){
             if(period=='day'){
-              var startdate=document.getElementById('startdatep');
-            var enddate=document.getElementById('enddatep');
-            var temp = new Date(startdate.value)
-            enddate = new Date(enddate.value)
+            var startdate=new Date(parseInt(payload.year), parseInt(payload.month), 1);
+              var enddate=new Date(parseInt(payload.year), parseInt(payload.month)+1, 0);
+              var temp = startdate;
             
               var labels = []
               while (temp <= enddate) {
@@ -556,7 +641,9 @@
             myChartp.update();
        
           }
-        </script>
+</script>
+
+
   <br><br>
 
 

@@ -1,4 +1,5 @@
 {{>adminheader loginuser=loginuser  patientdata=patientdata  docData=docData admin=admin}}
+
 {{>adminsidebaar loginuser=loginuser}}
       <div class="main-panel">
      <div class="main-panel">
@@ -11,7 +12,7 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-8 offset-lg-2">
-                        <form action="/add-patient" method="POST">
+                        <form action="/file/patient" method="POST" enctype="multipart/form-data">
                           {{#each errors}}
                             <div class="alert alert-danger">
                               <a href="#" class ="close" data-dismiss="alert" aria-label="close">&times;</a>
@@ -90,6 +91,22 @@
 											<div class="form-group">
 												<label>Address</label>
 												<input type="text" class="form-control" name="address" value="{{address}}" required>
+											</div>
+										</div>
+
+
+                                        <div class="col-sm-12">
+											<div class="form-group">
+												<label>Upload Image</label>
+												<input type="file" class="form-control" id="file" name="file"/>
+											</div>
+										</div>
+
+
+                                         <div class="col-sm-12">
+											<div class="form-group">
+												<label>Upload filename</label>
+												<input type="text" class="form-control" id="filename" placeholder="same name as image name.jpg" name = "filename"/>
 											</div>
 										</div>
                                         

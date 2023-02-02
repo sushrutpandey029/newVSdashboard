@@ -1939,7 +1939,8 @@ ul.chat-user-total li i.old-users {
 	color: #fff;
 }
 .avatar > img {
-	width: 100%;
+	width: 80px;
+    height: 80px;
 	display: block;
 }
 .chat.chat-left .chat-bubble:first-child .chat-content {

@@ -13,7 +13,7 @@ const patientSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true 
-      },
+    },
     email: {
         type: String,
         required: true,
@@ -37,6 +37,14 @@ const patientSchema = new mongoose.Schema({
     address : {
         type: String,
     },
+
+    file:{
+
+        type: String,
+        default: "test.jpg",
+
+    },
+    
     disabalityType:{
         type:String,
         required:true,

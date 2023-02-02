@@ -9,23 +9,7 @@ router.get('/',(req,res)=>{
 console.log(req.session); 
 req.session.isAuth=true;
 res.send("Session")
-})
-
-var storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads')
-    },
-    filename: (req, file, cb) => {
-        cb(null, file.fieldname + '-' + Date.now())
-    }
 });
-
-
-var upload = multer({ storage: storage });
-
-
-
-
 
 const roleController = require("../controller/roleController")
 const patientController = require("../controller/patientController")
@@ -40,6 +24,7 @@ router.post("/superadminlogin",superadminController.superadminlogin)
 router.post("/superadminUpdate/:id",superadminController.superadminUpdate)
 
 router.post("/changesuperpassword/:id",superadminController.changesuperpassword)
+
 router.post("/adminchangepassword/:id",adminController.adminchangepassword);
 
 
@@ -49,7 +34,24 @@ router.post("/adminchangepassword/:id",adminController.adminchangepassword);
 
 
 
-router.post("/docregister",upload.single('profilepic'),roleController.createUsernew)
+// router.post("/docregister",roleController.createUsernew)
+const storage = multer.diskStorage({
+
+    destination: (req, file, cb) => {
+      cb(null, "public/doc");
+    },
+    filename: (req, file, cb) => {
+      cb(null, Date.now()+file.originalname);
+    },
+});
+
+const upload = multer({storage});
+  router.post(
+    "/file/upload",
+    upload.single("file"),
+    roleController.createUsernew
+);
+
 router.post("/login",roleController.login)
 router.post("/docchangepassword/:id",roleController.docchangepassword)
 
@@ -68,6 +70,9 @@ router.post("/doclogin",roleController.doclogin)
 router.get("/delete-doctor/:id",roleController.deletedoc);
 router.post("/docUpdate/:id",roleController.docUpdate);
 router.post("/add-patient",patientController.createPatientnew);
+
+
+
 router.get("/delete-patient/:id",patientController.delete_patient)
 router.post("/edit-patient/:id",patientController.update_patient)
 router.post("/game_register",gameController.game_register)

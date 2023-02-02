@@ -14,13 +14,10 @@
                   <p class="font-weight-500">The total number of Patients Added by Doctors</p>
                   <div class="d-flex flex-wrap mb-5"> 
                   </div>
-                 <canvas id="myChartp" style="width:100%; max-height:400px"></canvas>
-                 
-                 <select onclick="timeFramep('month')" id='date-dropdownp'></select>
-
-                 <button onClick="timeFramep('day')" >Month</button>
-                <input onchange="filterDatap()" type="date" id="startdatep" value="">
-               <input onchange="filterDatap()" type="date" id="enddatep" value=""> 
+                 <canvas id="myChartp" style="width:100%;max-width:600px"></canvas>
+                
+                 <select id='date-dropdownp' onchange="setGraphp()"></select>
+                <select id='month-dropdownp' onchange="setGraphp()"></select>
                 </div>
               </div>
             </div>
@@ -314,8 +311,41 @@
     dateOption.text = currentYearp;      
     dateOption.value = currentYearp;        
     dateDropdownp.add(dateOption);      
-    currentYearp -= 1;    
+    currentYearp -= 1;
   } 
+  var setMonthp = (year)=>{
+    var monthNames = ["January", "February", "March", "April", "May", "June", 
+              "July","August", "September", "October","November", "December"]
+              
+  const currentTime = new Date();
+  const monthDropdown = document.getElementById("month-dropdownp")
+  let index =0;
+      monthDropdown.innerHTML=`<option value="-1">Select</option>`;
+    if(year <currentTime.getFullYear()){
+      console.log("current month")
+      while(index<12){
+        let monthOption = document.createElement("option");
+        monthOption.text = monthNames[index];
+        monthOption.value = index;
+        monthDropdown.add(monthOption)
+        index++;
+      }
+    }
+    else{
+      console.log("past month")
+      while(index<=currentTime.getMonth()){
+        let monthOption = document.createElement("option");
+        monthOption.text = monthNames[index];
+        monthOption.value = index;
+        monthDropdown.add(monthOption)
+        index++;
+      }
+    }
+  }
+
+  setMonthp();
+
+
 </script>
 
 
@@ -401,13 +431,25 @@
             config
           );
 
-          function timeFramep(period){
 
+          function setGraphp(){
+              const monthValue = document.getElementById("month-dropdownp").value;
+              const yearValue = document.getElementById("date-dropdownp").value;
+              setMonthp(document.getElementById("date-dropdownp").value);
+              if(monthValue==-1){
+                timeFramep('month', -1)
+              }
+              else{
+                timeFramep('day',{month:monthValue, year: yearValue} )
+              }
+            
+          }
+
+          function timeFramep(period, payload){
             if(period=='day'){
-              var startdate=document.getElementById('startdatep');
-            var enddate=document.getElementById('enddatep');
-            var temp = new Date(startdate.value)
-            enddate = new Date(enddate.value)
+            var startdate=new Date(parseInt(payload.year), parseInt(payload.month), 1);
+              var enddate=new Date(parseInt(payload.year), parseInt(payload.month)+1, 0);
+              var temp = startdate;
             
               var labels = []
               while (temp <= enddate) {

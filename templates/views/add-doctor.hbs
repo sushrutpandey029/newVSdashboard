@@ -1,4 +1,5 @@
 {{>adminheader loginuser=loginuser  patientdata=patientdata  docData=docData admin=admin}}
+
 {{>adminsidebaar loginuser=loginuser}}
        <div class="main-panel">
             <div class="content-wrapper">
@@ -9,14 +10,15 @@
                 </div>
                 <div class="row"> 
                     <div class="col-lg-8 offset-lg-2">
-                        <form action="../docregister" method="POST" >
+                        <form action="/file/upload" method="POST" enctype="multipart/form-data">
                         
                             {{#each errors}}
                             <div class="alert alert-danger">
                               <a href="#" class ="close" data-dismiss="alert" aria-label="close">&times;</a>
-                              {{msg}}    
+                              {{msg}}  
                             </div>
                             {{/each}}
+
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
@@ -49,14 +51,14 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label>Email <span class="text-danger">*</span></label>
-                                        <input class="form-control" type="email" name ="email" value="{{email}}" required>
+                                        <input class="form-control" type="email" placeholder="Email" name ="email" value="{{email}}" required>
                                     </div>
                                 </div>
 
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label>Password <span class="text-danger">*</span></label>
-                                        <input class="form-control" type="password" name ="password" value="{{password}}" required>
+                                        <input class="form-control" type="password" placeholder="password" name ="password" value="{{password}}" required>
                                     </div>
                                 </div>
 
@@ -65,14 +67,14 @@
                                     <div class="form-group">
                                         <label>Date of Birth</label>
                                         <div class="cal-icon">
-                                            <input type="text" class="form-control datetimepicker" name ="Dob" value="{{Dob}}" required>
+                                            <input type="date" class="form-control datetimepicker" name ="Dob" value="{{Dob}}" required>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-sm-6 col-md-6 col-lg-3">
                                     <div class="form-group">
                                         <label>Role</label>
-                                        <select class="form-control select" name="role" value="{{role}}" required>
+                                        <select class="form-control select" placeholder="Role" name="role" value="{{role}}" required>
                                             <option>Select</option>
                                             <option>Sub-Admin</option>
                                             <option>Doctor</option>
@@ -84,16 +86,45 @@
                                     </div>
 								<div class="col-sm-12">
 									<div class="row">
+
 										<div class="col-sm-12">
 											<div class="form-group">
 												<label>Address</label>
-												<input type="text" class="form-control " name = "Address" value="{{Address}}" required>
+												<input type="text" class="form-control" placeholder="Address" name = "Address" value="{{Address}}" required>
 											</div>
 										</div>
+
+                                       
+
+                                        {{!-- <div class="col-sm-12">
+											<div class="form-group">
+												<img src="" alt="" id="imagePreview" width="500px">
+											</div>
+										</div> --}}
+
+                                        <div class="col-sm-12">
+											<div class="form-group">
+												<label>Upload Image</label>
+												<input type="file" class="form-control" id="doc-image" name="file"/>
+											</div>
+										</div>
+
+
+                                         {{!-- <div class="col-sm-12">
+											<div class="form-group">
+												<label>Upload filename</label>
+												<input type="text" class="form-control" id="filename" placeholder="same name as image name.jpg" name = "filename"/>
+											</div>
+										</div> --}}
+
+
+                                       
+
 										<div class="col-sm-6 col-md-6 col-lg-3">
 											<div class="form-group">
 												<label>Country</label>
-												<select class="form-control select" name = "Country" value="{{Country}}" required>
+												<select class="form-control select" placeholder="Country" name = "Country" value="{{Country}}" required>
+                                                    <option>Select Country</option>
 													<option>India</option>
 
 													<!-- <option>United Kingdom</option> -->
@@ -104,13 +135,15 @@
 										<div class="col-sm-6 col-md-6 col-lg-3">
 											<div class="form-group">
 												<label>City</label>
-												<input type="text" class="form-control" name = "City" value="{{City}}" required >
+												<input type="text" class="form-control" placeholder="city" name = "City" value="{{City}}" required >
 											</div>
 										</div>
+
 										<div class="col-sm-6 col-md-6 col-lg-3">
 											<div class="form-group">
 												<label>State/Province</label>
-												<select class="form-control select" name="State" value="{{State}}" required>
+												<select class="form-control select" name="State" placeholder="state" value="{{State}}" required>
+                                                    <option>Select state/province</option>
 													<option>Andhra Pradesh</option>
 													<option>Arunachal Pradesh</option>
 													<option>Assam</option>
@@ -142,10 +175,11 @@
 												</select>
 											</div>
 										</div>
+
 										<div class="col-sm-6 col-md-6 col-lg-3">
 											<div class="form-group">
 												<label>Postal Code</label>
-												<input type="text" class="form-control" name="pincode" value="{{pincode}}" required>
+												<input type="text" class="form-control" placeholder="postal Code" name="pincode" value="{{pincode}}" required>
 											</div>
 										</div>
 									</div>
@@ -153,13 +187,13 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label>Phone </label>
-                                        <input class="form-control" type="text" name = "phone" value="{{phone}}" required>
+                                        <input class="form-control" type="text" placeholder="phone" name = "phone" value="{{phone}}" required>
                                     </div>
                                 </div>
                             </div>
 							<div class="form-group">
                                 <label>Short Biography</label>
-                                <textarea class="form-control" rows="3" cols="30" name="Biography" value="Biography"></textarea>
+                                <textarea class="form-control" rows="3" cols="30" placeholder="short bio" name="Biography" value="Biography"></textarea>
                             </div>
                             <div class="form-group">
                                 <label class="display-block">Status</label>
@@ -186,4 +220,15 @@
     
         </div>
     </div>
+{{!-- preview uploaded  image --}}
+    <script>
+
+        const imageFile = document.getElementById("doc-image");
+        const filename = document.getElementById("filename");
+        const imagePreview = document.getElementById("imagePreview")
+        imageFile.addEventListener("change", (e)=>{
+            
+            imagePreview.src = URL.createObjectURL(e.target.files[0]);
+        })
+    </script>
    {{>adminfooter}}
