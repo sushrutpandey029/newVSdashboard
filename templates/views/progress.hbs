@@ -81,7 +81,7 @@
                                  
                                     <select id='date-dropdowno' onchange="setGraph()"></select>
                                     <select id='month-dropdowno' onchange="setGraph()"></select>
-                                   {{!-- <button onclick="timeFrameo('year')" >Year</button>  --}}
+                                   <button onclick="timeFrameo('year')" >Year</button> 
                 </div>
                   <div class="weather-info">
                   </div>
@@ -716,7 +716,7 @@
               console.log(arrl)
 
               myChartl.config.options.scales.x.time.unit='day';
-              myChartl.config.options.scales.x.type="category";
+              myChartl.config.options.scales.x.type="time";
               myChartl.config.data.labels=labell;
               myChartl.config.data.datasets[0].data=arrl;
             }else if(period=='month'){
@@ -907,7 +907,7 @@
 
 
              myCharth.config.options.scales.x.time.unit='day';
-              myCharth.config.options.scales.x.type="category";
+              myCharth.config.options.scales.x.type="time";
               myCharth.config.data.labels=labelh;
               myCharth.config.data.datasets[0].data=arrh;
             }else if(period=='month'){
@@ -1094,7 +1094,7 @@
 
 
               myChartr.config.options.scales.x.time.unit='day';
-              myChartr.config.options.scales.x.type="category";
+              myChartr.config.options.scales.x.type="time";
               myChartr.config.data.labels=labelr;
               myChartr.config.data.datasets[0].data=dayrr;
             }else if(period=='month'){
