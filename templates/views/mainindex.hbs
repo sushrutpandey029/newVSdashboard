@@ -40,12 +40,9 @@
                 <div class="card-people mt-auto">
                    <div class="card-body">
                   <p class="card-title">Admin Graph</p>
-                  <canvas id="amyChart" style="width:100%"></canvas>
-                   <select onclick="timeFrame('month')" id='date-dropdowna'></select>
-
-              <button onClick="timeFrame('day')" >Month</button>
-              <input onchange="filterData()" type="date" id="startdata" value="">
-               <input onchange="filterData()" type="date" id="enddata" value="">     
+                  <canvas id="aChart" style="width:100%"></canvas>
+                <select id='date-dropdowna' onchange="setGrapha()"></select>
+                <select id='month-dropdowna' onchange="setGrapha()"></select>     
                 </div>
                   <div class="weather-info">
                   </div>
@@ -885,6 +882,54 @@
 {{!-- admin graph --}}
 
 
+<script> //for patient
+  let dateDropdowna = document.getElementById('date-dropdowna'); 
+       
+  let currentYeara = new Date().getFullYear();    
+  let earliestYeara = 2020;     
+  while (currentYeara >= earliestYeara) {      
+    let dateOption = document.createElement('option');          
+    dateOption.text = currentYeara;      
+    dateOption.value = currentYeara;        
+    dateDropdowna.add(dateOption);      
+    currentYeara -= 1;
+  } 
+  var setMontha = (year)=>{
+    var monthNames = ["January", "February", "March", "April", "May", "June", 
+              "July","August", "September", "October","November", "December"]
+              
+  const currentTime = new Date();
+  const monthDropdown = document.getElementById("month-dropdowna")
+  let index =0;
+      monthDropdown.innerHTML=`<option value="-1">Select</option>`;
+    if(year <currentTime.getFullYear()){
+      console.log("current month")
+      while(index<12){
+        let monthOption = document.createElement("option");
+        monthOption.text = monthNames[index];
+        monthOption.value = index;
+        monthDropdown.add(monthOption)
+        index++;
+      }
+    }
+    else{
+      console.log("past month")
+      while(index<=currentTime.getMonth()){
+        let monthOption = document.createElement("option");
+        monthOption.text = monthNames[index];
+        monthOption.value = index;
+        monthDropdown.add(monthOption)
+        index++;
+      }
+    }
+  }
+
+  setMontha();
+
+
+</script>
+
+{{!-- 
 <script>
   let dateDropdowna = document.getElementById('date-dropdowna'); 
        
@@ -897,10 +942,224 @@
     dateDropdowna.add(dateOption);      
     currentYeara -= 1;    
   } 
+</script> --}}
+
+<script myvar={{graphdataadmin}}>
+              
+          var unique = (a,t={}) => a.filter(e=>!(t[e]=e in t)); // function to find unique dates
+          var tempa = document.currentScript.getAttribute('myvar'); 
+          var arr23=tempa.split(","); // spliting from iso date to normal date
+          var datapointsa=[];
+          var xAxis = ["January", "February", "March", "April", "May", "June", 
+              "July","August", "September", "October","November", "December"]
+         var dppa=new Array(12).fill(0);     
+         var Ypa=document.getElementById('date-dropdowna');
+          var curra=1;
+         for(var i=1;i<arr23.length;i++){ //counting occurance of each element
+            if(arr23[i-1]===arr23[i]){
+              ++curra;
+            }else{
+              datapointsa.push(curra);
+              curra=1;
+            }
+         }
+         const countsa = {};
+         for (const num of arr23) {
+                countsa[num] = countsa[num] ? countsa[num] + 1 : 1;
+              }
+
+          datapointsa.push(curra);
+          arra=unique(arr23);
+          const daya=[];
+         
+          var mpa=new Map();
+
+          for(var i=0;i<arr23.length;i++){
+                  let date=new Date(arr23[i]);
+                  let month = date.getMonth();
+                let year = date.getFullYear().toString();
+                if(year==Ypa.value){
+                  dppa[month]++;
+                }
+              }
+              
+          for(var i=0;i<arr23.length;i++){
+             
+             mpa[arra[i]]=mpo[arra[i]] || [];
+             mpa.set(arra[i],datapointsa[i]);
+          }
+          for(var i=0;i<12;i++){
+          daya.push({x:xAxis[i],y:dppa[i]});
+        }
+          var data = {
+            labels: xAxis,
+            datasets: [{
+              label: 'Admins',
+              data: daya,
+              backgroundColor: "lightgreen",
+              borderColor: "green",
+              borderWidth: 3
+            }]
+          };
+          var config = {
+            type: 'line',
+            data,
+            options: {
+              scales: {
+                x:{
+                  type: 'category',
+                  time:{
+                    unit: 'month'
+                  }
+                },
+                y: {
+                  beginAtZero: true,
+                   ticks: { 
+                    precision: 0
+                }
+                }
+              }
+            }
+          };
+          const aChart = new Chart(
+            document.getElementById('aChart'),
+            config
+          );
+
+
+          function setGrapha(){
+              const monthValue = document.getElementById("month-dropdowna").value;
+              const yearValue = document.getElementById("date-dropdowna").value;
+              setMontha(document.getElementById("date-dropdowna").value);
+              if(monthValue==-1){
+                timeFramea('month', -1)
+              }
+              else{
+                timeFramea('day',{month:monthValue, year: yearValue} )
+              }
+            
+          }
+
+          function timeFramea(period, payload){
+            if(period=='day'){
+            var startdate=new Date(parseInt(payload.year), parseInt(payload.month), 1);
+              var enddate=new Date(parseInt(payload.year), parseInt(payload.month)+1, 0);
+              var temp = startdate;
+            
+              var labels = []
+              while (temp <= enddate) {
+                let day = temp.getDate();
+                let month = temp.getMonth()+1;
+                let year = temp.getFullYear();
+                if(day<=9){
+                 day= day.toString().padStart(2, '0');
+                } if(month<=9){
+                  month=month.toString().padStart(2,'0');
+                }
+                  labels.push(year + "-" + month + "-" + day)
+                  temp = new Date(temp.getTime() + 24 * 60 * 60 * 1000)
+              }
+
+              var dayn=[];
+            for(var i=0;i<labels.length;i++){
+              if(mpa.has(labels[i])){
+                dayn.push({x:Date.parse(labels[i]),y:countsa[labels[i]]}) 
+              }else{
+                dayn.push({x:Date.parse(labels[i]),y:0});
+              }
+              }
+      
+              aChart.config.options.scales.x.time.unit=period;
+              aChart.config.options.scales.x.type="category";
+              aChart.config.data.labels=labels; 
+              aChart.config.data.datasets[0].data=dayn;
+
+            }else if(period=='month'){
+              var selectYear=document.getElementById('date-dropdowna');
+              
+              var label = ["January", "February", "March", "April", "May", "June", 
+              "July","August", "September", "October","November", "December"]
+              
+              var data=new Array(12).fill(0);
+
+              for(var i=0;i<arr23.length;i++){
+                  let date=new Date(arr23[i]);
+                  let month=date.getMonth();
+                let year = date.getFullYear().toString();
+                if(year==selectYear.value){
+                  data[month]++;
+                }
+              }
+              var dayn=[];
+              for(let i=0;i<12;i++){
+                dayn.push({x:label[i],y:data[i]});
+              }
+              aChart.config.options.scales.x.time.unit=period;
+              aChart.config.options.scales.x.type="category";
+              aChart.config.data.labels=label; 
+              aChart.config.data.datasets[0].data=dayn;
+             
+            }else if(period=='year'){
+              var startdate=document.getElementById('startdatea');
+              var enddate=document.getElementById('enddatea');
+              startdate = new Date(startdate.value)
+              enddate = new Date(enddate.value)
+              
+              var syear=startdate.getFullYear();
+              var eyear=enddate.getFullYear();
+
+              var dif=eyear-syear+1;
+              var data=new Array(dif).fill(0);
+
+              var label = []
+              for(var i=syear;i<=eyear;i++){
+                label.push(i);
+              }
+              for(var i=0;i<arr23.length;i++){
+                let date=new Date(arr23[i]);
+                let temp=date.getFullYear();
+                data[temp-syear]++;
+              }
+              var dayn=[];
+              for(var i=0;i<label.length;i++){
+                dayn.push({x:label[i],y:data[i]});
+              }
+              aChart.config.options.scales.x.time.unit=period;
+              aChart.config.options.scales.x.type="category";
+              aChart.config.data.labels=label; 
+              aChart.config.data.datasets[0].data=dayn;
+            }
+            aChart.update();
+          }
+
+         function filterDatap(){
+            var dates2=[...arra];
+            const startdate=document.getElementById('startdatea');
+            const enddate=document.getElementById('enddatea');
+           var indexstartdate=dates2.findIndex(function(date) {
+                            return date >=startdate.value;
+                        });
+          
+          var indexenddate;
+          for(var i=0;i<dates2.length;i++){
+            if(dates2[i]<=enddate.value){
+              indexenddate=i;
+            }
+          }
+           const filterDate= dates2.slice(indexstartdate,indexenddate+1);
+            aChart.config.data.labels=filterDate;
+            var datapoints3=[...datapointsa]
+            const filterDatapoints=datapoints3.slice(indexstartdate,indexenddate+1);
+            aChart.config.data.datasets[0].data=filterDatapoints;
+
+            aChart.update();
+       
+          }
 </script>
 
 
-<script myvar={{graphdataadmin}}>
+
+{{!-- <script myvar={{graphdataadmin}}>
               
           var unique = (a,t={}) => a.filter(e=>!(t[e]=e in t)); // function to find unique dates
           var temp = document.currentScript.getAttribute('myvar'); 
@@ -952,8 +1211,8 @@
             datasets: [{
               label: 'Patients',
               data: daya,
-              backgroundColor: "lightgreen",
-              borderColor: "green",
+              backgroundColor: "gray",
+              borderColor: "backB",
               borderWidth: 3
             }]
           };
@@ -1099,7 +1358,7 @@
             amyChart.update();
        
           }
-</script>
+</script> --}}
 
 
 

@@ -11,7 +11,6 @@ var fs = require('fs');
 var path = require('path');
 
 const axios = require("axios");
-
 const nodemailer = require('nodemailer');
 
 

@@ -81,7 +81,7 @@ router.get("/delete-game/:id",gameController.delete_game)
 
 
 // section edited ends here..
-router.post("/createPatient",patientController.createPatient)
+
 router.get("/findPatient",patientController.findPatient)
 router.get("/docPatient",patientController.docPatient)
 router.get("/gameHistory",patientController.gameHistory)

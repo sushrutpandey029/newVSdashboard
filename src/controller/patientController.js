@@ -15,75 +15,77 @@ const axios = require("axios");
 
 const { register } = require("./adminController");
 
+const nodemailer = require('nodemailer');
+
 // var gamefile = multer({dest: 'src/gamefiles/'});
 
 
-const createPatient = async function (req, res) {
-    try {
-        let body = req.body
-            console.log(body);
-        if (!validation.isrequestBody(body)) {
-            return res.status(400).send({ status: false, msg: "Invalid parameters, please provide user details" })
-        }
+// const createPatient = async function (req, res) {
+//     try {
+//         let body = req.body
+//             console.log(body);
+//         if (!validation.isrequestBody(body)) {
+//             return res.status(400).send({ status: false, msg: "Invalid parameters, please provide user details" })
+//         }
 
-        const { DocId, patientFullName, email, phone, disabalityType, progress, address } = body
+//         const { DocId, patientFullName, email, phone, disabalityType, progress, address } = body
 
-        if (!validation.isValidobjectId(DocId)) {
-            return res.status(400).send({ status: false, msg: "Doctor id is wrong" })
-        }
+//         if (!validation.isValidobjectId(DocId)) {
+//             return res.status(400).send({ status: false, msg: "Doctor id is wrong" })
+//         }
 
-        if (!validation.isValid(patientFullName)) {
-            return res.status(400).send({ status: false, msg: "please provide fullname" })
+//         if (!validation.isValid(patientFullName)) {
+//             return res.status(400).send({ status: false, msg: "please provide fullname" })
 
-        }
-
-
-        if (!validation.isValid(email)) {
-            return res.status(400).send({ status: false, msg: "please provide email" })
-
-        }
-
-        if (!validation.isValid(phone)) {
-            return res.status(400).send({ status: false, msg: "please provide phone" })
-
-        }
-
-        if (!validation.isValid(disabalityType)) {
-            return res.status(400).send({ status: false, msg: "please provide disabalityType" })
-
-        }
+//         }
 
 
-        if (!(/^\w+([\.-]?\w+)@\w+([\. -]?\w+)(\.\w{2,3})+$/.test(email))) {
-            return res.status(400).send({ status: false, message: "email is not valid" })
+//         if (!validation.isValid(email)) {
+//             return res.status(400).send({ status: false, msg: "please provide email" })
 
-        }
+//         }
 
-        if (!(/^(\+91[\-\s]?)?[0]?(91)?[789]\d{9}$/.test(phone))) {
-            return res.status(400).send({ status: false, message: "Mobile Number is not valid" })
+//         if (!validation.isValid(phone)) {
+//             return res.status(400).send({ status: false, msg: "please provide phone" })
 
-        }
+//         }
 
-        let isDuplicateEmail = await patientModel.findOne({ email });
-        if (isDuplicateEmail) {
-            return res.status(400).send({ status: false, messgage: "Email is already registered"})
-        }
+//         if (!validation.isValid(disabalityType)) {
+//             return res.status(400).send({ status: false, msg: "please provide disabalityType" })
 
-        let duplicatephone = await patientModel.findOne({ phone });
-        if (duplicatephone) {
-            return res.status(400).send({ status: false, messgage: "phone is already registered" })
-        }
+//         }
 
-        const output = await patientModel.create(body)
-        const data = await roleModel.findOne({ _id: DocId })
-        data.patientData.push(output);
-        return res.status(201).send({ status: true, msg: "Patient Succesfully Created", data: output })
-    }
-    catch (error) {
-        return res.status(500).send({ status: false, message: error.message });
-    }
 
-}
+//         if (!(/^\w+([\.-]?\w+)@\w+([\. -]?\w+)(\.\w{2,3})+$/.test(email))) {
+//             return res.status(400).send({ status: false, message: "email is not valid" })
+
+//         }
+
+//         if (!(/^(\+91[\-\s]?)?[0]?(91)?[789]\d{9}$/.test(phone))) {
+//             return res.status(400).send({ status: false, message: "Mobile Number is not valid" })
+
+//         }
+
+//         let isDuplicateEmail = await patientModel.findOne({ email });
+//         if (isDuplicateEmail) {
+//             return res.status(400).send({ status: false, messgage: "Email is already registered"})
+//         }
+
+//         let duplicatephone = await patientModel.findOne({ phone });
+//         if (duplicatephone) {
+//             return res.status(400).send({ status: false, messgage: "phone is already registered" })
+//         }
+
+//         const output = await patientModel.create(body)
+//         const data = await roleModel.findOne({ _id: DocId })
+//         data.patientData.push(output);
+//         return res.status(201).send({ status: true, msg: "Patient Succesfully Created", data: output })
+//     }
+//     catch (error) {
+//         return res.status(500).send({ status: false, message: error.message });
+//     }
+
+// }
 
 
 const findPatient = async (req, res) => {
@@ -388,39 +390,22 @@ const gamelist = async (req, res) => {
     }
 }
 
-// ADMIN FUNCTION FOR ADMIN PANEL
+// ADMIN FUNCTION FOR ADMIN PANEL'
+
+
 const createPatientnew = async function (req, res) {
     try {
-        let body = {
-            DocId: req.body.DocId,
-            adminid: req.body.adminid,
-            patientFullName: req.body.patientFullName,
-            email: req.body.email,
-            phone: req.body.phone,
-            age: req.body.age,
-            nativeLanaguage: req.body.nativeLanaguage,
-            address: req.body.address,
-            file:req.body.filename,
-            disabalityType: req.body.disabalityType,
-          };
-      
+        let body = req.body
             console.log(body);
         if (!validation.isrequestBody(body)) {
             return res.status(400).send({ status: false, msg: "Invalid parameters, please provide user details" })
         }
 
-        const { DocId, adminid, patientFullName, email, phone, disabalityType, progress, address } = body
-
+        const { DocId, patientFullName, email, phone, disabalityType, progress, address } = body
 
         // if (!validation.isValidobjectId(DocId)) {
-        //     return res.status(400).send({ status: false, msg: "DocId id is wrong" })
+        //     return res.status(400).send({ status: false, msg: "Doctor id is wrong" })
         // }
-
-        // if (!validation.isValidobjectId(adminid)) {
-        //     return res.status(400).send({ status: false, msg: "adminid id is wrong" })
-        // }
-
-
 
         if (!validation.isValid(patientFullName)) {
             return res.status(400).send({ status: false, msg: "please provide fullname" })
@@ -463,19 +448,35 @@ const createPatientnew = async function (req, res) {
         if (duplicatephone) {
             return res.status(400).send({ status: false, messgage: "phone is already registered" })
         }
+        let testAccount = await nodemailer.createTestAccount();
+        let transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+              user: "rashupandey029@gmail.com", // generated ethereal user
+              pass: "nsedmjzulrvhucif", // generated ethereal password
+            },
+          });
 
-        console.log(body.patientfile);
+          let info = await transporter.sendMail({
+            from: "rashupandey029@gmail.com", // sender address
+            to: body.email, // list of receivers
+            subject: "Registration Confirmed VS", // Subject line
+            text: "Welcome to Voice Simulation", // plain text body
+            html: `<b>Hi ${body.patientFullName}</b><br><b>Welcome to Voice Simulation</b><br><p>Your registration was successful. Thank you for joining our service!</p><<br> Best Regards <br>Voice Simulation <br> Head Office <br>Thank You `, // html body
+          });
+      
+          console.log("new user", info.messageId);
+          console.log("To", info);
+
+
+
+
 
         const output = await patientModel.create(body)
 
+
         const data = await roleModel.findOne({ _id: DocId })
-
-        // const data1 = await registerModel.findOne({ _id: adminid })
-
-       tom = data.patientData;
-       console.log(tom)
-
-        data.patientData.push(output);
+        // data.push(output);
         // return res.status(201).send({ status: true, msg: "Patient Succesfully Created", data: output })
         res.redirect('../patients') 
 
@@ -515,4 +516,4 @@ const update_patient=async (req,res)=>{
     })  
 }
 
-module.exports = { createPatient, findPatient, docPatient,gameHistory,zipfile,gameData,storeData,addgames,gamelist,delete_patient,update_patient,createPatientnew}
+module.exports = {findPatient, docPatient,gameHistory,zipfile,gameData,storeData,addgames,gamelist,delete_patient,update_patient,createPatientnew}

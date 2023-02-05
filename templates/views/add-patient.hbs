@@ -12,7 +12,7 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-8 offset-lg-2">
-                        <form action="/file/patient" method="POST" enctype="multipart/form-data">
+                        <form action="/add-patient" method="POST">
                           {{#each errors}}
                             <div class="alert alert-danger">
                               <a href="#" class ="close" data-dismiss="alert" aria-label="close">&times;</a>
@@ -95,20 +95,20 @@
 										</div>
 
 
-                                        <div class="col-sm-12">
+                                        {{!-- <div class="col-sm-12">
 											<div class="form-group">
 												<label>Upload Image</label>
 												<input type="file" class="form-control" id="file" name="file"/>
 											</div>
-										</div>
+										</div> --}}
 
 
-                                         <div class="col-sm-12">
+                                         {{!-- <div class="col-sm-12">
 											<div class="form-group">
 												<label>Upload filename</label>
 												<input type="text" class="form-control" id="filename" placeholder="same name as image name.jpg" name = "filename"/>
 											</div>
-										</div>
+										</div> --}}
                                         
 										<!-- <div class="col-sm-6 col-md-6 col-lg-3">
 											<div class="form-group">

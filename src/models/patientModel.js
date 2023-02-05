@@ -36,15 +36,7 @@ const patientSchema = new mongoose.Schema({
     },
     address : {
         type: String,
-    },
-
-    file:{
-
-        type: String,
-        default: "test.jpg",
-
-    },
-    
+    },    
     disabalityType:{
         type:String,
         required:true,

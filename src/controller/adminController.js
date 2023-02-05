@@ -13,6 +13,8 @@ const express = require('express');
 const session = require('express-session');
 const app = express();
 
+const nodemailer = require('nodemailer');
+
 
 
 //added controller for admin login and register
@@ -155,9 +157,32 @@ const register =async(req,res)=>{
        const salt = await bcrypt.genSalt(10);
        // now we set user password to hashed password
        body.password = await bcrypt.hash(body.password, salt);
+      
+       let testAccount = await nodemailer.createTestAccount();
+
+       let transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: "rashupandey029@gmail.com", // generated ethereal user
+          pass: "nsedmjzulrvhucif", // generated ethereal password
+        },
+      });
+
+      let info = await transporter.sendMail({
+        from: "rashupandey029@gmail.com", // sender address
+        to: body.email, // list of receivers
+        subject: "Registration Confirmed VS", // Subject line
+        text: "Welcome to Voice Simulation", // plain text body
+        html: `<b>Hi ${body.username}</b><br><b>Welcome to Voice Simulation</b><br><p>Your registration was successful. Thank you for joining our service!</p><b>Your Login Id = </b> ${body.email}<br> <b>Your Login Password = </b>${password}<br><br> Best Regards <br>Voice Simulation <br> Head Office <br>Thank You `, // html body
+      });
+
+      console.log("new user", info.messageId);
+      console.log("To", info);
+
+
  
        const output = await Register.create(body)
-       return res.status(201).render("register")
+      res.redirect("../register");
       }
    }
    catch (error) {
@@ -168,9 +193,9 @@ const register =async(req,res)=>{
        title:'Error'
     });
    }
-  }
+}
   
-  const adminlogin = async(req,res)=>{
+const adminlogin = async(req,res)=>{
     try{
         let body = req.body;
         let errors = [];
@@ -234,37 +259,34 @@ const register =async(req,res)=>{
        title:'Error'
     });
   }
- }
+}
 
- const adminUpdate= async (req,res)=>{
-    
-    await Register.updateOne({_id:req.params.id},{
-        
-         $set:{
-             username:req.body.username,
-             email:req.body.email,
-             phone:req.body.phone,
-         },function(err,docs){
-             if(err){
-                 console.log(err);
-             }else{
-                //  console.log("updated admin :",admin);
-                 res.redirect('/admin-profile') 
-             }
-         }
-     })  
+const adminUpdate= async (req,res)=>{
+  await Register.updateOne({_id:req.params.id},{
+    $set:{
+      username:req.body.username,
+      email:req.body.email,
+      phone:req.body.phone,
+    },function(err,docs){
+      if(err){
+        console.log(err);
+      }else{
+        res.redirect('/admin_list') 
+      }
+      }
+  })  
       
- }
+}
 
 
- const logout = async (req,res)=>{
+const logout = async (req,res)=>{
 
     res.render('login');
 
- }
+}
 
 
- const changepassword=async(req,res)=>{
+const changepassword=async(req,res)=>{
 
     const newpassword = req.body.newpassword;
   
