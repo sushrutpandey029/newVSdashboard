@@ -1114,7 +1114,8 @@
                   month=month.toString().padStart(2,'0');
                 }
                   //label.push(new Date(year , month , day).getTime())
-                  labelr.push(year + "-" + month + "-" + day)
+                  //1/31/2023
+                  labelr.push(temp.toLocaleDateString())
                   temp = new Date(temp.getTime() + 24 * 60 * 60 * 1000)
               }
 
@@ -1136,7 +1137,7 @@
 
 
               myChartr.config.options.scales.x.time.unit='day';
-              myChartr.config.options.scales.x.type="time";
+              myChartr.config.options.scales.x.type="category";
               myChartr.config.data.labels=labelr;
               myChartr.config.data.datasets[0].data=dayrr;
             }else if(period=='month'){
