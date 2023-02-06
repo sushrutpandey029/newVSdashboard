@@ -101,7 +101,7 @@ app.get("/index",async(req,res) => {
 
    let datag= await roleModel.find({adminid:temp1}).sort({createdAt:1})
    
-
+   
    const temp2 = req.cookies.id;
    let data1 = await patientModel.find({adminid:temp2});
 

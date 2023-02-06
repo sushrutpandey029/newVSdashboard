@@ -326,7 +326,7 @@
 
 {{!-- Recognigetion script --}}
 
-   <script>
+  <script>
   let dateDropdownr = document.getElementById('date-dropdownr'); 
   var yearr = {}
   let currentYearr = new Date().getFullYear();    
@@ -371,14 +371,14 @@
 
   setMonthr();
 
-</script> 
+  </script> 
 
 
 
 
-        {{!-- Overall graph --}}
+         {{!-- Overall graph --}}
 
-          <script myvar={{graphDataPatient}} myvarl={{loudness}} myvarp={{pitch}} myvarr={{overrall}} >
+      <script myvar={{graphDataPatient}} myvarl={{loudness}} myvarp={{pitch}} myvarr={{overrall}} >
                var unique = (a,t={}) => a.filter(e=>!(t[e]=e in t)); // function to find unique dates
           var temp = document.currentScript.getAttribute('myvar'); 
           var temp2 = document.currentScript.getAttribute('myvarl'); 
@@ -396,10 +396,6 @@
             var sum=parseFloat(arrl[i])+parseFloat(arrr[i])+parseFloat(arrp[i]); 
             datapointso.push(parseFloat(sum/3));
             }
-             //console.log(datapointso)
-             //console.log("arro"+ arro)
-
-
             var curr=1;
          for(var i=1;i<arro.length;i++){ //counting occurance of each element
             if(arro[i-1]===arro[i]){
@@ -430,13 +426,45 @@
           }
 
 
+          var monthName = ["January", "February", "March", "April", "May", "June", 
+              "July","August", "September", "October","November", "December"]
+              
+              var data=new Array(12).fill(0);
+              for(var i=0;i<mpo.size;i++){
+                  let date=new Date(dayo[i].x);
+                  let month = date.getMonth();
+                let year = date.getFullYear().toString();
+                if( mpo.get(date.getTime()) ){
+                  //console.log(date)
+                  data[month] += mpo.get(date.getTime());
+                }
+              }
+
+              var daynr=[];
+
+
+              const newLable = [];
+              for(let i=0;i<12;i++){
+                 // console.log(new Date().getFullYear(), selectYearr)
+                if( new Date().getMonth()< i){
+                  console.log(monthName[i])
+                }
+                else{
+                  newLable.push(monthName[i]);
+                  daynr.push({x:monthName[i],y:data[i]});
+                }
+              }
+
+          console.log(daynr)
+
+
           //console.log("mpo")
           //console.log(mpo)
           var data = {
-            labels: arro,
+            labels: newLable,
             datasets: [{
               label: 'Over All Graph',
-              data: dayo,
+              data: daynr,
               backgroundColor: "orange",
               borderColor: "red",
               borderWidth: 3
@@ -448,9 +476,9 @@
             options: {
               scales: {
                 x:{
-                  type: 'time',
+                  type: 'category',
                   time:{
-                    unit: 'day'
+                    unit: 'month'
                   }
                 },
                 y: {
@@ -486,13 +514,14 @@
               var temp = startdate;
               var label = []
 
-              var newLabel = []
-              
+              const date = new Date();
+              if(startdate.getFullYear()=== date.getFullYear() && startdate.getMonth()=== date.getMonth()){
+                enddate = date;
+              }
 
 
               while (temp <= enddate) {
                 let day = temp.getDate();
-                // buggy code for monthly part
                 let month = temp.getMonth()+1;
                 let year = temp.getFullYear();
                 if(day<=9){
@@ -501,7 +530,7 @@
                   month=month.toString().padStart(2,'0');
                 }
                   //label.push(new Date(year , month , day).getTime())
-                  label.push(year + "-" + month + "-" + day)
+                  label.push(temp.toLocaleDateString())
                   temp = new Date(temp.getTime() + 24 * 60 * 60 * 1000)
               }
 
@@ -519,10 +548,10 @@
                 //console.log("label")
                 //console.log(newLabel)
                 
-              console.log(dayn) 
+              //console.log(dayn) 
               myCharto.config.options.scales.x.time.unit='day';
-              myCharto.config.options.scales.x.type="time";
-              myCharto.config.data.labels=newLabel; 
+              myCharto.config.options.scales.x.type="category";
+              myCharto.config.data.labels=label; 
               myCharto.config.data.datasets[0].data=dayn;
 
 
@@ -552,16 +581,24 @@
               }
 
               var dayn=[];
+              const newLable = [];
               for(let i=0;i<12;i++){
-                dayn.push({x:monthName[i],y:data[i]});
+                  //console.log(new Date().getFullYear(), selectYearr)
+                if(new Date().getFullYear() === parseInt(selectYear) && new Date().getMonth()< i){
+                  console.log(monthName[i])
+                }
+                else{
+                  newLable.push(monthName[i]);
+                  dayn.push({x:monthName[i],y:data[i]});
+                }
               }
 
 
 
               //console.log(dayn)
-              myCharto.config.options.scales.x.time.unit=period;
+              myCharto.config.options.scales.x.time.unit='mpnth';
               myCharto.config.options.scales.x.type="category";
-              myCharto.config.data.labels=monthName; 
+              myCharto.config.data.labels=newLable; 
               myCharto.config.data.datasets[0].data=dayn;
             }else if(period=='year'){
               for(year in yearo){
@@ -608,11 +645,11 @@
             myCharto.update();
        
           }
-        </script>
+      </script>
 
         {{!-- Loudness --}}
 
-        <script myvar={{datel}} myvars={{loudness}}>
+      <script myvar={{datel}} myvars={{loudness}}>
           var temp2 = document.currentScript.getAttribute('myvars'); 
           var tempXl=document.currentScript.getAttribute('myvar');
           var arrY=temp2.split(",");
@@ -628,12 +665,45 @@
              dayl.push({x:new Date(arrXl[i]).setHours(0,0,0,0),y:datapointsl[i]});
              mapl.set(new Date(arrXl[i]).setHours(0,0,0,0), datapointsl[i]);
           }
-          console.log(mapl)
+
+
+          var monthNamel = ["January", "February", "March", "April", "May", "June", 
+              "July","August", "September", "October","November", "December"]
+              
+              var datal=new Array(12).fill(0);
+              for(var i=0;i<mapl.size;i++){
+                  let date=new Date(dayo[i].x);
+                  let month = date.getMonth();
+                let year = date.getFullYear().toString();
+                if( mapl.get(date.getTime()) ){
+                  //console.log(date)
+                  datal[month] += mapl.get(date.getTime());
+                }
+              }
+
+              var daynl=[];
+
+
+              const newLablel = [];
+              for(let i=0;i<12;i++){
+                 // console.log(new Date().getFullYear(), selectYearr)
+                if( new Date().getMonth()< i){
+                  //console.log(monthNamer[i])
+                }
+                else{
+                  newLablel.push(monthNamel[i]);
+                  daynl.push({x:monthNamel[i],y:datal[i]});
+                }
+              }
+
+          console.log(daynl)
+
+          //console.log(mapl)
           var data = {
             labels: arrXl,
             datasets: [{
               label: 'Loudness',
-              data: dayl,
+              data: daynl,
               backgroundColor: "green",
               borderColor: "lightgreen",
               borderWidth: 3
@@ -645,9 +715,9 @@
             options: {
               scales: {
                 x:{
-                  type: 'time',
+                  type: 'category',
                   time:{
-                    unit: 'day'
+                    unit: 'month'
                   }
                 },
                 y: {
@@ -684,6 +754,12 @@
               var temp = startdate;
               var labell = []
 
+              const date = new Date();
+              if(startdate.getFullYear()=== date.getFullYear() && startdate.getMonth()=== date.getMonth()){
+                enddate = date;
+              }
+
+
 
               while (temp <= enddate) {
                 let day = temp.getDate();
@@ -695,7 +771,7 @@
                   month=month.toString().padStart(2,'0');
                 }
                   //label.push(new Date(year , month , day).getTime())
-                  labell.push(year + "-" + month + "-" + day)
+                  labell.push(temp.toLocaleDateString());
                   temp = new Date(temp.getTime() + 24 * 60 * 60 * 1000)
               }
 
@@ -713,11 +789,17 @@
                 }
               }
 
-              console.log(arrl)
+              //console.log(arrl)
+
+           //   myChartl.config.options.scales.x.time.unit='day';
+           //   myChartl.config.options.scales.x.type="category";
+           //   myChartl.config.data.labels=labell;
+           //   myChartl.config.data.datasets[0].data=arrl;
+
 
               myChartl.config.options.scales.x.time.unit='day';
-              myChartl.config.options.scales.x.type="time";
-              myChartl.config.data.labels=labell;
+              myChartl.config.options.scales.x.type="category";
+              myChartl.config.data.labels=labell; 
               myChartl.config.data.datasets[0].data=arrl;
             }else if(period=='month'){
 
@@ -739,10 +821,24 @@
               }
 
               var daynl=[];
+              //for(let i=0;i<12;i++){
+              //  daynl.push({x:monthNamel[i],y:datal[i]});
+              //}
+
+              const newLablel = [];
               for(let i=0;i<12;i++){
-                daynl.push({x:monthNamel[i],y:datal[i]});
+                 // console.log(new Date().getFullYear(), selectYearr)
+                if(new Date().getFullYear() === parseInt(selectYearl) && new Date().getMonth()< i){
+                  //console.log(monthNamer[i])
+                }
+                else{
+                  newLablel.push(monthNamel[i]);
+                  daynl.push({x:monthNamel[i],y:datal[i]});
+                }
               }
-            console.log(daynl)
+            //console.log(daynr)
+            //console.log(newLabler)
+            //console.log(daynl)
 
               myChartl.config.options.scales.x.time.unit=period;
               myChartl.config.options.scales.x.type="category";
@@ -795,12 +891,12 @@
        
           }
 
-             </script>
+      </script>
 
              {{!-- pitch --}}
 
 
-        <script myvar={{datep}} myvars={{pitch}}>
+      <script myvar={{datep}} myvars={{pitch}}>
           var templ = document.currentScript.getAttribute('myvars'); 
           var tempXp=document.currentScript.getAttribute('myvar');
           var arrXp=tempXp.split(",");
@@ -817,13 +913,42 @@
              maph.set(new Date(arrXp[i]).setHours(0,0,0,0), datapointsp[i]);
           }
 
-          console.log(maph)
-          console.log(dayp)
+          const monthNameh = ["January", "February", "March", "April", "May", "June", 
+              "July","August", "September", "October","November", "December"]
+              
+              var datah=new Array(12).fill(0);
+              for(var i=0;i<maph.size;i++){
+                  let date=new Date(dayo[i].x);
+                  let month = date.getMonth();
+                let year = date.getFullYear().toString();
+                if( maph.get(date.getTime()) ){
+                  //console.log(date)
+                  datah[month] += maph.get(date.getTime());
+                }
+              }
+
+              var daynh=[];
+
+
+              const newLableh = [];
+              for(let i=0;i<12;i++){
+                 // console.log(new Date().getFullYear(), selectYearr)
+                if( new Date().getMonth()< i){
+                  console.log(monthNameh[i])
+                }
+                else{
+                  newLableh.push(monthNameh[i]);
+                  daynh.push({x:monthNameh[i],y:datah[i]});
+                }
+              }
+
+          //console.log(maph)
+          //console.log(dayp)
           var data = {
-            labels: arrXp,
+            labels: newLableh,
             datasets: [{
               label: 'Pitch',
-              data: dayp,
+              data: daynh,
               backgroundColor: "skyblue",
               borderColor: "blue",
               borderWidth: 3
@@ -835,9 +960,9 @@
             options: {
               scales: {
                 x:{
-                  type: 'time',
+                  type: 'category',
                   time:{
-                    unit: 'day'
+                    unit: 'month'
                   }
                 },
                 y: {
@@ -872,11 +997,13 @@
               var startdate=new Date(parseInt(payload.year), parseInt(payload.month), 1);
               var enddate=new Date(parseInt(payload.year), parseInt(payload.month)+1, 0);
               var temp = startdate;
-               var temp = startdate;
               var labelh = []
-                if(startdate.getFullYear()=== date.getFullYear() && startdate.getMonth()=== date.getMonth()){
+
+              const date = new Date();
+              if(startdate.getFullYear()=== date.getFullYear() && startdate.getMonth()=== date.getMonth()){
                 enddate = date;
               }
+
 
 
               while (temp <= enddate) {
@@ -889,7 +1016,7 @@
                   month=month.toString().padStart(2,'0');
                 }
                   //label.push(new Date(year , month , day).getTime())
-                  labelh.push(year + "-" + month + "-" + day)
+                  labelh.push(temp.toLocaleDateString())
                   temp = new Date(temp.getTime() + 24 * 60 * 60 * 1000)
               }
 
@@ -899,7 +1026,7 @@
                 const time = new Date(labelh[i]).setHours(0,0,0,0)
                 //console.log(time)
                 if(maph.has(time) && maph.get(time)){
-                  console.log(maph.get(time))
+                  //console.log(maph.get(time))
                   arrh.push({x:time, y:maph.get(time) })
                 }
                 else{
@@ -909,11 +1036,16 @@
 
               console.log(arrh)
 
-
-             myCharth.config.options.scales.x.time.unit='day';
-              myCharth.config.options.scales.x.type="time";
-              myCharth.config.data.labels=labelh;
+              myCharth.config.options.scales.x.time.unit='day';
+              myCharth.config.options.scales.x.type="category";
+              myCharth.config.data.labels=labelh; 
               myCharth.config.data.datasets[0].data=arrh;
+
+
+            // myCharth.config.options.scales.x.time.unit='day';
+            //  myCharth.config.options.scales.x.type="category";
+            //  myCharth.config.data.labels=labelh;
+            //  myCharth.config.data.datasets[0].data=arrh;
             }else if(period=='month'){
               var selectYearh=parseInt(payload.year);
               
@@ -933,14 +1065,22 @@
               }
 
               var daynh=[];
+              const newLableh = [];
               for(let i=0;i<12;i++){
-                daynh.push({x:monthNameh[i],y:datah[i]});
+                  //console.log(new Date().getFullYear(), selectYearr)
+                if(new Date().getFullYear() === parseInt(selectYearh) && new Date().getMonth()< i){
+                  console.log(monthNameh[i])
+                }
+                else{
+                  newLableh.push(monthNameh[i]);
+                  daynh.push({x:monthNameh[i],y:datah[i]});
+                }
               }
-            console.log(daynh)
+            //console.log(daynh)
 
              myCharth.config.options.scales.x.time.unit=period;
               myCharth.config.options.scales.x.type="category";
-              myCharth.config.data.labels=monthNameh; 
+              myCharth.config.data.labels= newLableh; 
               myCharth.config.data.datasets[0].data=daynh;
             }else if(period=='year'){
               for(year in yearh){
@@ -987,11 +1127,11 @@
        
           }
 
-        </script>
+      </script>
 
         {{!-- Recognition --}}
 
-         <script myvar={{dateo}} myvars={{overrall}}>
+      <script myvar={{dateo}} myvars={{overrall}}>
           var tempr = document.currentScript.getAttribute('myvars'); 
           var temprr=document.currentScript.getAttribute('myvar');
           var arrYr=tempr.split(",");
@@ -1229,7 +1369,7 @@
             myChartr.update();
        
           }
-        </script>
+      </script>
 
 
         
