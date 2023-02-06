@@ -241,12 +241,19 @@
              mpo[arrd[i]]=mpo[arrd[i]] || [];
              mpo.set(arrd[i],datapointsd[i]);
           }
+        const newLabel = []
         for(var i=0;i<12;i++){
+          if(new Date().getMonth()< i){
+                  //console.log(label[i])
+                }else{
+
           dayd.push({x:xAxis[i],y:yAxis[i]});
+          newLabel.push(xAxis[i]);
+                }
         }
           
           var data = {
-            labels: xAxis,
+            labels: newLabel,
             datasets: [{
               label: 'Doctors',
               data: dayd,
@@ -299,8 +306,11 @@
               var startdate=new Date(parseInt(payload.year), parseInt(payload.month), 1);
               var enddate=new Date(parseInt(payload.year), parseInt(payload.month)+1, 0);
               var temp = startdate;
-            
+              const date = new Date();
               var label = []
+              if(startdate.getFullYear()=== date.getFullYear() && startdate.getMonth()=== date.getMonth()){
+                enddate = date;
+              }
               while (temp <= enddate) {
                 let day = temp.getDate();
                 let month = temp.getMonth()+1;
@@ -346,13 +356,21 @@
                 }
               }
               var dayn=[];
+             const newLable = [];
               for(let i=0;i<12;i++){
-                dayn.push({x:label[i],y:data[i]});
+                  //console.log(new Date().getFullYear(), selectYear.value)
+                if(new Date().getFullYear() === parseInt(selectYear.value) && new Date().getMonth()< i){
+                  console.log(label[i])
+                }
+                else{
+                  newLable.push(label[i]);
+                  dayn.push({x:label[i],y:data[i]});
+                }
               }
               console.log(dayn)
               myChart.config.options.scales.x.time.unit=period;
               myChart.config.options.scales.x.type="category";
-              myChart.config.data.labels=label; 
+              myChart.config.data.labels=newLable; 
               myChart.config.data.datasets[0].data=dayn;
              
             }
@@ -707,11 +725,22 @@
              mpp[arrp[i]]=mpo[arrp[i]] || [];
              mpp.set(arrp[i],datapoints[i]);
           }
-          for(var i=0;i<12;i++){
+
+          const newLabel1 = []
+        for(var i=0;i<12;i++){
+          if(new Date().getMonth()< i){
+                  //console.log(label[i])
+                }else{
+
           dayp.push({x:xAxis[i],y:dpp[i]});
+          newLabel1.push(xAxis[i]);
+                }
         }
+
+
+        
           var data = {
-            labels: xAxis,
+            labels: newLabel1,
             datasets: [{
               label: 'Patients',
               data: dayp,
@@ -765,7 +794,13 @@
               var enddate=new Date(parseInt(payload.year), parseInt(payload.month)+1, 0);
               var temp = startdate;
             
+             const date = new Date();
+             
               var labels = []
+
+              if(startdate.getFullYear()=== date.getFullYear() && startdate.getMonth()=== date.getMonth()){
+                enddate = date;
+              }
               while (temp <= enddate) {
                 let day = temp.getDate();
                 let month = temp.getMonth()+1;
@@ -810,12 +845,20 @@
                 }
               }
               var dayn=[];
+              const newLable = [];
               for(let i=0;i<12;i++){
-                dayn.push({x:label[i],y:data[i]});
+                  //console.log(new Date().getFullYear(), selectYear.value)
+                if(new Date().getFullYear() === parseInt(selectYear.value) && new Date().getMonth()< i){
+                  console.log(label[i])
+                }
+                else{
+                  newLable.push(label[i]);
+                  dayn.push({x:label[i],y:data[i]});
+                }
               }
               myChartp.config.options.scales.x.time.unit=period;
               myChartp.config.options.scales.x.type="category";
-              myChartp.config.data.labels=label; 
+              myChartp.config.data.labels=newLable; 
               myChartp.config.data.datasets[0].data=dayn;
              
             }else if(period=='year'){
@@ -882,7 +925,7 @@
 {{!-- admin graph --}}
 
 
-<script> //for patient
+<script> //for admin
   let dateDropdowna = document.getElementById('date-dropdowna'); 
        
   let currentYeara = new Date().getFullYear();    
@@ -910,6 +953,7 @@
         monthOption.value = index;
         monthDropdown.add(monthOption)
         index++;
+        //console.log("ab shahi hai")
       }
     }
     else{
@@ -924,9 +968,7 @@
     }
   }
 
-  setMontha();
-
-
+  setMontha(); 
 </script>
 
 {{!-- 
@@ -970,6 +1012,10 @@
 
           datapointsa.push(curra);
           arra=unique(arr23);
+
+
+         // console.log("bs dekh rha",arra);
+
           const daya=[];
          
           var mpa=new Map();
@@ -985,19 +1031,26 @@
               
           for(var i=0;i<arr23.length;i++){
              
-             mpa[arra[i]]=mpo[arra[i]] || [];
-             mpa.set(arra[i],datapointsa[i]);
+            mpa[arra[i]]=mpo[arra[i]] || [];
+            mpa.set(arra[i],datapointsa[i]);
           }
-          for(var i=0;i<12;i++){
+           const newLabel2 = []
+           for(var i=0;i<12;i++){
+          if(new Date().getMonth()< i){
+                  //console.log(label[i])
+                }else{
+
           daya.push({x:xAxis[i],y:dppa[i]});
+          newLabel2.push(xAxis[i]);
+                }
         }
           var data = {
-            labels: xAxis,
+            labels: newLabel2,
             datasets: [{
               label: 'Admins',
               data: daya,
-              backgroundColor: "lightgreen",
-              borderColor: "green",
+              backgroundColor: "gray",
+              borderColor: "black",
               borderWidth: 3
             }]
           };
@@ -1045,8 +1098,11 @@
             var startdate=new Date(parseInt(payload.year), parseInt(payload.month), 1);
               var enddate=new Date(parseInt(payload.year), parseInt(payload.month)+1, 0);
               var temp = startdate;
-            
+                const date = new Date();
               var labels = []
+              if(startdate.getFullYear()=== date.getFullYear() && startdate.getMonth()=== date.getMonth()){
+                enddate = date;
+              }
               while (temp <= enddate) {
                 let day = temp.getDate();
                 let month = temp.getMonth()+1;
@@ -1091,12 +1147,20 @@
                 }
               }
               var dayn=[];
+             const newLable = [];
               for(let i=0;i<12;i++){
-                dayn.push({x:label[i],y:data[i]});
+                  //console.log(new Date().getFullYear(), selectYear.value)
+                if(new Date().getFullYear() === parseInt(selectYear.value) && new Date().getMonth()< i){
+                  console.log(label[i])
+                }
+                else{
+                  newLable.push(label[i]);
+                  dayn.push({x:label[i],y:data[i]});
+                }
               }
               aChart.config.options.scales.x.time.unit=period;
               aChart.config.options.scales.x.type="category";
-              aChart.config.data.labels=label; 
+              aChart.config.data.labels=newLable; 
               aChart.config.data.datasets[0].data=dayn;
              
             }else if(period=='year'){
@@ -1504,37 +1568,7 @@
          
         
           </div>
-          {{!-- <div class="row">
-            <div class="col-md-12 grid-margin stretch-card">
-              <div class="card">
-                <div class="card-body">
-                  <p class="card-title">Advanced Table</p>
-                  <div class="row">
-                    <div class="col-12">
-                      <div class="table-responsive">
-                        <table id="example" class="display expandable-table" style="width:100%">
-                          <thead>
-                            <tr>
-                              <th>Quote#</th>
-                              <th>Product</th>
-                              <th>Business type</th>
-                              <th>Policy holder</th>
-                              <th>Premium</th>
-                              <th>Status</th>
-                              <th>Updated at</th>
-                              <th></th>
-                            </tr>
-                          </thead>
-                      </table>
-                      </div>
-                    </div>
-                  </div>
-                  </div>
-                </div>
-
-                
-              </div>
-            </div> --}}
+         
         </div>
         <!-- content-wrapper ends -->
         <!-- partial:partials/_footer.html -->

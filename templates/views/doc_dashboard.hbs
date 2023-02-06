@@ -393,11 +393,18 @@
              mpp[arrp[i]]=mpo[arrp[i]] || [];
              mpp.set(arrp[i],datapoints[i]);
           }
-          for(var i=0;i<12;i++){
+         const newLabel1 = []
+        for(var i=0;i<12;i++){
+          if(new Date().getMonth()< i){
+                  //console.log(label[i])
+                }else{
+
           dayp.push({x:xAxis[i],y:dpp[i]});
+          newLabel1.push(xAxis[i]);
+                }
         }
           var data = {
-            labels: xAxis,
+            labels: newLabel1,
             datasets: [{
               label: 'Patients',
               data: dayp,
@@ -450,8 +457,11 @@
             var startdate=new Date(parseInt(payload.year), parseInt(payload.month), 1);
               var enddate=new Date(parseInt(payload.year), parseInt(payload.month)+1, 0);
               var temp = startdate;
-            
+             const date = new Date();
               var labels = []
+               if(startdate.getFullYear()=== date.getFullYear() && startdate.getMonth()=== date.getMonth()){
+                enddate = date;
+              }
               while (temp <= enddate) {
                 let day = temp.getDate();
                 let month = temp.getMonth()+1;
@@ -496,12 +506,20 @@
                 }
               }
               var dayn=[];
+                const newLable = [];
               for(let i=0;i<12;i++){
-                dayn.push({x:label[i],y:data[i]});
+                  //console.log(new Date().getFullYear(), selectYear.value)
+                if(new Date().getFullYear() === parseInt(selectYear.value) && new Date().getMonth()< i){
+                  console.log(label[i])
+                }
+                else{
+                  newLable.push(label[i]);
+                  dayn.push({x:label[i],y:data[i]});
+                }
               }
               myChartp.config.options.scales.x.time.unit=period;
               myChartp.config.options.scales.x.type="category";
-              myChartp.config.data.labels=label; 
+              myChartp.config.data.labels=newLable; 
               myChartp.config.data.datasets[0].data=dayn;
              
             }else if(period=='year'){

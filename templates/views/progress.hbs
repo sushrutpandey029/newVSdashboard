@@ -872,7 +872,11 @@
               var startdate=new Date(parseInt(payload.year), parseInt(payload.month), 1);
               var enddate=new Date(parseInt(payload.year), parseInt(payload.month)+1, 0);
               var temp = startdate;
+               var temp = startdate;
               var labelh = []
+                if(startdate.getFullYear()=== date.getFullYear() && startdate.getMonth()=== date.getMonth()){
+                enddate = date;
+              }
 
 
               while (temp <= enddate) {
@@ -999,19 +1003,51 @@
             }
 
             var mapr = new Map();
+
           var dayr=[];
+
+          
           for(var i=0;i<arrr.length;i++){
             dayr.push({x:new Date(arrr[i]).setHours(0,0,0,0),y:datapointsr[i]});
              mapr.set(new Date(arrr[i]).setHours(0,0,0,0), datapointsr[i]);
           }
 
+          var monthNamer = ["January", "February", "March", "April", "May", "June", 
+              "July","August", "September", "October","November", "December"]
+              
+              var datar=new Array(12).fill(0);
+              for(var i=0;i<mapr.size;i++){
+                  let date=new Date(dayo[i].x);
+                  let month = date.getMonth();
+                let year = date.getFullYear().toString();
+                if( mapr.get(date.getTime()) ){
+                  //console.log(date)
+                  datar[month] += mapr.get(date.getTime());
+                }
+              }
+
+              var daynr=[];
 
 
+              const newLabler = [];
+              for(let i=0;i<12;i++){
+                 // console.log(new Date().getFullYear(), selectYearr)
+                if( new Date().getMonth()< i){
+                  console.log(monthNamer[i])
+                }
+                else{
+                  newLabler.push(monthNamer[i]);
+                  daynr.push({x:monthNamer[i],y:datar[i]});
+                }
+              }
+
+          console.log(daynr)
+      
           var data = {
-            labels: arrr,
+            labels: newLabler,
             datasets: [{
               label: 'Recognition',
-              data: dayr,
+              data: daynr,
               backgroundColor: "yellow",
               borderColor: "orange",
               borderWidth: 3
@@ -1023,9 +1059,9 @@
             options: {
               scales: {
                 x:{
-                  type: 'time',
+                  type: 'category',
                   time:{
-                    unit: 'day'
+                    unit: 'month'
                   }
                 },
                 y: {
@@ -1059,7 +1095,13 @@
               var startdate=new Date(parseInt(payload.year), parseInt(payload.month), 1);
               var enddate=new Date(parseInt(payload.year), parseInt(payload.month)+1, 0);
               var temp = startdate;
+
+               const date = new Date();
               var labelr = []
+
+                if(startdate.getFullYear()=== date.getFullYear() && startdate.getMonth()=== date.getMonth()){
+                enddate = date;
+              }
 
 
               while (temp <= enddate) {
@@ -1090,7 +1132,7 @@
                 }
               }
 
-              console.log(mapr)
+              console.log(labelr)
 
 
               myChartr.config.options.scales.x.time.unit='day';
@@ -1116,14 +1158,23 @@
               }
 
               var daynr=[];
+              
+               const newLabler = [];
               for(let i=0;i<12;i++){
-                daynr.push({x:monthNamer[i],y:datar[i]});
+                  //console.log(new Date().getFullYear(), selectYear.value)
+                if(new Date().getFullYear() === parseInt(selectYearr) && new Date().getMonth()< i){
+                  console.log(monthNamer[i])
+                }
+                else{
+                  newLabler.push(monthNamer[i]);
+                  daynr.push({x:monthNamer[i],y:datar[i]});
+                }
               }
-            //console.log(daynr)
+            console.log(daynr)
 
              myChartr.config.options.scales.x.time.unit=period;
               myChartr.config.options.scales.x.type="category";
-              myChartr.config.data.labels=monthNamer; 
+              myChartr.config.data.labels=newLabler; 
               myChartr.config.data.datasets[0].data=daynr;
 
 
