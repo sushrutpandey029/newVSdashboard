@@ -903,13 +903,13 @@ app.get('/patients-profile/:id',async(req,res)=>{
       let iso=new Date(ob.createdAt).toISOString();
       iso=iso.split("T")[0];
       
-      if(ob.gamebase=='Loudness'){
+      if(ob.gamebase=='loudness'){
          mpl[iso]=mpl[iso] || []
          mpl[iso].push(parseFloat(ob.overralrating))
-      }else if(ob.gamebase=='Frequency'){
+      }else if(ob.gamebase=='frequency'){
          mpp[iso]=mpp[iso] || []
          mpp[iso].push(parseFloat(ob.overralrating))
-      }else if(ob.gamebase=='Recogintion'){
+      }else if(ob.gamebase=='recognition'){
          mpo[iso]=mpo[iso] || []
          mpo[iso].push(parseFloat(ob.overralrating))
       } 

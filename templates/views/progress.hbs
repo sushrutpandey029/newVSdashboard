@@ -379,7 +379,8 @@
          {{!-- Overall graph --}}
 
       <script myvar={{graphDataPatient}} myvarl={{loudness}} myvarp={{pitch}} myvarr={{overrall}} >
-               var unique = (a,t={}) => a.filter(e=>!(t[e]=e in t)); // function to find unique dates
+        
+          var unique = (a,t={}) => a.filter(e=>!(t[e]=e in t)); // function to find unique dates
           var temp = document.currentScript.getAttribute('myvar'); 
           var temp2 = document.currentScript.getAttribute('myvarl'); 
           var temp3 = document.currentScript.getAttribute('myvarp');
@@ -395,6 +396,7 @@
          for(var i=0;i<arro.length;i++){ //counting occurance of each element
             var sum=parseFloat(arrl[i])+parseFloat(arrr[i])+parseFloat(arrp[i]); 
             datapointso.push(parseFloat(sum/3));
+            console.log("perfecy",arrp);
             }
             var curr=1;
          for(var i=1;i<arro.length;i++){ //counting occurance of each element
