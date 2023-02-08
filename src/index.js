@@ -229,22 +229,22 @@ app.get('/register',async(req,res)=>{
     res.render("register",{loginuser:user});
 })
 
-app.get('/admin_login',(req,res)=>{
+// app.get('/admin_login',(req,res)=>{
 
-   res.render('login')
-});
+//    res.render('login')
+// });
 
 
-app.get('/logout',(req,res)=>{
-   req.session.destroy((err) => {
-      if (err) {
-        console.log(err);
-      } else {
-        res.clearCookie('session-id');
-        res.redirect('/admin_login');
-      }
-    });
-})
+// app.get('/logout',(req,res)=>{
+//    req.session.destroy((err) => {
+//       if (err) {
+//         console.log(err);
+//       } else {
+//         res.clearCookie('session-id');
+//         res.redirect('/admin_login');
+//       }
+//     });
+// })
 
 app.get('/superadminlogout',(req,res)=>{
    req.session.destroy((err) => {
@@ -258,16 +258,16 @@ app.get('/superadminlogout',(req,res)=>{
 })
 
 
-app.get('/doclogout',(req,res)=>{
-   req.session.destroy((err) => {
-      if (err) {
-        console.log(err);
-      } else {
-        res.clearCookie('session-id');
-        res.redirect('/doctor_login');
-      }
-    });
-})
+// app.get('/doclogout',(req,res)=>{
+//    req.session.destroy((err) => {
+//       if (err) {
+//         console.log(err);
+//       } else {
+//         res.clearCookie('session-id');
+//         res.redirect('/doctor_login');
+//       }
+//     });
+// })
 
 
 
@@ -555,10 +555,10 @@ app.get("/doctor",async(req,res)=>{
 //    res.render('sdoctor',{userData:data,graphDataDoc:array,loginuser:user,loginuser:superuser})
 // })
 
-app.get("/doctor_login",(req,res)=>{
+// app.get("/doctor_login",(req,res)=>{
 
-   res.render("doctor_login")
-})
+//    res.render("doctor_login")
+// })
 
 
 
@@ -575,15 +575,15 @@ app.get("/superadminlogin",(req,res)=>{
 })
 
 
-app.get("/tom",(req,res)=>{
+// app.get("/tom",(req,res)=>{
 
-   const currentIp = req.ip;
+//    const currentIp = req.ip;
 
-   if (currentIp !== systemIp) console.log(currentIp)
+//    if (currentIp !== systemIp) console.log(currentIp)
 
-   else res.render("tom")
+//    else res.render("tom")
 
-})
+// })
 
 app.get("/admin_list",async(req,res)=>{
 
