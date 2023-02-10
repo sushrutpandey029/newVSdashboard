@@ -173,7 +173,16 @@ const register =async(req,res)=>{
         to: body.email, // list of receivers
         subject: "Registration Confirmed VS", // Subject line
         text: "Welcome to Voice Simulation", // plain text body
-        html: `<b>Hi ${body.username}</b><br><b>Welcome to Voice Simulation</b><br><p>Your registration was successful. Thank you for joining our service!</p><b>Your Login Id = </b> ${body.email}<br> <b>Your Login Password = </b>${password}<br><br> Best Regards <br>Voice Simulation <br> Head Office <br>Thank You `, // html body
+        html: `<b>Dear ${body.username}</b><br><b>Welcome to Voice Simulation</b><br>
+        <p>Your registration was successful. Thank you for joining our service!</p>
+        <b>Your Login Id = </b> ${body.email}<br><b>Your Login Password = </b>${password}
+        <p>Click on this url https://vsdoctordashboard.onrender.com/admin_login to access your control panel.</p>
+        <p>Please find the attached download button with this email for downloading your desktop application.</p>
+        <p>For any query do reply to this email</p><br>
+        <p><a href="https://vsdoctordashboard.onrender.com/admin_login"><img src="https://techmonitor.ai/wp-content/uploads/sites/4/2016/06/what-is-URL.jpg" height="200px" width="200px"/></a></p>
+        <p><a href="https://vsdoctordashboard.onrender.com/admin_login"><button>Download Application</button></a></p>
+        <p>Best Regards</p>
+        <p>Head Office</p><p>Voice Simulation</p><p>New Ashok Nagar Delhi 110096 Near Metro Station Noida sector-18</p><p><b>Thank You</b></p> `, // html body
       });
 
       console.log("new user", info.messageId);
