@@ -7,14 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>VS Admin</title>
 
-   {{!-- <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css"> --}}
-
-    {{!-- <link rel="stylesheet" type="text/css" href="../css/select2.min.css"> --}}
-    {{!-- <link rel="stylesheet" type="text/css" href="../css/bootstrap-datetimepicker.min.css"> --}}
-
-    {{!-- <link rel="stylesheet" type="text/css" href="../css/select2.min.css"> --}}
-    {{!-- <link rel="stylesheet" type="text/css" href="../css/bootstrap-datetimepicker.min.css"> --}}
-    {{!-- <link rel="stylesheet" type="text/css" href="../css/style.css"> --}}
+ 
   <!-- plugins:css -->
   <link rel="stylesheet" href="../../vendors/feather/feather.css">
   <link rel="stylesheet" href="../../vendors/ti-icons/css/themify-icons.css">
@@ -104,11 +97,25 @@
             </div>
 
           </li>
+
+
           <li class="nav-item nav-profile dropdown">
             <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
+              {{#each loginuser}}
+               {{#if isAdmin}}
+               <img src="../../superadmin/images/3135715.png" alt="profile"/>
+                {{else if isSuperadmin}}
+                <img src="../../superadmin/images/3135715.png" alt="profile"/>
+                {{else}}
+                <img src="../../superadmin/images/3135715.png" alt="profile"/>
+               {{/if}}
+              {{/each}}
               <img src="../../superadmin/images/3135715.png" alt="profile"/>
+
             </a>
             </li>
+
+
              <li class="nav-item nav-settings d-none d-lg-flex">
             <a class="nav-link" href="#">
            <i class="icon-bell mx-0"></i>

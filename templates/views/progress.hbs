@@ -650,7 +650,7 @@
 
         {{!-- Loudness --}}
 
-      <script myvar={{datel}} myvars={{loudness}}>
+        <script myvar={{datel}} myvars={{loudness}}>
           var temp2 = document.currentScript.getAttribute('myvars'); 
           var tempXl=document.currentScript.getAttribute('myvar');
           var arrY=temp2.split(",");
@@ -672,15 +672,21 @@
               "July","August", "September", "October","November", "December"]
               
               var datal=new Array(12).fill(0);
+              const avg ={};
+              let count =0;
               for(var i=0;i<mapl.size;i++){
-                  let date=new Date(dayo[i].x);
+                  let date=new Date(dayl[i].x);
                   let month = date.getMonth();
                 let year = date.getFullYear().toString();
+                
                 if( mapl.get(date.getTime()) ){
                   //console.log(date)
+                  avg[month] = {val:mapl.get(date.getTime()), count: ++count }
                   datal[month] += mapl.get(date.getTime());
+                  
                 }
               }
+              console.log(avg)
 
               var daynl=[];
 
@@ -790,7 +796,6 @@
                 }
               }
 
-              //console.log(arrl)
 
            //   myChartl.config.options.scales.x.time.unit='day';
            //   myChartl.config.options.scales.x.type="category";
@@ -812,7 +817,7 @@
               var datal=new Array(12).fill(0);
               //console.log(dayo)
               for(var i=0;i<mapl.size;i++){
-                  let date=new Date(dayo[i].x);
+                  let date=new Date(dayl[i].x);
                   let month = date.getMonth();
                 let year = date.getFullYear().toString();
                 if(year==selectYearl && mapl.get(date.getTime()) ){
@@ -852,7 +857,7 @@
               }
               //const data = {};
               for(let i=0; i<mapl.size; i++){
-                let date=new Date(dayo[i].x);
+                let date=new Date(dayl[i].x);
                 if(mapl.get(date.getTime()))
                 yearl[date.getFullYear()] +=mapl.get(date.getTime()); 
               }
@@ -892,12 +897,12 @@
        
           }
 
-      </script>
+             </script>
 
              {{!-- pitch --}}
 
 
-      <script myvar={{datep}} myvars={{pitch}}>
+        <script myvar={{datep}} myvars={{pitch}}>
           var templ = document.currentScript.getAttribute('myvars'); 
           var tempXp=document.currentScript.getAttribute('myvar');
           var arrXp=tempXp.split(",");
@@ -919,7 +924,7 @@
               
               var datah=new Array(12).fill(0);
               for(var i=0;i<maph.size;i++){
-                  let date=new Date(dayo[i].x);
+                  let date=new Date(dayp[i].x);
                   let month = date.getMonth();
                 let year = date.getFullYear().toString();
                 if( maph.get(date.getTime()) ){
@@ -1060,7 +1065,7 @@
               var datah=new Array(12).fill(0);
               //console.log(dayo)
               for(var i=0;i<maph.size;i++){
-                  let date=new Date(dayo[i].x);
+                  let date=new Date(dayp[i].x);
                   let month = date.getMonth();
                 let year = date.getFullYear().toString();
                 if(year==selectYearh && maph.get(date.getTime()) ){
@@ -1092,7 +1097,7 @@
                 yearh[year] =0
               }
               for(let i=0; i<maph.size; i++){
-                let date=new Date(dayo[i].x);
+                let date=new Date(dayp[i].x);
                 if(maph.get(date.getTime()))
                 yearh[date.getFullYear()] +=maph.get(date.getTime()); 
               }
@@ -1136,7 +1141,7 @@
 
         {{!-- Recognition --}}
 
-      <script myvar={{dateo}} myvars={{overrall}}>
+        <script myvar={{dateo}} myvars={{overrall}}>
           var tempr = document.currentScript.getAttribute('myvars'); 
           var temprr=document.currentScript.getAttribute('myvar');
           var arrYr=tempr.split(",");
@@ -1163,7 +1168,7 @@
               
               var datar=new Array(12).fill(0);
               for(var i=0;i<mapr.size;i++){
-                  let date=new Date(dayo[i].x);
+                  let date=new Date(dayr[i].x);
                   let month = date.getMonth();
                 let year = date.getFullYear().toString();
                 if( mapr.get(date.getTime()) ){
@@ -1297,7 +1302,7 @@
               var datar=new Array(12).fill(0);
               //console.log(dayo)
               for(var i=0;i<mapr.size;i++){
-                  let date=new Date(dayo[i].x);
+                  let date=new Date(dayr[i].x);
                   let month = date.getMonth();
                   let year = date.getFullYear().toString();
                 if(year==selectYearr && mapr.get(date.getTime()) ){
