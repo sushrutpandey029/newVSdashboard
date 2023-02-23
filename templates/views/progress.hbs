@@ -95,7 +95,7 @@
                   <div class="card card-tale">
                     <a class="nav-link" href="#">
                     <div class="card-body">
-                      <p class="mb-4" style="color: white;">Patients Play Games</p>
+                      <p class="mb-4" style="color: white;">Patients Game History</p>
                       <p class="fs-30 mb-2" style="color: white;">{{graphDataPatient.length}}</p>
                       <p style="color: white;">30 days</p>
                     </div>
@@ -149,7 +149,7 @@
   const currentTime = new Date();
   const monthDropdown = document.getElementById("month-dropdowno")
   let index =0;
-      monthDropdown.innerHTML=`<option value="-1">Select</option>`;
+      monthDropdown.innerHTML=`<option value="-1">Months</option>`;
     if(year <currentTime.getFullYear()){
       while(index<12){
         let monthOption = document.createElement("option");
@@ -282,7 +282,7 @@
   const currentTime = new Date();
   const monthDropdownh = document.getElementById("month-dropdownh")
   let index =0;
-      monthDropdownh.innerHTML=`<option value="-1">Select</option>`;
+      monthDropdownh.innerHTML=`<option value="-1">Months</option>`;
     if(year <currentTime.getFullYear()){
       while(index<12){
         let monthOption = document.createElement("option");
@@ -348,7 +348,7 @@
   const currentTime = new Date();
   const monthDropdownr = document.getElementById("month-dropdownr")
   let index =0;
-      monthDropdownr.innerHTML=`<option value="-1">Select</option>`;
+      monthDropdownr.innerHTML=`<option value="-1">Months</option>`;
     if(year <currentTime.getFullYear()){
       while(index<12){
         let monthOption = document.createElement("option");
@@ -1423,13 +1423,13 @@
                                              }
                                          </script>
 
-                                           <div class="popup" onclick="myFunction()">Show all details
+                                           <div class="popup" onclick="myFunction()">Patients History
                                                   
                                                   
                                                 <div class="popuptext" id="myPopup" class="row">
                     <div class="col-md-12"  style="max-height: 500px;">
                         <div class="card-box">
-                            {{!-- <h3 class="card-title">Progress Details</h3> --}}
+                            {{!-- <h3 class="card-title">History Details</h3> --}}
                             
                             <div class="experience-box">
                                 <ul class="experience-list">
