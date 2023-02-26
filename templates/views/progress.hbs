@@ -1,1573 +1,1632 @@
-
- {{>adminheader loginuser=loginuser  patientdata=patientdata  docData=docData admin=admin}}
+{{>adminheader loginuser=loginuser patientdata=patientdata docData=docData admin=admin}}
 
 <style>
-/* Popup container - can be anything you want */
-.popup {
-  position: relative;
-  display: inline-block;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
+  * {
+    box-sizing: border-box
+  }
 
-/* The actual popup */
-.popup .popuptext {
-  visibility: hidden;
-  width: 1000px;
+  .mySlides {
+    display: none
+  }
 
-  background-color: rgb(255, 255, 255);
-  color: rgb(249, 174, 174);
-  text-align: center;
-  border-radius: 6px;
+  img {
+    vertical-align: middle;
+  }
 
-  z-index: 1;
-  bottom: 100%;
 
-}
 
-/* Popup arrow */
-.popup .popuptext::after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  margin-left: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: #555 transparent transparent transparent;
-}
 
-/* Toggle this class - hide and show the popup */
-.popup .show {
-  visibility: visible;
-  -webkit-animation: fadeIn 1s;
-  animation: fadeIn 1s;
-}
+  /* Slideshow container */
+  .slideshow-container {
+    max-width: 1000px;
+    position: relative;
+    margin: auto;
+  }
 
-/* Add animation (fade in the popup) */
-@-webkit-keyframes fadeIn {
-  from {opacity: 0;} 
-  to {opacity: 1;}
-}
+  /* Next & previous buttons */
+  .prev,
+  .next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    width: auto;
+    padding: 16px;
+    margin-top: -22px;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    transition: 0.6s ease;
+    border-radius: 0 3px 3px 0;
+    user-select: none;
+  }
 
-@keyframes fadeIn {
-  from {opacity: 0;}
-  to {opacity:1 ;}
-}
+  /* Position the "next button" to the right */
+  .next {
+    right: 0;
+    border-radius: 3px 0 0 3px;
+  }
+
+  /* On hover, add a black background color with a little bit see-through */
+  .prev:hover,
+  .next:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+
+  /* Caption text */
+  .text {
+    color: #654747;
+    font-size: 15px;
+    padding: 8px 12px;
+    position: absolute;
+    bottom: 8px;
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Number text (1/3 etc) */
+  .numbertext {
+    color: #f2f2f2;
+    font-size: 12px;
+    padding: 8px 12px;
+    position: absolute;
+    top: 0;
+  }
+
+  /* The dots/bullets/indicators */
+  .dot {
+    cursor: pointer;
+    height: 15px;
+    width: 15px;
+    margin: 0 2px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+    transition: background-color 0.6s ease;
+  }
+
+  .active,
+  .dot:hover {
+    background-color: #717171;
+  }
+
+  /* Fading animation */
+  .fade {
+    animation-name: fade;
+    animation-duration: 1.5s;
+  }
+
+  @keyframes fade {
+    from {
+      opacity: .4
+    }
+
+    to {
+      opacity: 1
+    }
+  }
+
+  /* On smaller screens, decrease text size */
+  @media only screen and (max-width: 300px) {
+
+    .prev,
+    .next,
+    .text {
+      font-size: 11px
+    }
+  }
 </style>
-    <link rel="stylesheet" type="text/css" href="../css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="../css/style.css">
+
+
+<link rel="stylesheet" type="text/css" href="../css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="../css/style.css">
 {{>adminsidebaar loginuser=loginuser}}
 
 
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script
+  src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
 
 
-       <div class="page-wrapper">
-            <div class="content">
+
+
+<div class="page-wrapper">
+  <div class="content">
+    <div class="row">
+
+      <div class="col-md-6 grid-margin stretch-card">
+        <div class="card tale-bg">
+          <div class="card-people mt-auto">
+            <div class="card-body">
+              {{#each patientdata}}
+              <p class="card-title">{{this.patientFullName}} OverAllGraph Graph</p>
+              <p class="font-weight-500">Overall Rating of {{this.patientFullName}} Progress</p>
+              {{/each}}
+              <canvas id="myCharto" style="width:100%;max-width:100%"></canvas>
+
+              <select id='date-dropdowno' onchange="setGraph()"></select>
+              <select id='month-dropdowno' onchange="setGraph()"></select>
+              {{!-- <button onclick="timeFrameo('year')">Year</button> --}}
+            </div>
+            <div class="weather-info">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 grid-margin transparent">
+        <div class="row">
+          <div class="col-md-12 mb-4 stretch-card transparent">
+            <div class="card card-tale">
+              <a class="nav-link" href="#">
+                <div class="card-body">
+                  {{#each patientdata}}
+                  <p class="mb-4" style="color: white;">{{this.patientFullName}} Play Games History</p>
+                  {{/each}}
+
+                  <p class="fs-30 mb-2" style="color: white;">{{graphDataPatient.length}}</p>
+                  <p style="color: white;">30 days</p>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+
+
         <div class="row">
 
-          <div class="col-md-6 grid-margin stretch-card">
-              <div class="card tale-bg">
-                <div class="card-people mt-auto">
-                   <div class="card-body">
-                  <p class="card-title">Patient OverAllGraph Graph</p>
-                   <p class="font-weight-500">Overall Rating of Patient Progress</p>
-                            <canvas id="myCharto" style="width:100%;max-width:100%"></canvas>
-                                 
-                                    <select id='date-dropdowno' onchange="setGraph()"></select>
-                                    <select id='month-dropdowno' onchange="setGraph()"></select>
-                                   {{!-- <button onclick="timeFrameo('year')" >Year</button>  --}}
+          <div class="col-md-12 stretch-card transparent">
+            <div class="card card-light-danger">
+              <a class="nav-link" href="#">
+                <div class="card-body">
+                  <p class="mb-4" style="color: white;">Number of Games</p>
+                  <p class="fs-30 mb-2" style="color: white;">{{datagame.length}}</p>
+                  <p style="color: white;">30 days</p>
                 </div>
-                  <div class="weather-info">
-                  </div>
-                </div>
-              </div>
-          </div>
-
-           <div class="col-md-6 grid-margin transparent">
-              <div class="row">
-                <div class="col-md-12 mb-4 stretch-card transparent">
-                  <div class="card card-tale">
-                    <a class="nav-link" href="#">
-                    <div class="card-body">
-                      <p class="mb-4" style="color: white;">Patients Game History</p>
-                      <p class="fs-30 mb-2" style="color: white;">{{graphDataPatient.length}}</p>
-                      <p style="color: white;">30 days</p>
-                    </div>
-                    </a>
-                  </div>
-                </div>
-             </div>
-                 
-                
-              <div class="row">
-              
-                <div class="col-md-12 stretch-card transparent">
-                  <div class="card card-light-danger">
-                     <a class="nav-link" href="#">
-                    <div class="card-body">
-                      <p class="mb-4" style="color: white;">Number of Games</p>
-                      <p class="fs-30 mb-2" style="color: white;">{{datagame.length}}</p>
-                      <p style="color: white;">30 days</p>
-                    </div>
-                    </a>
-                  </div>
-                </div>
-             
+              </a>
             </div>
           </div>
-					
-				</div>
 
-
-   {{!-- overall graph script       --}}
-
-     <script>
-  let dateDropdown = document.getElementById('date-dropdowno'); 
-  var yearo = {}
-  let currentYear = new Date().getFullYear();    
-  let earliestYear = 2020;     
-  while (currentYear >= earliestYear) {      
-    let dateOption = document.createElement('option');          
-    dateOption.text = currentYear;      
-    dateOption.value = currentYear;        
-    dateDropdown.add(dateOption); 
-    yearo[currentYear] = 0;    
-    currentYear -= 1;    
-  }
-
-  
-  var setMonth = (year)=>{
-    var monthNames = ["January", "February", "March", "April", "May", "June", 
-              "July","August", "September", "October","November", "December"]
-              
-  const currentTime = new Date();
-  const monthDropdown = document.getElementById("month-dropdowno")
-  let index =0;
-      monthDropdown.innerHTML=`<option value="-1">Months</option>`;
-    if(year <currentTime.getFullYear()){
-      while(index<12){
-        let monthOption = document.createElement("option");
-        monthOption.text = monthNames[index];
-        monthOption.value = index;
-        monthDropdown.add(monthOption)
-        index++;
-      }
-    }
-    else{
-      while(index<=currentTime.getMonth()){
-        let monthOption = document.createElement("option");
-        monthOption.text = monthNames[index];
-        monthOption.value = index;
-        monthDropdown.add(monthOption)
-        index++;
-      }
-    }
-  }
-
-  setMonth();
-
-     </script> 
-
-
-
-                  <div class="row">
-
-
-                    	<div class="col-12 col-md-4 col-lg-4col-xl-4">
-						<div class="card">
-							<div class="card-body">
-								<div class="chart-title">
-									<h4>Loudness Graph</h4>
-								
-								</div>	
-								   <canvas id="myChartl" style="width:100%;max-width:600px"></canvas>
-                    <select id='date-dropdownl' onchange="setGraphl()"></select>
-                    <select id='month-dropdownl' onchange="setGraphl()"></select>
-                    {{!-- <button onclick="timeFramel('year')">Year</button> --}}
-							</div>
-             
-						</div>
-					</div>
-           {{!-- loudness graph script       --}}
-
-            <script>
-  let dateDropdownl = document.getElementById('date-dropdownl'); 
-  var yearl = {}
-  let currentYearl = new Date().getFullYear();    
-  let earliestYearl = 2020;     
-  while (currentYearl >= earliestYearl) {      
-    let dateOption = document.createElement('option');          
-    dateOption.text = currentYearl;      
-    dateOption.value = currentYearl;        
-    dateDropdownl.add(dateOption);  
-    yearl[currentYearl] = 0;
-    currentYearl -= 1;    
-  }
-
-  
-  var setMonthl = (year)=>{
-    var monthNames = ["January", "February", "March", "April", "May", "June", 
-              "July","August", "September", "October","November", "December"]
-              
-  const currentTime = new Date();
-  const monthDropdownl = document.getElementById("month-dropdownl")
-  let index =0;
-      monthDropdownl.innerHTML=`<option value="-1">Select</option>`;
-    if(year <currentTime.getFullYear()){
-      while(index<12){
-        let monthOption = document.createElement("option");
-        monthOption.text = monthNames[index];
-        monthOption.value = index;
-        monthDropdownl.add(monthOption)
-        index++;
-      }
-    }
-    else{
-      while(index<=currentTime.getMonth()){
-        let monthOption = document.createElement("option");
-        monthOption.text = monthNames[index];
-        monthOption.value = index;
-        monthDropdownl.add(monthOption)
-        index++;
-      }
-    }
-  }
-
-  setMonthl();
-
-           </script> 
-
-				<div class="col-12 col-md-4 col-lg-4col-xl-4">
-						<div class="card">
-							<div class="card-body">
-								<div class="chart-title">
-									<h4>Hz Graph</h4>
-								</div>
-								<canvas id="myCharth" style="width:100%;max-width:600px"></canvas>
-                <select id='date-dropdownh' onchange="setGraphh()"></select>
-                <select id='month-dropdownh' onchange="setGraphh ()"></select>
-                {{!-- <button onclick="timeFrameh('year')" >Year</button> --}}
-                                 
-							</div>
-						</div>
-			</div>
-
-         {{!-- HZ Graph --}}
-
-          <script>
-  let dateDropdownh = document.getElementById('date-dropdownh'); 
-  var yearh = {}
-  let currentYearh = new Date().getFullYear();    
-  let earliestYearh = 2020;     
-  while (currentYearh >= earliestYearh) {      
-    let dateOption = document.createElement('option');          
-    dateOption.text = currentYearh;      
-    dateOption.value = currentYearh;        
-    dateDropdownh.add(dateOption);  
-    yearh[currentYearh] = 0;
-    currentYearh -= 1;    
-  }
-
-  
-  var setMonthh = (year)=>{
-    var monthNames = ["January", "February", "March", "April", "May", "June", 
-              "July","August", "September", "October","November", "December"]
-              
-  const currentTime = new Date();
-  const monthDropdownh = document.getElementById("month-dropdownh")
-  let index =0;
-      monthDropdownh.innerHTML=`<option value="-1">Months</option>`;
-    if(year <currentTime.getFullYear()){
-      while(index<12){
-        let monthOption = document.createElement("option");
-        monthOption.text = monthNames[index];
-        monthOption.value = index;
-        monthDropdownh.add(monthOption)
-        index++;
-      }
-    }
-    else{
-      while(index<=currentTime.getMonth()){
-        let monthOption = document.createElement("option");
-        monthOption.text = monthNames[index];
-        monthOption.value = index;
-        monthDropdownh.add(monthOption)
-        index++;
-      }
-    }
-  }
-
-  setMonthh();
-
-       </script> 
-
-          <div class="col-12 col-md-4 col-lg-4col-xl-4">
-						<div class="card">
-							<div class="card-body">
-								<div class="chart-title">
-									<h4>Recognition Graph</h4>
-								</div>
-								 <canvas id="myChartr" style="width:100%;max-width:600px"></canvas>
-                                 <select id='date-dropdownr' onchange="setGraphr()"></select>
-                                    <select id='month-dropdownr' onchange="setGraphr ()"></select>
-                                   {{!-- <button onclick="timeFramer('year')" >Year</button> --}}
-                               
-							</div>
-						</div>
-					</div>
-				</div>
-
-
-{{!-- Recognigetion script --}}
-
-  <script>
-  let dateDropdownr = document.getElementById('date-dropdownr'); 
-  var yearr = {}
-  let currentYearr = new Date().getFullYear();    
-  let earliestYearr = 2020;     
-  while (currentYearr >= earliestYearr) {      
-    let dateOption = document.createElement('option');          
-    dateOption.text = currentYearr;      
-    dateOption.value = currentYearr;        
-    dateDropdownr.add(dateOption);  
-    yearr[currentYearr] = 0;
-    currentYearr -= 1;    
-  }
-
-  
-  var setMonthr = (year)=>{
-    var monthNames = ["January", "February", "March", "April", "May", "June", 
-              "July","August", "September", "October","November", "December"]
-              
-  const currentTime = new Date();
-  const monthDropdownr = document.getElementById("month-dropdownr")
-  let index =0;
-      monthDropdownr.innerHTML=`<option value="-1">Months</option>`;
-    if(year <currentTime.getFullYear()){
-      while(index<12){
-        let monthOption = document.createElement("option");
-        monthOption.text = monthNames[index];
-        monthOption.value = index;
-        monthDropdownr.add(monthOption)
-        index++;
-      }
-    }
-    else{
-      while(index<=currentTime.getMonth()){
-        let monthOption = document.createElement("option");
-        monthOption.text = monthNames[index];
-        monthOption.value = index;
-        monthDropdownr.add(monthOption)
-        index++;
-      }
-    }
-  }
-
-  setMonthr();
-
-  </script> 
-
-
-
-
-         {{!-- Overall graph --}}
-
-      <script myvar={{graphDataPatient}} myvarl={{loudness}} myvarp={{pitch}} myvarr={{overrall}} >
-               var unique = (a,t={}) => a.filter(e=>!(t[e]=e in t)); // function to find unique dates
-          var temp = document.currentScript.getAttribute('myvar'); 
-          var temp2 = document.currentScript.getAttribute('myvarl'); 
-          var temp3 = document.currentScript.getAttribute('myvarp');
-          var temp4 = document.currentScript.getAttribute('myvarr');
-        
-          var arro=temp.split(","); // spliting from iso date to normal date
-          var arrl=temp2.split(",");
-          var arrp=temp3.split(",");
-          var arrr=temp4.split(",");
-          
-         var datapointso=[];
-         arro=unique(arro);
-         for(var i=0;i<arro.length;i++){ //counting occurance of each element
-            var sum=parseFloat(arrl[i])+parseFloat(arrr[i])+parseFloat(arrp[i]); 
-            datapointso.push(parseFloat(sum/3));
-            }
-            var curr=1;
-         for(var i=1;i<arro.length;i++){ //counting occurance of each element
-            if(arro[i-1]===arro[i]){
-              ++curr;
-            }else{
-              datapointso.push(curr);
-              curr=1;
-            }
-         }
-
-            const counts = {};
-         for (const num of arro) {
-                counts[num] = counts[num] ? counts[num] + 1 : 1;
-              }
-              // console.log(counts)
-          datapointso.push(curr);
-         
-          const dayo=[];
-          for(var i=0;i<arro.length;i++){
-             dayo.push({x:new Date(arro[i]).setHours(0,0,0,0),y:datapointso[i]});
-          } 
-
-          var mpo = new Map();
-
-              for(var i=0;i<dayo.length;i++){           
-             //mpo[arro[i]]=mpo[arro[i]] || [];
-             mpo.set(dayo[i].x,datapointso[i]);
-          }
-
-
-          var monthName = ["January", "February", "March", "April", "May", "June", 
-              "July","August", "September", "October","November", "December"]
-              
-              var data=new Array(12).fill(0);
-              for(var i=0;i<mpo.size;i++){
-                  let date=new Date(dayo[i].x);
-                  let month = date.getMonth();
-                let year = date.getFullYear().toString();
-                if( mpo.get(date.getTime()) ){
-                  //console.log(date)
-                  data[month] += mpo.get(date.getTime());
-                }
-              }
-
-              var daynr=[];
-
-
-              const newLable = [];
-              for(let i=0;i<12;i++){
-                 // console.log(new Date().getFullYear(), selectYearr)
-                if( new Date().getMonth()< i){
-                  console.log(monthName[i])
-                }
-                else{
-                  newLable.push(monthName[i]);
-                  daynr.push({x:monthName[i],y:data[i]});
-                }
-              }
-
-          console.log(daynr)
-
-
-          //console.log("mpo")
-          //console.log(mpo)
-          var data = {
-            labels: newLable,
-            datasets: [{
-              label: 'Over All Graph',
-              data: daynr,
-              backgroundColor: "orange",
-              borderColor: "red",
-              borderWidth: 3
-            }]
-          };
-          var config = {
-            type: 'line',
-            data,
-            options: {
-              scales: {
-                x:{
-                  type: 'category',
-                  time:{
-                    unit: 'month'
-                  }
-                },
-                y: {
-                  beginAtZero: true
-                }
-              }
-            }
-          };
-          const myCharto = new Chart(
-            document.getElementById('myCharto'),
-            config
-          );
-
-          function setGraph(){
-              const monthValue = document.getElementById("month-dropdowno").value;
-              const yearValue = document.getElementById("date-dropdowno").value;
-              setMonth(document.getElementById("date-dropdowno").value);
-              if(monthValue==-1){
-                timeFrameo('month', { year: yearValue} )
-              }
-              else{
-                timeFrameo('day',{month:monthValue, year: yearValue} )
-              }
-            
-          }
-
-          function timeFrameo(period, payload){
-            //console.log(period)
-            if(period=='day'){
-
-              var startdate=new Date(parseInt(payload.year), parseInt(payload.month), 1);
-              var enddate=new Date(parseInt(payload.year), parseInt(payload.month)+1, 0);
-              var temp = startdate;
-              var label = []
-
-              const date = new Date();
-              if(startdate.getFullYear()=== date.getFullYear() && startdate.getMonth()=== date.getMonth()){
-                enddate = date;
-              }
-
-
-              while (temp <= enddate) {
-                let day = temp.getDate();
-                let month = temp.getMonth()+1;
-                let year = temp.getFullYear();
-                if(day<=9){
-                 day= day.toString().padStart(2, '0');
-                } if(month<=9){
-                  month=month.toString().padStart(2,'0');
-                }
-                  //label.push(new Date(year , month , day).getTime())
-                  label.push(temp.toLocaleDateString())
-                  temp = new Date(temp.getTime() + 24 * 60 * 60 * 1000)
-              }
-
-              var dayn=[];
-              for(var i=0;i<label.length;i++){
-                const time = new Date(label[i]).setHours(0, 0, 0, 0)
-                if(mpo.has(time) && mpo.get(time)){
-                  //console.log(mpo.get(label[i]))
-                  dayn.push({x:time,y:mpo.get(time) }) 
-                }else{
-                  dayn.push({x:time,y:0});
-                }
-                }
-
-                //console.log("label")
-                //console.log(newLabel)
-                
-              //console.log(dayn) 
-              myCharto.config.options.scales.x.time.unit='day';
-              myCharto.config.options.scales.x.type="category";
-              myCharto.config.data.labels=label; 
-              myCharto.config.data.datasets[0].data=dayn;
-
-
-
-
-
-
-              //myCharto.config.options.scales.x.time.unit=period;
-              //myCharto.config.data.datasets[0].data=dayo;
-            }else if(period=='month'){
-
-              var selectYear=parseInt(payload.year);
-              
-              var monthName = ["January", "February", "March", "April", "May", "June", 
-              "July","August", "September", "October","November", "December"]
-              
-              var data=new Array(12).fill(0);
-              //console.log(dayo)
-              for(var i=0;i<mpo.size;i++){
-                  let date=new Date(dayo[i].x);
-                  let month = date.getMonth();
-                let year = date.getFullYear().toString();
-                if(year==selectYear && mpo.get(date.getTime()) ){
-                  //console.log(date)
-                  if(mpo.get(date.getTime())!== Infinity)
-                    data[month] += mpo.get(date.getTime());
-                }
-              }
-
-              var dayn=[];
-              const newLable = [];
-              for(let i=0;i<12;i++){
-                  //console.log(new Date().getFullYear(), selectYearr)
-                if(new Date().getFullYear() === parseInt(selectYear) && new Date().getMonth()< i){
-                  console.log(monthName[i])
-                }
-                else{
-                  newLable.push(monthName[i]);
-                  dayn.push({x:monthName[i],y:data[i]});
-                }
-              }
-
-
-
-              console.log(dayn)
-              myCharto.config.options.scales.x.time.unit='mpnth';
-              myCharto.config.options.scales.x.type="category";
-              myCharto.config.data.labels=newLable; 
-              myCharto.config.data.datasets[0].data=dayn;
-            }else if(period=='year'){
-              for(year in yearo){
-                yearo[year] =0
-              }
-              //const data = {};
-              for(let i=0; i<mpo.size; i++){
-                let date=new Date(dayo[i].x);
-                if(mpo.get(date.getTime()))
-                yearo[date.getFullYear()] +=mpo.get(date.getTime()); 
-              }
-              //console.log(yearo);
-
-              var dayn = [];
-              for(year in yearo){
-                dayn.push({x:year, y: yearo[year]})
-              }
-
-              myCharto.config.options.scales.x.time.unit=period;
-              myCharto.config.data.datasets[0].data=dayn;
-            }
-            myCharto.update();
-          }
-
-          function filterDatao(){
-            var dates2=[...arro];
-            const startdate=document.getElementById('startdateo');
-            const enddate=document.getElementById('enddateo');
-           var indexstartdate=dates2.findIndex(function(date) {
-                            return date >=startdate.value;
-                        });
-            var indexenddate;
-          for(var i=0;i<dates2.length;i++){
-            if(dates2[i]<=enddate.value){
-              indexenddate=i;
-            }
-          }
-           const filterDate= dates2.slice(indexstartdate,indexenddate+1);
-            myCharto.config.data.labels=filterDate;
-            var datapoints2=[...datapointso]
-            const filterDatapoints=datapoints2.slice(indexstartdate,indexenddate+1);
-            myCharto.config.data.datasets[0].data=filterDatapoints;
-
-            myCharto.update();
-       
-          }
-        </script>
-
-        {{!-- Loudness --}}
-
-        <script myvar={{datel}} myvars={{loudness}}>
-          var temp2 = document.currentScript.getAttribute('myvars'); 
-          var tempXl=document.currentScript.getAttribute('myvar');
-          var arrY=temp2.split(",");
-          var arrXl=tempXl.split(",");
-          var datapointsl=[];
-        
-         for(var i=0;i<arrY.length;i++){ //counting occurance of each element
-              datapointsl.push(parseFloat(arrY[i]));
-            }
-          var mapl = new Map();
-          const dayl = []
-          for(var i=0;i<arrXl.length;i++){
-             dayl.push({x:new Date(arrXl[i]).setHours(0,0,0,0),y:datapointsl[i]});
-             mapl.set(new Date(arrXl[i]).setHours(0,0,0,0), datapointsl[i]);
-          }
-
-
-          var monthNamel = ["January", "February", "March", "April", "May", "June", 
-              "July","August", "September", "October","November", "December"]
-              
-              var datal=new Array(12).fill(0);
-              const avg ={};
-              let count =0;
-              for(var i=0;i<mapl.size;i++){
-                  let date=new Date(dayl[i].x);
-                  let month = date.getMonth();
-                let year = date.getFullYear().toString();
-                
-                if( mapl.get(date.getTime()) ){
-                  //console.log(date)
-                  avg[month] = {val:mapl.get(date.getTime()), count: ++count }
-                  datal[month] += mapl.get(date.getTime());
-                  
-                }
-              }
-              console.log(avg)
-
-              var daynl=[];
-
-
-              const newLablel = [];
-              for(let i=0;i<12;i++){
-                 // console.log(new Date().getFullYear(), selectYearr)
-                if( new Date().getMonth()< i){
-                  //console.log(monthNamer[i])
-                }
-                else{
-                  newLablel.push(monthNamel[i]);
-                  daynl.push({x:monthNamel[i],y:datal[i]});
-                }
-              }
-
-          console.log(daynl)
-
-          //console.log(mapl)
-          var data = {
-            labels: arrXl,
-            datasets: [{
-              label: 'Loudness',
-              data: daynl,
-              backgroundColor: "green",
-              borderColor: "lightgreen",
-              borderWidth: 3
-            }]
-          };
-          var config = {
-            type: 'line',
-            data,
-            options: {
-              scales: {
-                x:{
-                  type: 'category',
-                  time:{
-                    unit: 'month'
-                  }
-                },
-                y: {
-                  beginAtZero: true
-                }
-              }
-            }
-          };
-          const myChartl = new Chart(
-            document.getElementById('myChartl'),
-            config
-          );
-
-
-
-          function setGraphl(){
-              const monthValuel = document.getElementById("month-dropdownl").value;
-              const yearValuel = document.getElementById("date-dropdownl").value;
-              setMonthl(document.getElementById("date-dropdownl").value);
-              if(monthValuel==-1){
-                timeFramel('month', { year: yearValuel})
-              }
-              else{
-                timeFramel('day',{month:monthValuel, year: yearValuel} )
-              }
-            
-          }
-
-          function timeFramel(period, payload){
-            if(period=='day'){
-
-              var startdate=new Date(parseInt(payload.year), parseInt(payload.month), 1);
-              var enddate=new Date(parseInt(payload.year), parseInt(payload.month)+1, 0);
-              var temp = startdate;
-              var labell = []
-
-              const date = new Date();
-              if(startdate.getFullYear()=== date.getFullYear() && startdate.getMonth()=== date.getMonth()){
-                enddate = date;
-              }
-
-
-
-              while (temp <= enddate) {
-                let day = temp.getDate();
-                let month = temp.getMonth()+1;
-                let year = temp.getFullYear();
-                if(day<=9){
-                 day= day.toString().padStart(2, '0');
-                } if(month<=9){
-                  month=month.toString().padStart(2,'0');
-                }
-                  //label.push(new Date(year , month , day).getTime())
-                  labell.push(temp.toLocaleDateString());
-                  temp = new Date(temp.getTime() + 24 * 60 * 60 * 1000)
-              }
-
-
-              var arrl = [];
-              for(var i=0; i<labell.length; i++){
-                const time = new Date(labell[i]).setHours(0, 0, 0, 0)
-                //console.log(time)
-                if(mapl.has(time) && mapl.get(time)){
-                  //console.log(mapl.get(1671993000000))
-                  arrl.push({x:time, y:mapl.get(time) })
-                }
-                else{
-                  arrl.push({x:time,y:0});
-                }
-              }
-
-
-           //   myChartl.config.options.scales.x.time.unit='day';
-           //   myChartl.config.options.scales.x.type="category";
-           //   myChartl.config.data.labels=labell;
-           //   myChartl.config.data.datasets[0].data=arrl;
-
-
-              myChartl.config.options.scales.x.time.unit='day';
-              myChartl.config.options.scales.x.type="category";
-              myChartl.config.data.labels=labell; 
-              myChartl.config.data.datasets[0].data=arrl;
-            }else if(period=='month'){
-
-              var selectYearl=parseInt(payload.year);
-              
-              var monthNamel = ["January", "February", "March", "April", "May", "June", 
-              "July","August", "September", "October","November", "December"]
-              
-              var datal=new Array(12).fill(0);
-              //console.log(dayo)
-              for(var i=0;i<mapl.size;i++){
-                  let date=new Date(dayl[i].x);
-                  let month = date.getMonth();
-                let year = date.getFullYear().toString();
-                if(year==selectYearl && mapl.get(date.getTime()) ){
-                  //console.log(date)
-                  datal[month] += mapl.get(date.getTime());
-                }
-              }
-
-              var daynl=[];
-              //for(let i=0;i<12;i++){
-              //  daynl.push({x:monthNamel[i],y:datal[i]});
-              //}
-
-              const newLablel = [];
-              for(let i=0;i<12;i++){
-                 // console.log(new Date().getFullYear(), selectYearr)
-                if(new Date().getFullYear() === parseInt(selectYearl) && new Date().getMonth()< i){
-                  //console.log(monthNamer[i])
-                }
-                else{
-                  newLablel.push(monthNamel[i]);
-                  daynl.push({x:monthNamel[i],y:datal[i]});
-                }
-              }
-            //console.log(daynr)
-            //console.log(newLabler)
-            //console.log(daynl)
-
-              myChartl.config.options.scales.x.time.unit=period;
-              myChartl.config.options.scales.x.type="category";
-              myChartl.config.data.labels=monthNamel; 
-              myChartl.config.data.datasets[0].data=daynl;
-            }else if(period=='year'){
-
-              for(year in yearl){
-                yearl[year] =0
-              }
-              //const data = {};
-              for(let i=0; i<mapl.size; i++){
-                let date=new Date(dayl[i].x);
-                if(mapl.get(date.getTime()))
-                yearl[date.getFullYear()] +=mapl.get(date.getTime()); 
-              }
-              //console.log(yearo);
-
-              var daynl = [];
-              for(year in yearl){
-                daynl.push({x:year, y: yearl[year]})
-              }
-
-              myChartl.config.options.scales.x.time.unit=period;
-              myChartl.config.data.datasets[0].data=daynl;
-            }
-            myChartl.update();
-          }
-
-          function filterDatal(){
-            var dates2=[...arro];
-            const startdate=document.getElementById('startdatel');
-            const enddate=document.getElementById('enddatel');
-           const indexstartdate=dates2.findIndex(function(date) {
-                            return date >=startdate.value;
-                        });
-            var indexenddate;
-          for(var i=0;i<dates2.length;i++){
-            if(dates2[i]<=enddate.value){
-              indexenddate=i;
-            }
-          }
-           const filterDate= dates2.slice(indexstartdate,indexenddate+1);
-            myChartl.config.data.labels=filterDate;
-            var datapoints2=[...datapointsl]
-            const filterDatapoints=datapoints2.slice(indexstartdate,indexenddate+1);
-            myChartl.config.data.datasets[0].data=filterDatapoints;
-
-            myChartl.update();
-       
-          }
-
-             </script>
-
-             {{!-- pitch --}}
-
-
-        <script myvar={{datep}} myvars={{pitch}}>
-          var templ = document.currentScript.getAttribute('myvars'); 
-          var tempXp=document.currentScript.getAttribute('myvar');
-          var arrXp=tempXp.split(",");
-          var arrYp=templ.split(",");
-         var datapointsp=[];
-        
-         for(var i=0;i<arrYp.length;i++){ //counting occurance of each element
-              datapointsp.push(parseFloat(arrYp[i]));
-            }
-          var dayp=[];
-          var maph = new Map();
-          for(var i=0;i<arrXp.length;i++){
-             dayp.push({x:new Date(arrXp[i]).setHours(0,0,0,0),y:datapointsp[i]});
-             maph.set(new Date(arrXp[i]).setHours(0,0,0,0), datapointsp[i]);
-          }
-
-          const monthNameh = ["January", "February", "March", "April", "May", "June", 
-              "July","August", "September", "October","November", "December"]
-              
-              var datah=new Array(12).fill(0);
-              for(var i=0;i<maph.size;i++){
-                  let date=new Date(dayp[i].x);
-                  let month = date.getMonth();
-                let year = date.getFullYear().toString();
-                if( maph.get(date.getTime()) ){
-                  //console.log(date)
-                  datah[month] += maph.get(date.getTime());
-                }
-              }
-
-              var daynh=[];
-
-
-              const newLableh = [];
-              for(let i=0;i<12;i++){
-                 // console.log(new Date().getFullYear(), selectYearr)
-                if( new Date().getMonth()< i){
-                  console.log(monthNameh[i])
-                }
-                else{
-                  newLableh.push(monthNameh[i]);
-                  daynh.push({x:monthNameh[i],y:datah[i]});
-                }
-              }
-
-          //console.log(maph)
-          //console.log(dayp)
-          var data = {
-            labels: newLableh,
-            datasets: [{
-              label: 'Pitch',
-              data: daynh,
-              backgroundColor: "skyblue",
-              borderColor: "blue",
-              borderWidth: 3
-            }]
-          };
-          var config = {
-            type: 'line',
-            data,
-            options: {
-              scales: {
-                x:{
-                  type: 'category',
-                  time:{
-                    unit: 'month'
-                  }
-                },
-                y: {
-                  beginAtZero: true
-                }
-              }
-            }
-          };
-          const myCharth = new Chart(
-            document.getElementById('myCharth'),
-            config
-          );
-
-
-
-        function setGraphh(){
-              const monthValueh = document.getElementById("month-dropdownh").value;
-              const yearValueh = document.getElementById("date-dropdownh").value;
-              setMonthh(document.getElementById("date-dropdownh").value);
-              if(monthValueh==-1){
-                timeFrameh('month', { year: yearValueh})
-              }
-              else{
-                timeFrameh('day',{month:monthValueh, year: yearValueh} )
-              }
-            
-          }
-
-
-          function timeFrameh(period, payload){
-            if(period=='day'){
-              var startdate=new Date(parseInt(payload.year), parseInt(payload.month), 1);
-              var enddate=new Date(parseInt(payload.year), parseInt(payload.month)+1, 0);
-              var temp = startdate;
-              var labelh = []
-
-              const date = new Date();
-              if(startdate.getFullYear()=== date.getFullYear() && startdate.getMonth()=== date.getMonth()){
-                enddate = date;
-              }
-
-
-
-              while (temp <= enddate) {
-                let day = temp.getDate();
-                let month = temp.getMonth()+1;
-                let year = temp.getFullYear();
-                if(day<=9){
-                 day= day.toString().padStart(2, '0');
-                } if(month<=9){
-                  month=month.toString().padStart(2,'0');
-                }
-                  //label.push(new Date(year , month , day).getTime())
-                  labelh.push(temp.toLocaleDateString())
-                  temp = new Date(temp.getTime() + 24 * 60 * 60 * 1000)
-              }
-
-
-              var arrh = [];
-              for(var i=0; i<labelh.length; i++){
-                const time = new Date(labelh[i]).setHours(0,0,0,0)
-                //console.log(time)
-                if(maph.has(time) && maph.get(time)){
-                  //console.log(maph.get(time))
-                  if(maph.get(time) === Infinity)
-                    arrh.push({x:time, y:0})
-                    else
-                  arrh.push({x:time, y:maph.get(time) })
-                }
-                else{
-                  arrh.push({x:time,y:0});
-                }
-              }
-
-              console.log(arrh)
-              console.log(maph)
-
-              myCharth.config.options.scales.x.time.unit='day';
-              myCharth.config.options.scales.x.type="category";
-              myCharth.config.data.labels=labelh; 
-              myCharth.config.data.datasets[0].data=arrh;
-
-
-            // myCharth.config.options.scales.x.time.unit='day';
-            //  myCharth.config.options.scales.x.type="category";
-            //  myCharth.config.data.labels=labelh;
-            //  myCharth.config.data.datasets[0].data=arrh;
-            }else if(period=='month'){
-              var selectYearh=parseInt(payload.year);
-              
-              var monthNameh = ["January", "February", "March", "April", "May", "June", 
-              "July","August", "September", "October","November", "December"]
-              
-              var datah=new Array(12).fill(0);
-              //console.log(dayo)
-              for(var i=0;i<maph.size;i++){
-                  let date=new Date(dayp[i].x);
-                  let month = date.getMonth();
-                let year = date.getFullYear().toString();
-                if(year==selectYearh && maph.get(date.getTime()) ){
-                  //console.log(date)
-                  datah[month] += maph.get(date.getTime());
-                }
-              }
-
-              var daynh=[];
-              const newLableh = [];
-              for(let i=0;i<12;i++){
-                  //console.log(new Date().getFullYear(), selectYearr)
-                if(new Date().getFullYear() === parseInt(selectYearh) && new Date().getMonth()< i){
-                  console.log(monthNameh[i])
-                }
-                else{
-                  newLableh.push(monthNameh[i]);
-                  daynh.push({x:monthNameh[i],y:datah[i]});
-                }
-              }
-            //console.log(daynh)
-
-             myCharth.config.options.scales.x.time.unit=period;
-              myCharth.config.options.scales.x.type="category";
-              myCharth.config.data.labels= newLableh; 
-              myCharth.config.data.datasets[0].data=daynh;
-            }else if(period=='year'){
-              for(year in yearh){
-                yearh[year] =0
-              }
-              for(let i=0; i<maph.size; i++){
-                let date=new Date(dayp[i].x);
-                if(maph.get(date.getTime()))
-                yearh[date.getFullYear()] +=maph.get(date.getTime()); 
-              }
-              //console.log(yearo);
-
-              var daynh = [];
-              for(year in yearh){
-                daynh.push({x:year, y: yearh[year]})
-              }
-
-              myCharth.config.options.scales.x.time.unit=period;
-              myCharth.config.data.datasets[0].data=daynh;
-            }
-            myCharth.update();
-          }
-
-          function filterDatah(){
-            var dates2=[...arro];
-            const startdate=document.getElementById('startdateh');
-            const enddate=document.getElementById('enddateh');
-           const indexstartdate=dates2.findIndex(function(date) {
-                            return date >=startdate.value;
-                        });
-                        var indexenddate;
-          for(var i=0;i<dates2.length;i++){
-            if(dates2[i]<=enddate.value){
-              indexenddate=i;
-            }
-          }
-           const filterDate= dates2.slice(indexstartdate,indexenddate+1);
-            myCharth.config.data.labels=filterDate;
-            var datapoints2=[...datapointsp]
-            const filterDatapoints=datapoints2.slice(indexstartdate,indexenddate+1);
-            myCharth.config.data.datasets[0].data=filterDatapoints;
-
-            myCharth.update();
-       
-          }
-
-        </script>
-
-        {{!-- Recognition --}}
-
-        <script myvar={{dateo}} myvars={{overrall}}>
-          var tempr = document.currentScript.getAttribute('myvars'); 
-          var temprr=document.currentScript.getAttribute('myvar');
-          var arrYr=tempr.split(",");
-          var arrr=temprr.split(",");
-         var datapointsr=[];
-        
-         for(var i=0;i<arrr.length;i++){ //counting occurance of each element
-              datapointsr.push(parseFloat(arrYr[i]));
-            }
-
-            var mapr = new Map();
-            console.log("mapr")
-            
-          var dayr=[];
-          for(var i=0;i<arrr.length;i++){
-            dayr.push({x:new Date(arrr[i]).setHours(0,0,0,0),y:datapointsr[i]});
-             mapr.set(new Date(arrr[i]).setHours(0,0,0,0), datapointsr[i]);
-          }
-
-          console.log(mapr)
-
-          var monthNamer = ["January", "February", "March", "April", "May", "June", 
-              "July","August", "September", "October","November", "December"]
-              
-              var datar=new Array(12).fill(0);
-              for(var i=0;i<mapr.size;i++){
-                  let date=new Date(dayr[i].x);
-                  let month = date.getMonth();
-                let year = date.getFullYear().toString();
-                if( mapr.get(date.getTime()) ){
-                  //console.log(date)
-                  datar[month] += mapr.get(date.getTime());
-                }
-              }
-
-              var daynr=[];
-
-
-              const newLabler = [];
-              for(let i=0;i<12;i++){
-                 // console.log(new Date().getFullYear(), selectYearr)
-                if( new Date().getMonth()< i){
-                  console.log(monthNamer[i])
-                }
-                else{
-                  newLabler.push(monthNamer[i]);
-                  daynr.push({x:monthNamer[i],y:datar[i]});
-                }
-              }
-
-          console.log(daynr)
-
-
-
-          var data = {
-            labels: newLabler,
-            datasets: [{
-              label: 'Recognition',
-              data: daynr,
-              backgroundColor: "yellow",
-              borderColor: "orange",
-              borderWidth: 3
-            }]
-          };
-          var config = {
-            type: 'line',
-            data,
-            options: {
-              scales: {
-                x:{
-                  type: 'category',
-                  time:{
-                    unit: 'month'
-                  }
-                },
-                y: {
-                  beginAtZero: true
-                }
-              }
-            }
-          };
-          const myChartr = new Chart(
-            document.getElementById('myChartr'),
-            config
-          );
-
-
-
-          function setGraphr(){
-              const monthValuer = document.getElementById("month-dropdownr").value;
-              const yearValuer = document.getElementById("date-dropdownr").value;
-              setMonthr(document.getElementById("date-dropdownr").value);
-              if(monthValuer==-1){
-                timeFramer('month', { year: yearValuer})
-              }
-              else{
-                timeFramer('day',{month:monthValuer, year: yearValuer} )
-              }
-            
-          }
-
-          function timeFramer(period, payload){
-            if(period=='day'){
-              var startdate=new Date(parseInt(payload.year), parseInt(payload.month), 1);
-              var enddate=new Date(parseInt(payload.year), parseInt(payload.month)+1, 0);
-              var temp = startdate;
-              var labelr = []
-
-              const date = new Date();
-              if(startdate.getFullYear()=== date.getFullYear() && startdate.getMonth()=== date.getMonth()){
-                enddate = date;
-              }
-
-
-              while (temp <= enddate) {
-                let day = temp.getDate();
-                let month = temp.getMonth()+1;
-                let year = temp.getFullYear();
-                if(day<=9){
-                 day= day.toString().padStart(2, '0');
-                } if(month<=9){
-                  month=month.toString().padStart(2,'0');
-                }
-                  //label.push(new Date(year , month , day).getTime())
-                  //1/31/2023
-                  labelr.push(temp.toLocaleDateString())
-                  temp = new Date(temp.getTime() + 24 * 60 * 60 * 1000)
-              }
-
-
-              var dayrr = [];
-              for(var i=0; i<labelr.length; i++){
-                const time = new Date(labelr[i]).setHours(0, 0, 0, 0)
-                //console.log(time)
-                if(mapr.has(time) && mapr.get(time)){
-                  //console.log(mapl.get(1671993000000))
-                  dayrr.push({x:time, y:mapr.get(time) })
-                }
-                else{
-                  dayrr.push({x:time,y:0});
-                }
-              }
-
-              console.log(dayrr)
-              console.log(labelr)
-
-
-              myChartr.config.options.scales.x.time.unit='day';
-              myChartr.config.options.scales.x.type="category";
-              myChartr.config.data.labels=labelr;
-              myChartr.config.data.datasets[0].data=dayrr;
-            }else if(period=='month'){
-              var selectYearr=parseInt(payload.year);
-              
-              var monthNamer = ["January", "February", "March", "April", "May", "June", 
-              "July","August", "September", "October","November", "December"]
-              
-              var datar=new Array(12).fill(0);
-              //console.log(dayo)
-              for(var i=0;i<mapr.size;i++){
-                  let date=new Date(dayr[i].x);
-                  let month = date.getMonth();
-                  let year = date.getFullYear().toString();
-                if(year==selectYearr && mapr.get(date.getTime()) ){
-                  //console.log(date)
-                  datar[month] += mapr.get(date.getTime());
-                }
-              }
-
-              var daynr=[];
-
-
-              const newLabler = [];
-              for(let i=0;i<12;i++){
-                  console.log(new Date().getFullYear(), selectYearr)
-                if(new Date().getFullYear() === parseInt(selectYearr) && new Date().getMonth()< i){
-                  console.log(monthNamer[i])
-                }
-                else{
-                  newLabler.push(monthNamer[i]);
-                  daynr.push({x:monthNamer[i],y:datar[i]});
-                }
-              }
-            console.log(daynr)
-            console.log(newLabler)
-
-
-            myChartr.config.options.scales.x.time.unit='month';
-              myChartr.config.options.scales.x.type="category";
-              myChartr.config.data.labels= newLabler
-              myChartr.config.data.datasets[0].data=daynr;
-
-            // myChartr.config.options.scales.x.time.unit=period;
-            //  myChartr.config.options.scales.x.type="category";
-            //  //myChartr.config.data.labels=monthNamer; 
-            //  myChartr.config.data.datasets[0].data=daynr;
-
-
-
-              //myChartr.config.options.scales.x.time.unit=period;
-              //myChartr.config.data.datasets[0].data=dayr;
-            }else if(period=='year'){
-
-              for(year in yearr){
-                yearr[year] =0
-              }
-              for(let i=0; i<mapr.size; i++){
-                let date=new Date(dayo[i].x);
-                if(mapr.get(date.getTime()))
-                yearr[date.getFullYear()] +=mapr.get(date.getTime()); 
-              }
-              //console.log(yearo);
-
-              var daynr = [];
-              for(year in yearr){
-                daynr.push({x:year, y: yearr[year]})
-              }
-
-              myChartr.config.options.scales.x.time.unit=period;
-              myChartr.config.options.scales.x.type="time";
-              myChartr.config.data.datasets[0].data=daynr;
-              //myChartr.config.options.scales.x.time.unit=period;
-              //myChartr.config.data.datasets[0].data=dayr;
-            }
-            myChartr.update();
-          }
-
-          function filterDatar(){
-            var dates2=[...arro];
-            const startdate=document.getElementById('startdater');
-            const enddate=document.getElementById('enddater');
-           const indexstartdate=dates2.findIndex(function(date) {
-                            return date >=startdate.value;
-                        });
-                        var indexenddate;
-          for(var i=0;i<dates2.length;i++){
-            if(dates2[i]<=enddate.value){
-              indexenddate=i;
-            }
-          }
-           const filterDate= dates2.slice(indexstartdate,indexenddate+1);
-            myChartr.config.data.labels=filterDate;
-            var datapoints2=[...datapointsr]
-            const filterDatapoints=datapoints2.slice(indexstartdate,indexenddate+1);
-            myChartr.config.data.datasets[0].data=filterDatapoints;
-
-            myChartr.update();
-       
-          }
-        </script>
-
-
-        
-
-
-
-             <div class="col-12" style="max-height: 500px;">
-                        <div class="card member-panel" style="height: 500px;">
-							<div class="card-header bg-white">
-								<center><h4 class="card-title mb-0">Patient Pragress Details</h4></center>
-							</div>
-                            <div class="card-body">
-                                <ul class="contact-list">
-                                  {{#each progress}}
-                                    <li>
-                                        <div class="contact-cont">
-                                            <div class="float-left user-img m-r-10">
-                                                <a href="#" title="John Doe"><img src="{{this.image}}" alt="" class="w-40 rounded-circle"></a>
-                                            </div>
-                                            <div class="contact-info">
-                                               <span class="contact-name text-ellipsis">{{this.patientId}} </span>
-                                                <span class="contact-date">{{this.date}} </span>
-
-
-                                                <script>
-                                          function myFunction() {
-                                     var popup = document.getElementById("myPopup");
-                                   popup.classList.toggle("show");
-                                             }
-                                         </script>
-
-                                           <div class="popup" onclick="myFunction()">Patients History
-                                                  
-                                                  
-                                                <div class="popuptext" id="myPopup" class="row">
-                    <div class="col-md-12"  style="max-height: 500px;">
-                        <div class="card-box">
-                            {{!-- <h3 class="card-title">History Details</h3> --}}
-                            
-                            <div class="experience-box">
-                                <ul class="experience-list">
-                                    <li>
-                                        <div class="experience-user">
-                                            <div class="before-circle"></div>
-                                        </div>
-                                        <div class="experience-content">
-                                            <div class="timeline-content">
-                                                <a href="#/" class="name">Gamebase</a>
-                                                <div>{{this.gamebase}}</div>
-                                            </div>
-
-                                            <hr style="color:black">
-
-                                            <div class="timeline-content">
-                                                <a href="#/" class="name">Overralrating</a>
-                                                <div>{{this.overralrating}}</div>
-                                            </div>
-
-                                            <hr style="color:black">
-
-                                            <div class="timeline-content">
-                                                <a href="#/" class="name">LoudnessTarget</a>
-                                                <div>{{this.LoudnessTarget}}</div>
-                                            </div>
-
-                                             <hr style="color:black">
-
-                                            <div class="timeline-content">
-                                                <a href="#/" class="name">NumberOfTrials</a>
-                                                <div>{{this.NumberOfTrials}}</div>
-                                            </div>
-                                            
-
-                                            <hr style="color:black">
-
-                                            <div class="timeline-content">
-                                                <a href="#/" class="name">cumulativeDurationOfSounds</a>
-                                                <div>{{this.cumulativeDurationOfSounds}}</div>
-                                            </div>
- 
-
-                                            
-                                            <hr style="color:black">
-
-                                            <div class="timeline-content">
-                                                <a href="#/" class="name">MeanPitch</a>
-                                                <div>{{this.MeanPitch}}</div>
-                                            </div>
-
-
-                                            <hr style="color:black">
-
-                                            <div class="timeline-content">
-                                                <a href="#/" class="name">meanLoudness</a>
-                                                <div>{{this.meanLoudness}}</div>
-                                            </div>
-
-
-                                            <hr style="color:black">
-
-                                            <div class="timeline-content">
-                                                <a href="#/" class="name">stdDevPitch</a>
-                                                <div>{{this.stdDevPitch}}</div>
-                                              
-                                            </div>
-
-                                             <hr style="color:black">
-
-                                            <div class="timeline-content">
-                                                <a href="#/" class="name">stdDevLoudness</a>
-                                                <div>{{this.stdDevLoudness}}</div>
-                                              
-                                            </div>
-
-                                            <hr style="color:black">
-
-                                            <div class="timeline-content">
-                                                <a href="#/" class="name">rangepitchMin</a>
-                                                <div>{{this.rangepitchMin}}</div>
-                                              
-                                            </div>
-
-
-                                             <hr style="color:black">
-
-                                            <div class="timeline-content">
-                                                <a href="#/" class="name">rangepitchMax</a>
-                                                <div>{{this.rangepitchMax}}</div>
-                                              
-                                            </div>
-
-
-                                            <hr style="color:black">
-
-                                            <div class="timeline-content">
-                                                <a href="#/" class="name">rangeLoudnessMin</a>
-                                                <div>{{this.rangeLoudnessMin}}</div>
-                                            </div>
-
-
-                                            <hr style="color:black">
-
-                                            <div class="timeline-content">
-                                                <a href="#/" class="name">rangeLoudnessmax</a>
-                                                <div>{{this.rangeLoudnessmax}}</div>
-                                              
-                                            </div>
-                                            
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        
-                    </div>
-                </div>
-                                              
-                                                 </div>
-                                              
-                                            </div>
-                                        </div>
-                                    </li>
-                                    {{/each}}
-                                   
-                                </ul>
-                            </div>
-                         
-                        </div>
-                    </div>
-				  </div>
-			
-                
-            </div>
-        
         </div>
+      </div>
+
     </div>
+
+
+    {{!-- overall graph script --}}
+
+    <script>
+      let dateDropdown = document.getElementById('date-dropdowno');
+      var yearo = {}
+      let currentYear = new Date().getFullYear();
+      let earliestYear = 2020;
+      while (currentYear >= earliestYear) {
+        let dateOption = document.createElement('option');
+        dateOption.text = currentYear;
+        dateOption.value = currentYear;
+        dateDropdown.add(dateOption);
+        yearo[currentYear] = 0;
+        currentYear -= 1;
+      }
+
+
+      var setMonth = (year) => {
+        var monthNames = ["January", "February", "March", "April", "May", "June",
+          "July", "August", "September", "October", "November", "December"]
+
+        const currentTime = new Date();
+        const monthDropdown = document.getElementById("month-dropdowno")
+        let index = 0;
+        monthDropdown.innerHTML = `<option value="-1">Month's</option>`;
+        if (year < currentTime.getFullYear()) {
+          while (index < 12) {
+            let monthOption = document.createElement("option");
+            monthOption.text = monthNames[index];
+            monthOption.value = index;
+            monthDropdown.add(monthOption)
+            index++;
+          }
+        }
+        else {
+          while (index <= currentTime.getMonth()) {
+            let monthOption = document.createElement("option");
+            monthOption.text = monthNames[index];
+            monthOption.value = index;
+            monthDropdown.add(monthOption)
+            index++;
+          }
+        }
+      }
+
+      setMonth();
+
+    </script>
+
+
+
+    <div class="row">
+
+
+      <div class="col-12 col-md-4 col-lg-4col-xl-4">
+        <div class="card">
+          <div class="card-body">
+            <div class="chart-title">
+              {{#each patientdata}}
+              <p class="card-title">{{this.patientFullName}}
+              <h4>Loudness Graph</h4>
+              </p>
+              {{/each}}
+
+
+            </div>
+            <canvas id="myChartl" style="width:100%;max-width:600px"></canvas>
+            <select id='date-dropdownl' onchange="setGraphl()"></select>
+            <select id='month-dropdownl' onchange="setGraphl()"></select>
+            {{!-- <button onclick="timeFramel('year')">Year</button> --}}
+          </div>
+
+        </div>
+      </div>
+      {{!-- loudness graph script --}}
+
+      <script>
+        let dateDropdownl = document.getElementById('date-dropdownl');
+        var yearl = {}
+        let currentYearl = new Date().getFullYear();
+        let earliestYearl = 2020;
+        while (currentYearl >= earliestYearl) {
+          let dateOption = document.createElement('option');
+          dateOption.text = currentYearl;
+          dateOption.value = currentYearl;
+          dateDropdownl.add(dateOption);
+          yearl[currentYearl] = 0;
+          currentYearl -= 1;
+        }
+
+
+        var setMonthl = (year) => {
+          var monthNames = ["January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"]
+
+          const currentTime = new Date();
+          const monthDropdownl = document.getElementById("month-dropdownl")
+          let index = 0;
+          monthDropdownl.innerHTML = `<option value="-1">Month's</option>`;
+          if (year < currentTime.getFullYear()) {
+            while (index < 12) {
+              let monthOption = document.createElement("option");
+              monthOption.text = monthNames[index];
+              monthOption.value = index;
+              monthDropdownl.add(monthOption)
+              index++;
+            }
+          }
+          else {
+            while (index <= currentTime.getMonth()) {
+              let monthOption = document.createElement("option");
+              monthOption.text = monthNames[index];
+              monthOption.value = index;
+              monthDropdownl.add(monthOption)
+              index++;
+            }
+          }
+        }
+
+        setMonthl();
+
+      </script>
+
+      <div class="col-12 col-md-4 col-lg-4col-xl-4">
+        <div class="card">
+          <div class="card-body">
+            <div class="chart-title">
+              {{#each patientdata}}
+              <p class="card-title">{{this.patientFullName}}
+              <h4>Hz Graph</h4>
+              </p>
+              {{/each}}
+
+            </div>
+            <canvas id="myCharth" style="width:100%;max-width:600px"></canvas>
+            <select id='date-dropdownh' onchange="setGraphh()"></select>
+            <select id='month-dropdownh' onchange="setGraphh ()"></select>
+            {{!-- <button onclick="timeFrameh('year')">Year</button> --}}
+
+          </div>
+        </div>
+      </div>
+
+      {{!-- HZ Graph --}}
+
+      <script>
+        let dateDropdownh = document.getElementById('date-dropdownh');
+        var yearh = {}
+        let currentYearh = new Date().getFullYear();
+        let earliestYearh = 2020;
+        while (currentYearh >= earliestYearh) {
+          let dateOption = document.createElement('option');
+          dateOption.text = currentYearh;
+          dateOption.value = currentYearh;
+          dateDropdownh.add(dateOption);
+          yearh[currentYearh] = 0;
+          currentYearh -= 1;
+        }
+
+
+        var setMonthh = (year) => {
+          var monthNames = ["January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"]
+
+          const currentTime = new Date();
+          const monthDropdownh = document.getElementById("month-dropdownh")
+          let index = 0;
+          monthDropdownh.innerHTML = `<option value="-1">Month's</option>`;
+          if (year < currentTime.getFullYear()) {
+            while (index < 12) {
+              let monthOption = document.createElement("option");
+              monthOption.text = monthNames[index];
+              monthOption.value = index;
+              monthDropdownh.add(monthOption)
+              index++;
+            }
+          }
+          else {
+            while (index <= currentTime.getMonth()) {
+              let monthOption = document.createElement("option");
+              monthOption.text = monthNames[index];
+              monthOption.value = index;
+              monthDropdownh.add(monthOption)
+              index++;
+            }
+          }
+        }
+
+        setMonthh();
+
+      </script>
+
+      <div class="col-12 col-md-4 col-lg-4col-xl-4">
+        <div class="card">
+          <div class="card-body">
+            <div class="chart-title">
+              {{#each patientdata}}
+              <p class="card-title">{{this.patientFullName}}
+              <h4>Recognition Graph</h4>
+              </p>
+              {{/each}}
+
+
+            </div>
+            <canvas id="myChartr" style="width:100%;max-width:600px"></canvas>
+            <select id='date-dropdownr' onchange="setGraphr()"></select>
+            <select id='month-dropdownr' onchange="setGraphr ()"></select>
+            {{!-- <button onclick="timeFramer('year')">Year</button> --}}
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    {{!-- Recognigetion script --}}
+
+    <script>
+      let dateDropdownr = document.getElementById('date-dropdownr');
+      var yearr = {}
+      let currentYearr = new Date().getFullYear();
+      let earliestYearr = 2020;
+      while (currentYearr >= earliestYearr) {
+        let dateOption = document.createElement('option');
+        dateOption.text = currentYearr;
+        dateOption.value = currentYearr;
+        dateDropdownr.add(dateOption);
+        yearr[currentYearr] = 0;
+        currentYearr -= 1;
+      }
+
+
+      var setMonthr = (year) => {
+        var monthNames = ["January", "February", "March", "April", "May", "June",
+          "July", "August", "September", "October", "November", "December"]
+
+        const currentTime = new Date();
+        const monthDropdownr = document.getElementById("month-dropdownr")
+        let index = 0;
+        monthDropdownr.innerHTML = `<option value="-1">Month's</option>`;
+        if (year < currentTime.getFullYear()) {
+          while (index < 12) {
+            let monthOption = document.createElement("option");
+            monthOption.text = monthNames[index];
+            monthOption.value = index;
+            monthDropdownr.add(monthOption)
+            index++;
+          }
+        }
+        else {
+          while (index <= currentTime.getMonth()) {
+            let monthOption = document.createElement("option");
+            monthOption.text = monthNames[index];
+            monthOption.value = index;
+            monthDropdownr.add(monthOption)
+            index++;
+          }
+        }
+      }
+
+      setMonthr();
+
+    </script>
+
+
+
+
+    {{!-- Overall graph --}}
+
+    <script myvar={{graphDataPatient}} myvarl={{loudness}} myvarp={{pitch}} myvarr={{overrall}}>
+      var unique = (a, t = {}) => a.filter(e => !(t[e] = e in t)); // function to find unique dates
+      var temp = document.currentScript.getAttribute('myvar');
+      var temp2 = document.currentScript.getAttribute('myvarl');
+      var temp3 = document.currentScript.getAttribute('myvarp');
+      var temp4 = document.currentScript.getAttribute('myvarr');
+
+      var arro = temp.split(","); // spliting from iso date to normal date
+      var arrl = temp2.split(",");
+      var arrp = temp3.split(",");
+      var arrr = temp4.split(",");
+
+      var datapointso = [];
+      arro = unique(arro);
+      for (var i = 0; i < arro.length; i++) { //counting occurance of each element
+        var sum = parseFloat(arrl[i]) + parseFloat(arrr[i]) + parseFloat(arrp[i]);
+        datapointso.push(parseFloat(sum / 3));
+      }
+      var curr = 1;
+      for (var i = 1; i < arro.length; i++) { //counting occurance of each element
+        if (arro[i - 1] === arro[i]) {
+          ++curr;
+        } else {
+          datapointso.push(curr);
+          curr = 1;
+        }
+      }
+
+      const counts = {};
+      for (const num of arro) {
+        counts[num] = counts[num] ? counts[num] + 1 : 1;
+      }
+      // console.log(counts)
+      datapointso.push(curr);
+
+      const dayo = [];
+      for (var i = 0; i < arro.length; i++) {
+        dayo.push({ x: new Date(arro[i]).setHours(0, 0, 0, 0), y: datapointso[i] });
+      }
+
+      var mpo = new Map();
+
+      for (var i = 0; i < dayo.length; i++) {
+        //mpo[arro[i]]=mpo[arro[i]] || [];
+        mpo.set(dayo[i].x, datapointso[i]);
+      }
+
+
+      var monthName = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"]
+
+      var data = new Array(12).fill(0);
+      for (var i = 0; i < mpo.size; i++) {
+        let date = new Date(dayo[i].x);
+        let month = date.getMonth();
+        let year = date.getFullYear().toString();
+        if (mpo.get(date.getTime())) {
+          //console.log(date)
+          data[month] += mpo.get(date.getTime());
+        }
+      }
+
+      var daynr = [];
+
+
+      const newLable = [];
+      for (let i = 0; i < 12; i++) {
+        // console.log(new Date().getFullYear(), selectYearr)
+        if (new Date().getMonth() < i) {
+          console.log(monthName[i])
+        }
+        else {
+          newLable.push(monthName[i]);
+          daynr.push({ x: monthName[i], y: data[i] });
+        }
+      }
+
+      console.log(daynr)
+
+
+      //console.log("mpo")
+      //console.log(mpo)
+      var data = {
+        labels: newLable,
+        datasets: [{
+          label: 'Over All Graph',
+          data: daynr,
+          backgroundColor: "orange",
+          borderColor: "red",
+          borderWidth: 3
+        }]
+      };
+      var config = {
+        type: 'line',
+        data,
+        options: {
+          scales: {
+            x: {
+              type: 'category',
+              time: {
+                unit: 'month'
+              }
+            },
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      };
+      const myCharto = new Chart(
+        document.getElementById('myCharto'),
+        config
+      );
+
+      function setGraph() {
+        const monthValue = document.getElementById("month-dropdowno").value;
+        const yearValue = document.getElementById("date-dropdowno").value;
+        setMonth(document.getElementById("date-dropdowno").value);
+        if (monthValue == -1) {
+          timeFrameo('month', { year: yearValue })
+        }
+        else {
+          timeFrameo('day', { month: monthValue, year: yearValue })
+        }
+
+      }
+
+      function timeFrameo(period, payload) {
+        //console.log(period)
+        if (period == 'day') {
+
+          var startdate = new Date(parseInt(payload.year), parseInt(payload.month), 1);
+          var enddate = new Date(parseInt(payload.year), parseInt(payload.month) + 1, 0);
+          var temp = startdate;
+          var label = []
+
+          const date = new Date();
+          if (startdate.getFullYear() === date.getFullYear() && startdate.getMonth() === date.getMonth()) {
+            enddate = date;
+          }
+
+
+          while (temp <= enddate) {
+            let day = temp.getDate();
+            let month = temp.getMonth() + 1;
+            let year = temp.getFullYear();
+            if (day <= 9) {
+              day = day.toString().padStart(2, '0');
+            } if (month <= 9) {
+              month = month.toString().padStart(2, '0');
+            }
+            //label.push(new Date(year , month , day).getTime())
+            label.push(temp.toLocaleDateString())
+            temp = new Date(temp.getTime() + 24 * 60 * 60 * 1000)
+          }
+
+          var dayn = [];
+          for (var i = 0; i < label.length; i++) {
+            const time = new Date(label[i]).setHours(0, 0, 0, 0)
+            if (mpo.has(time) && mpo.get(time)) {
+              //console.log(mpo.get(label[i]))
+              dayn.push({ x: time, y: mpo.get(time) })
+            } else {
+              dayn.push({ x: time, y: 0 });
+            }
+          }
+
+          //console.log("label")
+          //console.log(newLabel)
+
+          //console.log(dayn) 
+          myCharto.config.options.scales.x.time.unit = 'day';
+          myCharto.config.options.scales.x.type = "category";
+          myCharto.config.data.labels = label;
+          myCharto.config.data.datasets[0].data = dayn;
+
+
+
+
+
+
+          //myCharto.config.options.scales.x.time.unit=period;
+          //myCharto.config.data.datasets[0].data=dayo;
+        } else if (period == 'month') {
+
+          var selectYear = parseInt(payload.year);
+
+          var monthName = ["January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"]
+
+          var data = new Array(12).fill(0);
+          //console.log(dayo)
+          for (var i = 0; i < mpo.size; i++) {
+            let date = new Date(dayo[i].x);
+            let month = date.getMonth();
+            let year = date.getFullYear().toString();
+            if (year == selectYear && mpo.get(date.getTime())) {
+              //console.log(date)
+              if (mpo.get(date.getTime()) !== Infinity)
+                data[month] += mpo.get(date.getTime());
+            }
+          }
+
+          var dayn = [];
+          const newLable = [];
+          for (let i = 0; i < 12; i++) {
+            //console.log(new Date().getFullYear(), selectYearr)
+            if (new Date().getFullYear() === parseInt(selectYear) && new Date().getMonth() < i) {
+              console.log(monthName[i])
+            }
+            else {
+              newLable.push(monthName[i]);
+              dayn.push({ x: monthName[i], y: data[i] });
+            }
+          }
+
+
+
+          console.log(dayn)
+          myCharto.config.options.scales.x.time.unit = 'mpnth';
+          myCharto.config.options.scales.x.type = "category";
+          myCharto.config.data.labels = newLable;
+          myCharto.config.data.datasets[0].data = dayn;
+        } else if (period == 'year') {
+          for (year in yearo) {
+            yearo[year] = 0
+          }
+          //const data = {};
+          for (let i = 0; i < mpo.size; i++) {
+            let date = new Date(dayo[i].x);
+            if (mpo.get(date.getTime()))
+              yearo[date.getFullYear()] += mpo.get(date.getTime());
+          }
+          //console.log(yearo);
+
+          var dayn = [];
+          for (year in yearo) {
+            dayn.push({ x: year, y: yearo[year] })
+          }
+
+          myCharto.config.options.scales.x.time.unit = period;
+          myCharto.config.data.datasets[0].data = dayn;
+        }
+        myCharto.update();
+      }
+
+      function filterDatao() {
+        var dates2 = [...arro];
+        const startdate = document.getElementById('startdateo');
+        const enddate = document.getElementById('enddateo');
+        var indexstartdate = dates2.findIndex(function (date) {
+          return date >= startdate.value;
+        });
+        var indexenddate;
+        for (var i = 0; i < dates2.length; i++) {
+          if (dates2[i] <= enddate.value) {
+            indexenddate = i;
+          }
+        }
+        const filterDate = dates2.slice(indexstartdate, indexenddate + 1);
+        myCharto.config.data.labels = filterDate;
+        var datapoints2 = [...datapointso]
+        const filterDatapoints = datapoints2.slice(indexstartdate, indexenddate + 1);
+        myCharto.config.data.datasets[0].data = filterDatapoints;
+
+        myCharto.update();
+
+      }
+    </script>
+
+    {{!-- Loudness --}}
+
+    <script myvar={{datel}} myvars={{loudness}}>
+      var temp2 = document.currentScript.getAttribute('myvars');
+      var tempXl = document.currentScript.getAttribute('myvar');
+      var arrY = temp2.split(",");
+      var arrXl = tempXl.split(",");
+      var datapointsl = [];
+
+      for (var i = 0; i < arrY.length; i++) { //counting occurance of each element
+        datapointsl.push(parseFloat(arrY[i]));
+      }
+      var mapl = new Map();
+      const dayl = []
+      for (var i = 0; i < arrXl.length; i++) {
+        dayl.push({ x: new Date(arrXl[i]).setHours(0, 0, 0, 0), y: datapointsl[i] });
+        mapl.set(new Date(arrXl[i]).setHours(0, 0, 0, 0), datapointsl[i]);
+      }
+
+
+      var monthNamel = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"]
+
+      var datal = new Array(12).fill(0);
+      const avg = {};
+      let count = 0;
+      for (var i = 0; i < mapl.size; i++) {
+        let date = new Date(dayl[i].x);
+        let month = date.getMonth();
+        let year = date.getFullYear().toString();
+
+        if (mapl.get(date.getTime())) {
+          //console.log(date)
+          avg[month] = { val: mapl.get(date.getTime()), count: ++count }
+          datal[month] += mapl.get(date.getTime());
+
+        }
+      }
+      console.log(avg)
+
+      var daynl = [];
+
+
+      const newLablel = [];
+      for (let i = 0; i < 12; i++) {
+        // console.log(new Date().getFullYear(), selectYearr)
+        if (new Date().getMonth() < i) {
+          //console.log(monthNamer[i])
+        }
+        else {
+          newLablel.push(monthNamel[i]);
+          daynl.push({ x: monthNamel[i], y: datal[i] });
+        }
+      }
+
+      console.log(daynl)
+
+      //console.log(mapl)
+      var data = {
+        labels: arrXl,
+        datasets: [{
+          label: 'Loudness',
+          data: daynl,
+          backgroundColor: "green",
+          borderColor: "lightgreen",
+          borderWidth: 3
+        }]
+      };
+      var config = {
+        type: 'line',
+        data,
+        options: {
+          scales: {
+            x: {
+              type: 'category',
+              time: {
+                unit: 'month'
+              }
+            },
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      };
+      const myChartl = new Chart(
+        document.getElementById('myChartl'),
+        config
+      );
+
+
+
+      function setGraphl() {
+        const monthValuel = document.getElementById("month-dropdownl").value;
+        const yearValuel = document.getElementById("date-dropdownl").value;
+        setMonthl(document.getElementById("date-dropdownl").value);
+        if (monthValuel == -1) {
+          timeFramel('month', { year: yearValuel })
+        }
+        else {
+          timeFramel('day', { month: monthValuel, year: yearValuel })
+        }
+
+      }
+
+      function timeFramel(period, payload) {
+        if (period == 'day') {
+
+          var startdate = new Date(parseInt(payload.year), parseInt(payload.month), 1);
+          var enddate = new Date(parseInt(payload.year), parseInt(payload.month) + 1, 0);
+          var temp = startdate;
+          var labell = []
+
+          const date = new Date();
+          if (startdate.getFullYear() === date.getFullYear() && startdate.getMonth() === date.getMonth()) {
+            enddate = date;
+          }
+
+
+
+          while (temp <= enddate) {
+            let day = temp.getDate();
+            let month = temp.getMonth() + 1;
+            let year = temp.getFullYear();
+            if (day <= 9) {
+              day = day.toString().padStart(2, '0');
+            } if (month <= 9) {
+              month = month.toString().padStart(2, '0');
+            }
+            //label.push(new Date(year , month , day).getTime())
+            labell.push(temp.toLocaleDateString());
+            temp = new Date(temp.getTime() + 24 * 60 * 60 * 1000)
+          }
+
+
+          var arrl = [];
+          for (var i = 0; i < labell.length; i++) {
+            const time = new Date(labell[i]).setHours(0, 0, 0, 0)
+            //console.log(time)
+            if (mapl.has(time) && mapl.get(time)) {
+              //console.log(mapl.get(1671993000000))
+              arrl.push({ x: time, y: mapl.get(time) })
+            }
+            else {
+              arrl.push({ x: time, y: 0 });
+            }
+          }
+
+
+          //   myChartl.config.options.scales.x.time.unit='day';
+          //   myChartl.config.options.scales.x.type="category";
+          //   myChartl.config.data.labels=labell;
+          //   myChartl.config.data.datasets[0].data=arrl;
+
+
+          myChartl.config.options.scales.x.time.unit = 'day';
+          myChartl.config.options.scales.x.type = "category";
+          myChartl.config.data.labels = labell;
+          myChartl.config.data.datasets[0].data = arrl;
+        } else if (period == 'month') {
+
+          var selectYearl = parseInt(payload.year);
+
+          var monthNamel = ["January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"]
+
+          var datal = new Array(12).fill(0);
+          //console.log(dayo)
+          for (var i = 0; i < mapl.size; i++) {
+            let date = new Date(dayl[i].x);
+            let month = date.getMonth();
+            let year = date.getFullYear().toString();
+            if (year == selectYearl && mapl.get(date.getTime())) {
+              //console.log(date)
+              datal[month] += mapl.get(date.getTime());
+            }
+          }
+
+          var daynl = [];
+          //for(let i=0;i<12;i++){
+          //  daynl.push({x:monthNamel[i],y:datal[i]});
+          //}
+
+          const newLablel = [];
+          for (let i = 0; i < 12; i++) {
+            // console.log(new Date().getFullYear(), selectYearr)
+            if (new Date().getFullYear() === parseInt(selectYearl) && new Date().getMonth() < i) {
+              //console.log(monthNamer[i])
+            }
+            else {
+              newLablel.push(monthNamel[i]);
+              daynl.push({ x: monthNamel[i], y: datal[i] });
+            }
+          }
+          //console.log(daynr)
+          //console.log(newLabler)
+          //console.log(daynl)
+
+          myChartl.config.options.scales.x.time.unit = period;
+          myChartl.config.options.scales.x.type = "category";
+          myChartl.config.data.labels = monthNamel;
+          myChartl.config.data.datasets[0].data = daynl;
+        } else if (period == 'year') {
+
+          for (year in yearl) {
+            yearl[year] = 0
+          }
+          //const data = {};
+          for (let i = 0; i < mapl.size; i++) {
+            let date = new Date(dayl[i].x);
+            if (mapl.get(date.getTime()))
+              yearl[date.getFullYear()] += mapl.get(date.getTime());
+          }
+          //console.log(yearo);
+
+          var daynl = [];
+          for (year in yearl) {
+            daynl.push({ x: year, y: yearl[year] })
+          }
+
+          myChartl.config.options.scales.x.time.unit = period;
+          myChartl.config.data.datasets[0].data = daynl;
+        }
+        myChartl.update();
+      }
+
+      function filterDatal() {
+        var dates2 = [...arro];
+        const startdate = document.getElementById('startdatel');
+        const enddate = document.getElementById('enddatel');
+        const indexstartdate = dates2.findIndex(function (date) {
+          return date >= startdate.value;
+        });
+        var indexenddate;
+        for (var i = 0; i < dates2.length; i++) {
+          if (dates2[i] <= enddate.value) {
+            indexenddate = i;
+          }
+        }
+        const filterDate = dates2.slice(indexstartdate, indexenddate + 1);
+        myChartl.config.data.labels = filterDate;
+        var datapoints2 = [...datapointsl]
+        const filterDatapoints = datapoints2.slice(indexstartdate, indexenddate + 1);
+        myChartl.config.data.datasets[0].data = filterDatapoints;
+
+        myChartl.update();
+
+      }
+
+    </script>
+
+    {{!-- pitch --}}
+
+
+    <script myvar={{datep}} myvars={{pitch}}>
+      var templ = document.currentScript.getAttribute('myvars');
+      var tempXp = document.currentScript.getAttribute('myvar');
+      var arrXp = tempXp.split(",");
+      var arrYp = templ.split(",");
+      var datapointsp = [];
+
+      for (var i = 0; i < arrYp.length; i++) { //counting occurance of each element
+        datapointsp.push(parseFloat(arrYp[i]));
+      }
+      var dayp = [];
+      var maph = new Map();
+      for (var i = 0; i < arrXp.length; i++) {
+        dayp.push({ x: new Date(arrXp[i]).setHours(0, 0, 0, 0), y: datapointsp[i] });
+        maph.set(new Date(arrXp[i]).setHours(0, 0, 0, 0), datapointsp[i]);
+      }
+
+      const monthNameh = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"]
+
+      var datah = new Array(12).fill(0);
+      for (var i = 0; i < maph.size; i++) {
+        let date = new Date(dayp[i].x);
+        let month = date.getMonth();
+        let year = date.getFullYear().toString();
+        if (maph.get(date.getTime())) {
+          //console.log(date)
+          datah[month] += maph.get(date.getTime());
+        }
+      }
+
+      var daynh = [];
+
+
+      const newLableh = [];
+      for (let i = 0; i < 12; i++) {
+        // console.log(new Date().getFullYear(), selectYearr)
+        if (new Date().getMonth() < i) {
+          console.log(monthNameh[i])
+        }
+        else {
+          newLableh.push(monthNameh[i]);
+          daynh.push({ x: monthNameh[i], y: datah[i] });
+        }
+      }
+
+      //console.log(maph)
+      //console.log(dayp)
+      var data = {
+        labels: newLableh,
+        datasets: [{
+          label: 'Pitch',
+          data: daynh,
+          backgroundColor: "skyblue",
+          borderColor: "blue",
+          borderWidth: 3
+        }]
+      };
+      var config = {
+        type: 'line',
+        data,
+        options: {
+          scales: {
+            x: {
+              type: 'category',
+              time: {
+                unit: 'month'
+              }
+            },
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      };
+      const myCharth = new Chart(
+        document.getElementById('myCharth'),
+        config
+      );
+
+
+
+      function setGraphh() {
+        const monthValueh = document.getElementById("month-dropdownh").value;
+        const yearValueh = document.getElementById("date-dropdownh").value;
+        setMonthh(document.getElementById("date-dropdownh").value);
+        if (monthValueh == -1) {
+          timeFrameh('month', { year: yearValueh })
+        }
+        else {
+          timeFrameh('day', { month: monthValueh, year: yearValueh })
+        }
+
+      }
+
+
+      function timeFrameh(period, payload) {
+        if (period == 'day') {
+          var startdate = new Date(parseInt(payload.year), parseInt(payload.month), 1);
+          var enddate = new Date(parseInt(payload.year), parseInt(payload.month) + 1, 0);
+          var temp = startdate;
+          var labelh = []
+
+          const date = new Date();
+          if (startdate.getFullYear() === date.getFullYear() && startdate.getMonth() === date.getMonth()) {
+            enddate = date;
+          }
+
+
+
+          while (temp <= enddate) {
+            let day = temp.getDate();
+            let month = temp.getMonth() + 1;
+            let year = temp.getFullYear();
+            if (day <= 9) {
+              day = day.toString().padStart(2, '0');
+            } if (month <= 9) {
+              month = month.toString().padStart(2, '0');
+            }
+            //label.push(new Date(year , month , day).getTime())
+            labelh.push(temp.toLocaleDateString())
+            temp = new Date(temp.getTime() + 24 * 60 * 60 * 1000)
+          }
+
+
+          var arrh = [];
+          for (var i = 0; i < labelh.length; i++) {
+            const time = new Date(labelh[i]).setHours(0, 0, 0, 0)
+            //console.log(time)
+            if (maph.has(time) && maph.get(time)) {
+              //console.log(maph.get(time))
+              if (maph.get(time) === Infinity)
+                arrh.push({ x: time, y: 0 })
+              else
+                arrh.push({ x: time, y: maph.get(time) })
+            }
+            else {
+              arrh.push({ x: time, y: 0 });
+            }
+          }
+
+          console.log(arrh)
+          console.log(maph)
+
+          myCharth.config.options.scales.x.time.unit = 'day';
+          myCharth.config.options.scales.x.type = "category";
+          myCharth.config.data.labels = labelh;
+          myCharth.config.data.datasets[0].data = arrh;
+
+
+          // myCharth.config.options.scales.x.time.unit='day';
+          //  myCharth.config.options.scales.x.type="category";
+          //  myCharth.config.data.labels=labelh;
+          //  myCharth.config.data.datasets[0].data=arrh;
+        } else if (period == 'month') {
+          var selectYearh = parseInt(payload.year);
+
+          var monthNameh = ["January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"]
+
+          var datah = new Array(12).fill(0);
+          //console.log(dayo)
+          for (var i = 0; i < maph.size; i++) {
+            let date = new Date(dayp[i].x);
+            let month = date.getMonth();
+            let year = date.getFullYear().toString();
+            if (year == selectYearh && maph.get(date.getTime())) {
+              //console.log(date)
+              datah[month] += maph.get(date.getTime());
+            }
+          }
+
+          var daynh = [];
+          const newLableh = [];
+          for (let i = 0; i < 12; i++) {
+            //console.log(new Date().getFullYear(), selectYearr)
+            if (new Date().getFullYear() === parseInt(selectYearh) && new Date().getMonth() < i) {
+              console.log(monthNameh[i])
+            }
+            else {
+              newLableh.push(monthNameh[i]);
+              daynh.push({ x: monthNameh[i], y: datah[i] });
+            }
+          }
+          //console.log(daynh)
+
+          myCharth.config.options.scales.x.time.unit = period;
+          myCharth.config.options.scales.x.type = "category";
+          myCharth.config.data.labels = newLableh;
+          myCharth.config.data.datasets[0].data = daynh;
+        } else if (period == 'year') {
+          for (year in yearh) {
+            yearh[year] = 0
+          }
+          for (let i = 0; i < maph.size; i++) {
+            let date = new Date(dayp[i].x);
+            if (maph.get(date.getTime()))
+              yearh[date.getFullYear()] += maph.get(date.getTime());
+          }
+          //console.log(yearo);
+
+          var daynh = [];
+          for (year in yearh) {
+            daynh.push({ x: year, y: yearh[year] })
+          }
+
+          myCharth.config.options.scales.x.time.unit = period;
+          myCharth.config.data.datasets[0].data = daynh;
+        }
+        myCharth.update();
+      }
+
+      function filterDatah() {
+        var dates2 = [...arro];
+        const startdate = document.getElementById('startdateh');
+        const enddate = document.getElementById('enddateh');
+        const indexstartdate = dates2.findIndex(function (date) {
+          return date >= startdate.value;
+        });
+        var indexenddate;
+        for (var i = 0; i < dates2.length; i++) {
+          if (dates2[i] <= enddate.value) {
+            indexenddate = i;
+          }
+        }
+        const filterDate = dates2.slice(indexstartdate, indexenddate + 1);
+        myCharth.config.data.labels = filterDate;
+        var datapoints2 = [...datapointsp]
+        const filterDatapoints = datapoints2.slice(indexstartdate, indexenddate + 1);
+        myCharth.config.data.datasets[0].data = filterDatapoints;
+
+        myCharth.update();
+
+      }
+
+    </script>
+
+    {{!-- Recognition --}}
+
+    <script myvar={{dateo}} myvars={{overrall}}>
+      var tempr = document.currentScript.getAttribute('myvars');
+      var temprr = document.currentScript.getAttribute('myvar');
+      var arrYr = tempr.split(",");
+      var arrr = temprr.split(",");
+      var datapointsr = [];
+
+      for (var i = 0; i < arrr.length; i++) { //counting occurance of each element
+        datapointsr.push(parseFloat(arrYr[i]));
+      }
+
+      var mapr = new Map();
+      console.log("mapr")
+
+      var dayr = [];
+      for (var i = 0; i < arrr.length; i++) {
+        dayr.push({ x: new Date(arrr[i]).setHours(0, 0, 0, 0), y: datapointsr[i] });
+        mapr.set(new Date(arrr[i]).setHours(0, 0, 0, 0), datapointsr[i]);
+      }
+
+      console.log(mapr)
+
+      var monthNamer = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"]
+
+      var datar = new Array(12).fill(0);
+      for (var i = 0; i < mapr.size; i++) {
+        let date = new Date(dayr[i].x);
+        let month = date.getMonth();
+        let year = date.getFullYear().toString();
+        if (mapr.get(date.getTime())) {
+          //console.log(date)
+          datar[month] += mapr.get(date.getTime());
+        }
+      }
+
+      var daynr = [];
+
+
+      const newLabler = [];
+      for (let i = 0; i < 12; i++) {
+        // console.log(new Date().getFullYear(), selectYearr)
+        if (new Date().getMonth() < i) {
+          console.log(monthNamer[i])
+        }
+        else {
+          newLabler.push(monthNamer[i]);
+          daynr.push({ x: monthNamer[i], y: datar[i] });
+        }
+      }
+
+      console.log(daynr)
+
+
+
+      var data = {
+        labels: newLabler,
+        datasets: [{
+          label: 'Recognition',
+          data: daynr,
+          backgroundColor: "yellow",
+          borderColor: "orange",
+          borderWidth: 3
+        }]
+      };
+      var config = {
+        type: 'line',
+        data,
+        options: {
+          scales: {
+            x: {
+              type: 'category',
+              time: {
+                unit: 'month'
+              }
+            },
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      };
+      const myChartr = new Chart(
+        document.getElementById('myChartr'),
+        config
+      );
+
+
+
+      function setGraphr() {
+        const monthValuer = document.getElementById("month-dropdownr").value;
+        const yearValuer = document.getElementById("date-dropdownr").value;
+        setMonthr(document.getElementById("date-dropdownr").value);
+        if (monthValuer == -1) {
+          timeFramer('month', { year: yearValuer })
+        }
+        else {
+          timeFramer('day', { month: monthValuer, year: yearValuer })
+        }
+
+      }
+
+      function timeFramer(period, payload) {
+        if (period == 'day') {
+          var startdate = new Date(parseInt(payload.year), parseInt(payload.month), 1);
+          var enddate = new Date(parseInt(payload.year), parseInt(payload.month) + 1, 0);
+          var temp = startdate;
+          var labelr = []
+
+          const date = new Date();
+          if (startdate.getFullYear() === date.getFullYear() && startdate.getMonth() === date.getMonth()) {
+            enddate = date;
+          }
+
+
+          while (temp <= enddate) {
+            let day = temp.getDate();
+            let month = temp.getMonth() + 1;
+            let year = temp.getFullYear();
+            if (day <= 9) {
+              day = day.toString().padStart(2, '0');
+            } if (month <= 9) {
+              month = month.toString().padStart(2, '0');
+            }
+            //label.push(new Date(year , month , day).getTime())
+            //1/31/2023
+            labelr.push(temp.toLocaleDateString())
+            temp = new Date(temp.getTime() + 24 * 60 * 60 * 1000)
+          }
+
+
+          var dayrr = [];
+          for (var i = 0; i < labelr.length; i++) {
+            const time = new Date(labelr[i]).setHours(0, 0, 0, 0)
+            //console.log(time)
+            if (mapr.has(time) && mapr.get(time)) {
+              //console.log(mapl.get(1671993000000))
+              dayrr.push({ x: time, y: mapr.get(time) })
+            }
+            else {
+              dayrr.push({ x: time, y: 0 });
+            }
+          }
+
+          console.log(dayrr)
+          console.log(labelr)
+
+
+          myChartr.config.options.scales.x.time.unit = 'day';
+          myChartr.config.options.scales.x.type = "category";
+          myChartr.config.data.labels = labelr;
+          myChartr.config.data.datasets[0].data = dayrr;
+        } else if (period == 'month') {
+          var selectYearr = parseInt(payload.year);
+
+          var monthNamer = ["January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"]
+
+          var datar = new Array(12).fill(0);
+          //console.log(dayo)
+          for (var i = 0; i < mapr.size; i++) {
+            let date = new Date(dayr[i].x);
+            let month = date.getMonth();
+            let year = date.getFullYear().toString();
+            if (year == selectYearr && mapr.get(date.getTime())) {
+              //console.log(date)
+              datar[month] += mapr.get(date.getTime());
+            }
+          }
+
+          var daynr = [];
+
+
+          const newLabler = [];
+          for (let i = 0; i < 12; i++) {
+            console.log(new Date().getFullYear(), selectYearr)
+            if (new Date().getFullYear() === parseInt(selectYearr) && new Date().getMonth() < i) {
+              console.log(monthNamer[i])
+            }
+            else {
+              newLabler.push(monthNamer[i]);
+              daynr.push({ x: monthNamer[i], y: datar[i] });
+            }
+          }
+          console.log(daynr)
+          console.log(newLabler)
+
+
+          myChartr.config.options.scales.x.time.unit = 'month';
+          myChartr.config.options.scales.x.type = "category";
+          myChartr.config.data.labels = newLabler
+          myChartr.config.data.datasets[0].data = daynr;
+
+          // myChartr.config.options.scales.x.time.unit=period;
+          //  myChartr.config.options.scales.x.type="category";
+          //  //myChartr.config.data.labels=monthNamer; 
+          //  myChartr.config.data.datasets[0].data=daynr;
+
+
+
+          //myChartr.config.options.scales.x.time.unit=period;
+          //myChartr.config.data.datasets[0].data=dayr;
+        } else if (period == 'year') {
+
+          for (year in yearr) {
+            yearr[year] = 0
+          }
+          for (let i = 0; i < mapr.size; i++) {
+            let date = new Date(dayo[i].x);
+            if (mapr.get(date.getTime()))
+              yearr[date.getFullYear()] += mapr.get(date.getTime());
+          }
+          //console.log(yearo);
+
+          var daynr = [];
+          for (year in yearr) {
+            daynr.push({ x: year, y: yearr[year] })
+          }
+
+          myChartr.config.options.scales.x.time.unit = period;
+          myChartr.config.options.scales.x.type = "time";
+          myChartr.config.data.datasets[0].data = daynr;
+          //myChartr.config.options.scales.x.time.unit=period;
+          //myChartr.config.data.datasets[0].data=dayr;
+        }
+        myChartr.update();
+      }
+
+      function filterDatar() {
+        var dates2 = [...arro];
+        const startdate = document.getElementById('startdater');
+        const enddate = document.getElementById('enddater');
+        const indexstartdate = dates2.findIndex(function (date) {
+          return date >= startdate.value;
+        });
+        var indexenddate;
+        for (var i = 0; i < dates2.length; i++) {
+          if (dates2[i] <= enddate.value) {
+            indexenddate = i;
+          }
+        }
+        const filterDate = dates2.slice(indexstartdate, indexenddate + 1);
+        myChartr.config.data.labels = filterDate;
+        var datapoints2 = [...datapointsr]
+        const filterDatapoints = datapoints2.slice(indexstartdate, indexenddate + 1);
+        myChartr.config.data.datasets[0].data = filterDatapoints;
+
+        myChartr.update();
+
+      }
+    </script>
+
+
+
+
+
+
+    <div class="col-12" style="background-color: #bbb;">
+      <div class="card member-panel" style="background-color: #bbb;">
+        <div class="card-header bg-white">
+          <center>
+            {{#each patientdata}}
+            <p class="card-title" style="color: red"><b>{{this.patientFullName}} History</b></p>
+            {{/each}}
+          </center>
+        </div>
+
+        <hr color="red">
+        <div class="slideshow-container" style="background-color: #bbb;">
+          {{#each progress}}
+          <div class="mySlides" style="background-color: #bbb; width: 100%">
+
+            <center>
+              <p class="card-title">patientId : {{this.patientId}}</p>
+              <p class="card-title">Date : {{this.date}}</p>
+              <p class="card-title">Gamebase : {{this.gamebase}}</p>
+            </center>
+
+
+            <hr color="red" style="width:100%;">
+
+            <center>
+              <p class="card-title">Overralrating : {{this.overralrating}}</p>
+            </center>
+            <hr color="red" width="100%">
+
+            <center>
+              <p class="card-title">LoudnessTarget : {{this.LoudnessTarget}}</p>
+            </center>
+            <hr color="red" width="100%">
+
+            <center>
+              <p class="card-title">NumberOfTrials : {{this.NumberOfTrials}}</p>
+            </center>
+            <hr color="red" width="100%">
+
+            <center>
+              <p class="card-title">cumulativeDurationOfSounds : {{this.cumulativeDurationOfSounds}}</p>
+            </center>
+            <hr color="red" width="100%">
+
+            <center>
+              <p class="card-title">MeanPitch : {{this.MeanPitch}}</p>
+            </center>
+            <hr color="red" width="100%">
+
+            <center>
+              <p class="card-title">meanLoudness : {{this.meanLoudness}}</p>
+            </center>
+            <hr color="red" style="width:100%;">
+
+            <center>
+              <p class="card-title">stdDevPitch : {{this.stdDevPitch}}</p>
+            </center>
+            <hr color="red" width="100%">
+
+            <center>
+              <p class="card-title">stdDevLoudness : {{this.stdDevLoudness}}</p>
+            </center>
+            <hr color="red" style="width:100%;">
+
+            <center>
+              <p class="card-title">rangepitchMin : {{this.rangepitchMin}}</p>
+            </center>
+            <hr color="red" width="100%">
+
+            <center>
+              <p class="card-title">rangepitchMax : {{this.rangepitchMax}}</p>
+            </center>
+            <hr color="red" width="100%">
+
+            <center>
+              <p class="card-title">rangeLoudnessMin : {{this.rangeLoudnessMin}}</p>
+            </center>
+            <hr color="red" width="100%">
+
+            <center>
+              <p class="card-title">rangeLoudnessmax : {{this.rangeLoudnessmax}}</p>
+            </center>
+
+
+
+            {{!-- <img
+              src="https://images.unsplash.com/photo-1427435150519-42d9bcd0aa81?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&s=1896a40b338ccfb0d8ff7e5199e5ecd2"
+              style="width:100%;"> --}}
+          </div>
+          {{/each}}
+
+
+          <a class="prev" onclick="plusSlides(-1)">❮</a>
+          <a class="next" onclick="plusSlides(1)">❯</a>
+
+        </div>
+        <br>
+
+        {{!-- <div style="text-align:center">
+          <span class="dot" onclick="currentSlide(1)"></span>
+          <span class="dot" onclick="currentSlide(2)"></span>
+          <span class="dot" onclick="currentSlide(3)"></span>
+        </div> --}}
+
+      </div>
+
+
+    </div>
+
+
+
+
+
+  </div>
+</div>
+
+</div>
+</div>
+<script>
+  let slideIndex = 1;
+  showSlides(slideIndex);
+
+  function plusSlides(n) {
+    showSlides(slideIndex += n);
+  }
+
+  function currentSlide(n) {
+    showSlides(slideIndex = n);
+  }
+
+  function showSlides(n) {
+    let i;
+    let slides = document.getElementsByClassName("mySlides");
+    let dots = document.getElementsByClassName("dot");
+    if (n > slides.length) { slideIndex = 1 }
+    if (n < 1) { slideIndex = slides.length }
+    for (i = 0; i < slides.length; i++) {
+      slides[i].style.display = "none";
+    }
+    for (i = 0; i < dots.length; i++) {
+      dots[i].className = dots[i].className.replace(" active", "");
+    }
+    slides[slideIndex - 1].style.display = "block";
+    dots[slideIndex - 1].className += " active";
+  }
+</script>
 {{>adminfooter}}
 
-  <script src="../js/app.js"></script>
+<script src="../js/app.js"></script>
