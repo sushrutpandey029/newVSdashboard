@@ -948,12 +948,14 @@ app.get('/patients-profile/:id',async(req,res)=>{
 
    const temp2 = req.cookies.id;
    const docuser = await roleModel.find({_id:temp2});
+   
+   let patientdata = await patientModel.find({"_id":req.params.id})
 
    console.log(arro);
 
-  if(user.length>0) res.render("progress",{userData:data,progress:gameData,graphDataPatient:array2,loudness:arrl,datel:aloud,pitch:arrp,datep:apitch,overrall:arro,dateo:aover,loginuser:user,datagame:datagame})
-  else if (superuser.length>0) res.render("progress",{userData:data,progress:gameData,graphDataPatient:array2,loudness:arrl,datel:aloud,pitch:arrp,datep:apitch,overrall:arro,dateo:aover,loginuser:superuser,datagame:datagame});
-  else res.render("progress",{userData:data,progress:gameData,graphDataPatient:array2,loudness:arrl,datel:aloud,pitch:arrp,datep:apitch,overrall:arro,dateo:aover,loginuser:docuser,datagame:datagame});
+  if(user.length>0) res.render("progress",{userData:data,progress:gameData,graphDataPatient:array2,loudness:arrl,datel:aloud,pitch:arrp,datep:apitch,overrall:arro,dateo:aover,loginuser:user,datagame:datagame,patientdata:patientdata})
+  else if (superuser.length>0) res.render("progress",{userData:data,progress:gameData,graphDataPatient:array2,loudness:arrl,datel:aloud,pitch:arrp,datep:apitch,overrall:arro,dateo:aover,loginuser:superuser,datagame:datagame,patientdata:patientdata});
+  else res.render("progress",{userData:data,progress:gameData,graphDataPatient:array2,loudness:arrl,datel:aloud,pitch:arrp,datep:apitch,overrall:arro,dateo:aover,loginuser:docuser,datagame:datagame,patientdata:patientdata});
 });
 
 
