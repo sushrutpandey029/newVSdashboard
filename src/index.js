@@ -881,7 +881,7 @@ app.get('/edit-patient/:id',async(req,res)=>{
 
 app.get('/patients-profile/:id',async(req,res)=>{
    const data=await patientModel.find({"_id": req.params.id});
-   const gameData=await progressModel.find({"patientId":req.params.id}).sort({patientId:1})
+   const gameData=await progressModel.find({"patientId":req.params.id}).sort({createdAt:-1})
 
    const temp = req.cookies.id;
    const user = await registerModel.find({_id:temp});
